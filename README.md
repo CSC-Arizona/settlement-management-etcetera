@@ -17,7 +17,7 @@ All four team members make a commit that modifies this file with your name added
 
 1) Artyom Perov
 
-2) 
+2) Tanner Bernth
 
 3)
 
