@@ -19,6 +19,6 @@ All four team members make a commit that modifies this file with your name added
 
 2) Tanner Bernth
 
-3) Caleb Short
+3) Robert Walters
 
-4)
+4) Caleb Short
