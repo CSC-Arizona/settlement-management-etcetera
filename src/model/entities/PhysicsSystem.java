@@ -6,6 +6,7 @@
  */
 package entities;
 
+import java.util.Collections;
 import java.util.Vector;
 
 public class PhysicsSystem extends System {
@@ -29,11 +30,12 @@ public class PhysicsSystem extends System {
 				(PositionComponent)eManager.getComponent(Component.POSITION, e);
 			MobilityComponent mobComp =
 				(MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
-			if(mobComp.velocity.x != 0 && mobComp.velocity.y != 0){
-				posComp.x += mobComp.velocity.x / TICKS_PER_SECOND;
-				posComp.y += mobComp.velocity.y / TICKS_PER_SECOND;
+			posComp.x += mobComp.velocity.x / TICKS_PER_SECOND;
+			posComp.y += mobComp.velocity.y / TICKS_PER_SECOND;
+			if(mobComp.velocity.x != 0 || mobComp.velocity.y != 0){
+
 				float slope = mobComp.velocity.y / mobComp.velocity.x;
-				mobComp.velocity.sub(new Vec2f(slope, slope));
+				mobComp.velocity = mobComp.velocity.mul(0.2f);
 			}
 		}
 	}
@@ -41,6 +43,7 @@ public class PhysicsSystem extends System {
 	private void processCollisions(){
 		Vector<Entity> collidables =
 			eManager.getMatchingEntities(Component.POSITION | Component.COLLISION);
+		Vector<Collision> collisions = new Vector<Collision>();
 		for(Entity e : entitiesToProcess){
 			if(eManager.hasComponents(Component.COLLISION, e)){
 				// In here: all e have: COLLISION, POSITION, MOBILITY
@@ -48,51 +51,65 @@ public class PhysicsSystem extends System {
 				for(Entity f : collidables){
 					if(f.getID() != e.getID()){
 
-						// If f doesn't have MOBILITY treat it as if all of its MOBILITY
-						// components were 0.
-						Vec2f fVelocity = new Vec2f(0.0f, 0.0f);
-						float fInvMass = 0;
-						float fRest = ((CollisionComponent)
-								eManager.getComponent(Component.COLLISION, f)).restitution;
-						MobilityComponent fMobComp =
-							(MobilityComponent)eManager.getComponent(Component.MOBILITY, f);
-						if(fMobComp != null){
-							fVelocity = fMobComp.velocity;
-							fInvMass = fMobComp.invMass;
-						}
-
-						MobilityComponent eMobComp =
-							(MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
-						Vec2f eVelocity = eMobComp.velocity;
-						float eInvMass = eMobComp.invMass;
-						float eRest = ((CollisionComponent)
-								eManager.getComponent(Component.COLLISION, e)).restitution;
-
 						Collision efCollision = new Collision(e, f);
-						if(efCollision.occured){
-							Vec2f relVel = fVelocity.sub(eVelocity);
-							float velAlongNormal = relVel.dot(efCollision.normal);
-							// Do not resolve if the entities are separating.
-							if(velAlongNormal < 0){
-								// Min restitution
-								float ep = eRest < fRest ? eRest : fRest;
-								float j = -(1 + ep) * velAlongNormal;
-								j /= eInvMass + fInvMass;
-
-								// Apply impulse
-								Vec2f impulse = efCollision.normal.mul(j);
-								eMobComp.velocity.sub(impulse.mul(eInvMass));
-								if(fMobComp != null)
-									fMobComp.velocity.add(impulse.mul(fInvMass));
-							}
-						}
+						if(efCollision.occured)
+							collisions.add(efCollision);
 					}
 				}
 			}
 		}
+		
+		// Remove duplicates.
+		Collections.sort(collisions);
+		Vector<Collision> potColls = collisions;
+		collisions = new Vector<Collision>();
+		for(int i = 0; i < potColls.size(); ++i){
+			collisions.add(potColls.get(i));
+			for(int k = i + 1; k < potColls.size() && potColls.get(k).equals(potColls.get(i)); ++i, ++k );
+		}
+		
+		for(Collision c : collisions){
+			// If f doesn't have MOBILITY treat it as if all of its MOBILITY
+			// components were 0.
+			Vec2f fVelocity = new Vec2f(0.0f, 0.0f);
+			float fInvMass = 0;
+			float fRest = ((CollisionComponent)
+					eManager.getComponent(Component.COLLISION, c.b)).restitution;
+			MobilityComponent fMobComp =
+				(MobilityComponent)eManager.getComponent(Component.MOBILITY, c.b);
+			if(fMobComp != null){
+				fVelocity = fMobComp.velocity;
+				fInvMass = fMobComp.invMass;
+			}
+
+		MobilityComponent eMobComp =
+			(MobilityComponent)eManager.getComponent(Component.MOBILITY, c.a);
+		Vec2f eVelocity = eMobComp.velocity;
+		float eInvMass = eMobComp.invMass;
+		float eRest = ((CollisionComponent)
+				eManager.getComponent(Component.COLLISION, c.a)).restitution;
+		
+			Vec2f relVel = fVelocity.sub(eVelocity);
+			float velAlongNormal = relVel.dot(c.normal);
+			// Do not resolve if the entities are separating.
+			if(velAlongNormal < 0){
+				// Min restitution
+				float ep = eRest < fRest ? eRest : fRest;
+				float j = -(1 + ep) * velAlongNormal;
+				j /= eInvMass + fInvMass;
+				
+				// Apply impulse
+				Vec2f impulse = c.normal.mul(j);
+				eMobComp.velocity = eMobComp.velocity.sub(impulse.mul(eInvMass));
+				if(fMobComp != null){
+					fMobComp.velocity = fMobComp.velocity.add(impulse.mul(fInvMass));
+				}
+			}
+		}
+
 	}
 
-	private class Collision {
+	private class Collision implements Comparable<Collision> {
 		public Collision(Entity a, Entity b){
 			this.a = a;
 			this.b = b;
@@ -141,6 +158,18 @@ public class PhysicsSystem extends System {
 					occured = true;
 				}
 			}
+		}
+		
+		public int compareTo(Collision that) {
+			if((this.a.getID() == that.a.getID() && this.b.getID() == that.b.getID()) ||
+				 (this.a.getID() == that.b.getID() && this.b.getID() == that.a.getID()))
+				return 0;
+			else
+				return 1;
+		}
+		
+		public boolean equals(Collision that){
+			return compareTo(that) == 0;
 		}
 
 		Entity a;

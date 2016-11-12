@@ -3,9 +3,8 @@ package entities;
 public class CollisionComponent extends Component {
 	public CollisionComponent(){
 		super(Component.COLLISION);
-		width = 1.0f;
-		height = 1.0f;
-		// FIXME
+		width = 0.7f;
+		height = 0.7f;
 		restitution = 0.5f;
 	}
 

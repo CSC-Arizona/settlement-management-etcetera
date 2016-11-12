@@ -15,6 +15,10 @@
 
 package entities;
 
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 public abstract class Component {
 	/* 
 	 * Default access modifier: seen only within the entities package.
@@ -31,7 +35,8 @@ public abstract class Component {
 	static final long MOBILITY			=		1 << 1;
 	static final long COLLISION			=		1 << 2;
 	static final long RENDER				=		1 << 3;
-	static final long TOTAL_COMPS 	=		4;
+	static final long AI						=		1 << 4;
+	static final long TOTAL_COMPS 	=		5;
 
 	/*
 	 * Must be called with an appropriate ComponentID taken from above.
@@ -53,8 +58,13 @@ public abstract class Component {
 			return new MobilityComponent();
 		if(cID == COLLISION)
 			return new CollisionComponent();
-		if(cID == RENDER)
-			return new RenderComponent(null, 0, 0);
+		if(cID == RENDER){
+			try{
+				return new RenderComponent("gfx/no_texture.png", 0, 0);
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 
