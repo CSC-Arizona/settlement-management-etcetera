@@ -22,9 +22,14 @@ public enum EntityManager {
 		used = 0;
 		recycleBin = new Vector<Integer>();
 		entityBitSets = new Vector<Long>(MAX_ENTITIES);
-		compVecs = new Vector<Vector<Component>>(MAX_ENTITIES);
+		for(int i = 0; i < MAX_ENTITIES; ++i){
+			entityBitSets.add(new Long(0));
+		}
+		entityBitSets.setSize(MAX_ENTITIES);
+		compVecs = new Vector<Vector<Component>>();
 		for(int i = 0; i < Component.TOTAL_COMPS; ++i){
 			compVecs.add(new Vector<Component>());
+			compVecs.get(i).setSize(MAX_ENTITIES);
 		}
 	}
 
@@ -43,8 +48,14 @@ public enum EntityManager {
 		if(componentBitSet >= (1 << Component.TOTAL_COMPS))
 			return null;
 
-		int id = recycleBin.get(recycleBin.size() - 1) == null ?
-			(++used - 1) : recycleBin.get(recycleBin.size() - 1);
+		int id;
+		if(recycleBin.size() != 0){
+			id = recycleBin.get(recycleBin.size() - 1);
+			recycleBin.remove(recycleBin.size() - 1);
+		}else{
+			id = used++;
+		}
+		
 		for(int i = 0; (1 << i) < (1 << Component.TOTAL_COMPS); ++i){
 			long curComp = componentBitSet & (1 << i);
 			if(curComp == 1)
