@@ -11,18 +11,18 @@
 package entities;
 
 public class Entity {
-	/*
-	 * Default access modifier, can only be constructed by the classes in entities
-	 * package.
-	 */
-	Entity(int ID){
-		this.ID = ID;
-	}
+  /*
+   * Default access modifier, can only be constructed by the classes in entities
+   * package.
+   */
+  Entity(int ID){
+    this.ID = ID;
+  }
 
-	public int getID(){
-		return ID;
-	}
+  public int getID(){
+    return ID;
+  }
 
-	private final int ID;
+  private final int ID;
 }
 
