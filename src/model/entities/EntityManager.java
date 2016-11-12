@@ -13,6 +13,8 @@
 
 package entities;
 
+import java.util.Vector;
+
 public enum EntityManager {
 	INSTANCE;
 
@@ -29,23 +31,24 @@ public enum EntityManager {
 	/*
 	 * This is how we get a brand new entity.
 	 */
-	public Entity getNewEntity(){
-		return getNewEntity(0);
+	public Entity genNewEntity(){
+		return genNewEntity(0);
 	}
 
 	/*
 	 * Same as above, but adds requested components with their default data values
 	 */
-	public Entity getNewEntity(long componentBitSet){
+	public Entity genNewEntity(long componentBitSet){
 		// Check the bit set to make sure it's valid
 		if(componentBitSet >= (1 << Component.TOTAL_COMPS))
 			return null;
 
-		int id = recycleBin.peek() == null ? (++used - 1) : recycleBin.pop();
+		int id = recycleBin.get(recycleBin.size() - 1) == null ?
+			(++used - 1) : recycleBin.get(recycleBin.size() - 1);
 		for(int i = 0; (1 << i) < (1 << Component.TOTAL_COMPS); ++i){
 			long curComp = componentBitSet & (1 << i);
 			if(curComp == 1)
-				compVecs.get(i).setElementAt(getComponentFromCID(curComp), id);
+				compVecs.get(i).setElementAt(Component.getComponentFromCID(curComp), id);
 		}
 
 		entityBitSets.setElementAt(componentBitSet, id);
@@ -59,8 +62,8 @@ public enum EntityManager {
 		if(e.getID() == used - 1)
 			--used;
 		else
-			recycleBin.push(e.getID());
-		entityBitSets.setElementAt(null, e.getID);
+			recycleBin.add(e.getID());
+		entityBitSets.setElementAt(null, e.getID());
 		for(Vector<Component> cv : compVecs)
 			cv.setElementAt(null, e.getID());
 	}
@@ -70,7 +73,7 @@ public enum EntityManager {
 	 */
 	public Vector<Component> getCompVec(long componentID){
 		for(int i = 0; (1 << i) < (1 << Component.TOTAL_COMPS); ++i){
-			if(componentID & (1 << i) == 1)
+			if((componentID & (1 << i)) == 1)
 				return compVecs.get(i);
 		}
 		return null;
@@ -82,7 +85,7 @@ public enum EntityManager {
 	public void addComponent(Component comp, Entity e){
 		int compVecPtr = getCompVecIndex(comp.ID);
 		compVecs.get(compVecPtr).setElementAt(comp, e.getID());
-		entityBitSets.insertElmentAt(
+		entityBitSets.setElementAt(
 				entityBitSets.get(e.getID()) | comp.ID, e.getID());
 	}
 
@@ -99,47 +102,24 @@ public enum EntityManager {
 	public Vector<Entity> getMatchingEntities(long componentBitSet){
 		Vector<Entity> ret = new Vector<Entity>();
 		for(int id = 0; id < entityBitSets.size(); ++id){
-			if(entityBitSets.get(id) == componentBitSet)
+			//if(entityBitSets.get(id) & componentBitSet == componentBitSet)
+			if(hasComponents(componentBitSet, new Entity(id)))
 				ret.add(new Entity(id));
 		}
 		return ret;
 	}
 
 	/*
-	 * Tells us whether or not an entity has a specified component.
+	 * Tells us whether or not an entity has specified components.
 	 */
-	public boolean hasComponent(long componentID, Entity e){
-		return (entityBitSets.get(e.getID()) & componentID) > 0;
+	public boolean hasComponents(long componentBitSet, Entity e){
+		return (entityBitSets.get(e.getID()) & componentBitSet) == componentBitSet;
 	}
 
 	private int getCompVecIndex(long componentID){
 		int  ret = 0;
-		for(long i = comp.ID; i != 1; i >>>= 1, ++ret);
+		for(long i = componentID; i != 1; i >>>= 1, ++ret);
 		return ret;
-	}
-
-	/*
-	 * This is a helper method for getNewEntity(componentBitSet). It might get
-	 * removed in the future if getNewEntity(componentBitSet) is deemed
-	 * unnecessary.
-	 */
-	private Component getComponentFromCID(long cID){
-		switch(cID){
-			case POSITION:
-				return new PositionComponent();
-			case VELOCITY:
-				return new VelocityComponent();
-			case SOLID:
-				return new SolidComponent();
-			case AI:
-				return new AIComponent();
-			case RENDER:
-				return new RenderComponent();
-			case LIVING:
-				return new LivingComponent();
-			default:
-				return null;
-		}
 	}
 
 	// Holds freed up ID's
