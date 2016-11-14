@@ -39,7 +39,6 @@ public abstract class System {
    */
   public abstract void tick();
 
-
   public void updateEntityVector(){
     entitiesToProcess = eManager.getMatchingEntities(cbs);
   }
@@ -53,4 +52,3 @@ public abstract class System {
   protected EntityManager eManager;
   private long cbs;
 }
-

@@ -1,18 +1,18 @@
 /**
- *  Holds data needed for change-of-position calculations.
- *  @author Artyom Perov
+ *	Specifies the velocity of the entity.
+ *	@author Artyom Perov
  */
 
 package entities;
 
 public class MobilityComponent extends Component {
-  public MobilityComponent(){
+  public MobilityComponent() {
     super(MOBILITY);
     velocity = new Vec2f(0.0f, 0.0f);
-    invMass = 0.25f;
+    invMass = 0.05f;
   }
 
-  public MobilityComponent(Vec2f velocity, float mass){
+  public MobilityComponent(Vec2f velocity, float mass) {
     super(Component.MOBILITY);
     this.velocity = velocity;
     this.invMass = 1 / mass;
@@ -22,4 +22,3 @@ public class MobilityComponent extends Component {
   Vec2f velocity;
   float invMass;
 }
-

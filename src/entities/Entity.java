@@ -25,4 +25,3 @@ public class Entity {
 
   private final int ID;
 }
-
