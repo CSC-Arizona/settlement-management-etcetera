@@ -27,30 +27,28 @@ package entities;
 import java.util.Vector;
 
 public abstract class System {
-	public System(long requiredComponentBitSet){
-		cbs = requiredComponentBitSet;
-		eManager = EntityManager.INSTANCE;
-		updateEntityVector();
-	}
+  public System(long requiredComponentBitSet) {
+    cbs = requiredComponentBitSet;
+    eManager = EntityManager.INSTANCE;
+    updateEntityVector();
+  }
 
-	/*
-	 * Called every game tick. All the processing goes on in here (of course
-	 * helper methods are encouraged). Don't forget to call updateEntityVector()!
-	 */
-	public abstract void tick();
+  /*
+   * Called every game tick. All the processing goes on in here (of course
+   * helper methods are encouraged). Don't forget to call updateEntityVector()!
+   */
+  public abstract void tick();
 
+  public void updateEntityVector() {
+    entitiesToProcess = eManager.getMatchingEntities(cbs);
+  }
 
-	public void updateEntityVector(){
-		entitiesToProcess = eManager.getMatchingEntities(cbs);
-	}
+  /*
+   * These are the entities your system needs to process. They are determined
+   * based on the requiredComponentBitSet.
+   */
+  protected Vector<Entity> entitiesToProcess;
 
-	/*
-	 * These are the entities your system needs to process. They are determined
-	 * based on the requiredComponentBitSet.
-	 */
-	protected Vector<Entity> entitiesToProcess;
-
-	protected EntityManager eManager;
-	private long cbs;
+  protected EntityManager eManager;
+  private long cbs;
 }
-
