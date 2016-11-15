@@ -38,9 +38,13 @@ public class PhysicsSystem extends System {
       float xmod = 0;
       float ymod = 0;
       final float mod = 0.5f;
-      if (mobComp.velocity.x != 0)
+      if (mobComp.velocity.x > 0)
+        xmod = -mod;
+      else
         xmod = mod;
-      if (mobComp.velocity.y != 0)
+      if (mobComp.velocity.y > 0)
+        ymod = -mod;
+      else
         ymod = mod;
       // mobComp.velocity = mobComp.velocity.mul(0.2f);
       Vec2f oldVel = mobComp.velocity;
