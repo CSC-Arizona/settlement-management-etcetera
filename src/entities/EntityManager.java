@@ -37,17 +37,6 @@ public enum EntityManager {
    * This is how we get a brand new entity.
    */
   public Entity genNewEntity() {
-    return genNewEntity(0);
-  }
-
-  /*
-   * Same as above, but adds requested components with their default data values
-   */
-  public Entity genNewEntity(long componentBitSet) {
-    // Check the bit set to make sure it's valid
-    if (componentBitSet >= (1 << Component.TOTAL_COMPS))
-      return null;
-
     int id;
     if (recycleBin.size() != 0) {
       id = recycleBin.get(recycleBin.size() - 1);
@@ -55,14 +44,6 @@ public enum EntityManager {
     } else {
       id = used++;
     }
-
-    for (int i = 0; (1 << i) < (1 << Component.TOTAL_COMPS); ++i) {
-      long curComp = componentBitSet & (1 << i);
-      if (curComp == 1)
-        compVecs.get(i).setElementAt(Component.getComponentFromCID(curComp), id);
-    }
-
-    entityBitSets.setElementAt(componentBitSet, id);
     return new Entity(id);
   }
 
@@ -70,13 +51,15 @@ public enum EntityManager {
    * Removes the entity from the system.
    */
   public void rmEntity(Entity e) {
-    if (e.getID() == used - 1)
-      --used;
-    else
-      recycleBin.add(e.getID());
-    entityBitSets.setElementAt(null, e.getID());
-    for (Vector<Component> cv : compVecs)
-      cv.setElementAt(null, e.getID());
+    if(e != null){
+      if (e.getID() == used - 1)
+        --used;
+      else
+        recycleBin.add(e.getID());
+      entityBitSets.setElementAt(null, e.getID());
+      for (Vector<Component> cv : compVecs)
+        cv.setElementAt(null, e.getID());
+    }
   }
 
   /*
@@ -84,7 +67,7 @@ public enum EntityManager {
    */
   public Vector<Component> getCompVec(long componentID) {
     for (int i = 0; (1 << i) < (1 << Component.TOTAL_COMPS); ++i) {
-      if ((componentID & (1 << i)) == 1)
+      if ((componentID & (1 << i)) == componentID)
         return compVecs.get(i);
     }
     return null;
@@ -94,9 +77,12 @@ public enum EntityManager {
    * Adds a component to an entity.
    */
   public void addComponent(Component comp, Entity e) {
-    int compVecPtr = getCompVecIndex(comp.ID);
-    compVecs.get(compVecPtr).setElementAt(comp, e.getID());
-    entityBitSets.setElementAt(entityBitSets.get(e.getID()) | comp.ID, e.getID());
+    if(e != null){
+      int compVecPtr = getCompVecIndex(comp.ID);
+      compVecs.get(compVecPtr).setElementAt(comp, e.getID());
+      long oldBS = entityBitSets.get(e.getID()) == null ? 0 : entityBitSets.get(e.getID());
+      entityBitSets.setElementAt(oldBS | comp.ID, e.getID());
+    }
   }
 
   /*
@@ -111,7 +97,7 @@ public enum EntityManager {
    */
   public Vector<Entity> getMatchingEntities(long componentBitSet) {
     Vector<Entity> ret = new Vector<Entity>();
-    for (int id = 0; id < entityBitSets.size(); ++id) {
+    for (int id = 0; id < used; ++id) {
       // if(entityBitSets.get(id) & componentBitSet == componentBitSet)
       if (hasComponents(componentBitSet, new Entity(id)))
         ret.add(new Entity(id));
@@ -123,13 +109,19 @@ public enum EntityManager {
    * Tells us whether or not an entity has specified components.
    */
   public boolean hasComponents(long componentBitSet, Entity e) {
-    return (entityBitSets.get(e.getID()) & componentBitSet) == componentBitSet;
+    if(e == null || entityBitSets.get(e.getID()) == null)
+      return false;
+    else
+      return (entityBitSets.get(e.getID()) & componentBitSet) == componentBitSet;
+  }
+  
+  public int getUsed(){
+    return used;
   }
 
   private int getCompVecIndex(long componentID) {
     int ret = 0;
-    for (long i = componentID; i != 1; i >>>= 1, ++ret)
-      ;
+    for (long i = componentID; i != 1; i >>>= 1, ++ret);
     return ret;
   }
 

@@ -12,14 +12,6 @@ public class Vec2f {
   }
 
   /*
-   * Copy constructor.
-   */
-  public Vec2f(Vec2f that) {
-    this.x = that.x;
-    this.y = that.y;
-  }
-
-  /*
    * Add two vectors.
    */
   public Vec2f add(Vec2f that) {
@@ -60,13 +52,6 @@ public class Vec2f {
    */
   public float getMag() {
     return (float) Math.sqrt(getMagSquared());
-  }
-
-  /*
-   * Tells us whether the two vectors are equal
-   */
-  public boolean equals(Vec2f that) {
-    return this.x == that.x && this.y == that.y;
   }
 
   // Default access modifier: seen within package

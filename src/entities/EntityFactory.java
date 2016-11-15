@@ -41,9 +41,7 @@ public class EntityFactory {
   }
 
   // We don't want it to be instantiated.
-  private EntityFactory() {
-  }
+  private EntityFactory(){}
 
-  private EntityFactory(EntityFactory that) {
-  }
+  private EntityFactory(EntityFactory that){}
 }
