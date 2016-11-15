@@ -3,12 +3,14 @@
  */
 package entities;
 
-public class AIComponent extends Component {
+public abstract class AIComponent extends Component {
 
   public AIComponent() {
     super(AI);
     destination = new Vec2f(10.0f, 10.0f);
   }
+  
+  String AIType;
 
   Vec2f destination;
 }

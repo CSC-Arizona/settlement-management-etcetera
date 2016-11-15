@@ -7,7 +7,7 @@ public class EntityFactory {
     eMan.addComponent(new PositionComponent(x, y, 0.0f), hunter);
     eMan.addComponent(new RenderComponent("gfx/TheHunter.png", 32, 32), hunter);
     eMan.addComponent(new MobilityComponent(new Vec2f(0.0f, 0.0f), 80.0f), hunter);
-    eMan.addComponent(new AIComponent(), hunter);
+    eMan.addComponent(new PlayerAIComponent(), hunter);
     eMan.addComponent(new CollisionComponent(), hunter);
     return hunter;
   }
@@ -18,7 +18,7 @@ public class EntityFactory {
     eMan.addComponent(new PositionComponent(x, y, 0.0f), ghost);
     eMan.addComponent(new RenderComponent("gfx/ghost.png", 32, 32), ghost);
     eMan.addComponent(new MobilityComponent(new Vec2f(0.0f, 0.0f), 80.0f), ghost);
-    eMan.addComponent(new AIComponent(), ghost);
+    eMan.addComponent(new EnemyAIComponent(), ghost);
     return ghost;
   }
 
