@@ -24,7 +24,7 @@ public class PhysicsSystem extends System {
 
   public void tick() {
     updateEntityVector();
-    processCollisions();
+    //processCollisions();
     processMovements();
   }
 
@@ -57,7 +57,7 @@ public class PhysicsSystem extends System {
     }
   }
 
-  private void processCollisions() {
+/*  private void processCollisions() {
     Vector<Entity> collidables = eManager.getMatchingEntities(Component.POSITION | Component.COLLISION);
     Vector<Collision> collisions = new Vector<Collision>();
     for (Entity e : entitiesToProcess) {
@@ -187,6 +187,6 @@ public class PhysicsSystem extends System {
     float penetration;
     Vec2f normal;
   }
-
+*/
   static final int TICKS_PER_SECOND = 30;
 }
