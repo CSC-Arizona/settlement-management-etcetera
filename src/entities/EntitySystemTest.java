@@ -17,25 +17,25 @@ public class EntitySystemTest {
   @Test
   public void test() {
     EntityManager eMan = EntityManager.INSTANCE;
-    EntityFactory.makeNewHunter(5.0f, 5.0f);
-    EntityFactory.makeNewHunter(15.0f, 5.0f);
-    EntityFactory.makeNewHunter(25.0f, 15.0f);
-    Entity randomHunter = EntityFactory.makeNewHunter(5.0f, 15.0f);
+    EntityFactory.makeNewGodzilla(5.0f, 5.0f);
+    EntityFactory.makeNewGodzilla(15.0f, 5.0f);
+    EntityFactory.makeNewGodzilla(25.0f, 15.0f);
+    Entity randomHunter = EntityFactory.makeNewGodzilla(5.0f, 15.0f);
 
-    EntityFactory.makeNewGhost(7.0f, 8.0f);
-    EntityFactory.makeNewGhost(9.0f, 2.0f);
-    EntityFactory.makeNewGhost(1.0f, 1.0f);
+    EntityFactory.makeNewAlien(7.0f, 8.0f);
+    EntityFactory.makeNewAlien(9.0f, 2.0f);
+    EntityFactory.makeNewAlien(1.0f, 1.0f);
 
-    EntityFactory.makeNewRock(8.0f, 9.0f);
-    EntityFactory.makeNewRock(18.0f, 6.0f);
-    EntityFactory.makeNewRock(3.0f, 4.0f);
-    EntityFactory.makeNewRock(15.0f, 7.0f);
-    Entity randomRock = EntityFactory.makeNewRock(8.0f, 14.0f);
-    EntityFactory.makeNewRock(9.0f, 13.0f);
+    EntityFactory.makeNewAmmo(8.0f, 9.0f);
+    EntityFactory.makeNewAmmo(18.0f, 6.0f);
+    EntityFactory.makeNewAmmo(3.0f, 4.0f);
+    EntityFactory.makeNewAmmo(15.0f, 7.0f);
+    Entity randomRock = EntityFactory.makeNewAmmo(8.0f, 14.0f);
+    EntityFactory.makeNewAmmo(9.0f, 13.0f);
 
-    EntityFactory.makeNewFlower(3.0f, 3.0f);
-    EntityFactory.makeNewFlower(8.0f, 13.0f);
-    EntityFactory.makeNewFlower(4.0f, 5.0f);
+    EntityFactory.makeNewBandage(3.0f, 3.0f);
+    EntityFactory.makeNewBandage(8.0f, 13.0f);
+    EntityFactory.makeNewBandage(4.0f, 5.0f);
     
     Entity rock = eMan.genNewEntity();
     eMan.addComponent(new PositionComponent(), rock);
@@ -49,7 +49,7 @@ public class EntitySystemTest {
     
     int oldSize = eMan.getUsed();
     eMan.rmEntity(rock);
-    EntityFactory.makeNewFlower(0.0f, 0.0f);
+    EntityFactory.makeNewBandage(0.0f, 0.0f);
     int newSize = eMan.getUsed();
     
     assertEquals(oldSize, newSize);
@@ -58,7 +58,7 @@ public class EntitySystemTest {
     eMan.rmEntity(randomHunter);
     newSize = eMan.getUsed();
     assertEquals(oldSize, newSize);
-    EntityFactory.makeNewFlower(0.0f, 0.0f);
+    EntityFactory.makeNewBandage(0.0f, 0.0f);
     newSize = eMan.getUsed();
     assertEquals(oldSize, newSize);
     
