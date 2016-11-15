@@ -12,16 +12,34 @@ public class World implements Serializable {
 	/*-- For testing purposes --*/
 	public static void main(String [] args) {
 		World world = World.getWorld();
-		world.printWorld();
+		System.out.println(world);
 	}
 	
-	private void printWorld() {
+	
+	public String toString() {
+		String world = "";
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
-				System.out.print("[ " + board[i][j] + " ] ");
+				/*switch(board[i][j]) {
+				case 0:
+					world += "[10%] ";
+					break;
+				case 1:
+					world += "[   ] ";
+					break;
+				case 2:
+					world += "[20%] ";
+					break;
+				default:
+					world += "[50%] ";
+					break;
+					
+				}*/
+				world += "[ " + board[i][j] + " ] ";
 			}
-			System.out.println();
+			world += "\n";
 		}
+		return world;
 	}
 	/* ------------------------ */
 	
@@ -50,16 +68,20 @@ public class World implements Serializable {
 	 * Fills the world with randomly generated Tiles.
 	 * Currently:
 	 * 10% chance for 0
-	 * 90% chance for 1
+	 * 20% chance for 1
+	 * 20% chance for 2
+	 * 50% chance for 3
 	 */
 	private void generateTerrain() {
 		Random rng = new Random();
-		int random = 0;
+		int r = 0;
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
-				random = rng.nextInt(TILE_COUNT*TILE_MULTIPLIER);
-				if (random == 0) board[i][j] = 0;
-				else board[i][j] = 1;
+				r = rng.nextInt(TILE_COUNT*TILE_MULTIPLIER);
+				if (r == 0) board[i][j] = 0;
+				else if (r == 1 || r == 2) board[i][j] = 1;
+				else if (r == 3 || r == 4) board[i][j] = 2;
+				else board[i][j] = 3;
 			}
 		}
 	}
