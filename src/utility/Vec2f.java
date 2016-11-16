@@ -3,7 +3,7 @@
  * @author Artyom Perov.
  */
 
-package entities;
+package utility;
 
 public class Vec2f {
   public Vec2f(float x, float y) {
@@ -54,7 +54,6 @@ public class Vec2f {
     return (float) Math.sqrt(getMagSquared());
   }
 
-  // Default access modifier: seen within package
-  float x;
-  float y;
+  public final float x;
+  public final float y;
 }

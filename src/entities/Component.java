@@ -6,10 +6,10 @@
  * their ID.
  *
  * To add a component:
- * 		1) Extend your component named NameComponent from Component
- * 		2) Add a constant representing it to list below (they should be in order)
- * 		3) Increment the TOTAL_COMPS long
- * 		Optional: create a system using it.
+ *     1) Extend your component named NameComponent from Component
+ *     2) Add a constant representing it to list below (they should be in order)
+ *     3) Increment the TOTAL_COMPS long
+ *     Optional: create a system using it.
  */
 
 package entities;

@@ -45,7 +45,7 @@ public class EntitySystemTest {
       e.printStackTrace();
     }
     eMan.addComponent(new MobilityComponent(), rock);
-    eMan.addComponent(new CollisionComponent(0.5f, 0.5f, 3.1f), rock);
+    eMan.addComponent(new CollisionComponent(0.5f, 0.5f, 3.1f, 2.3f), rock);
     
     int oldSize = eMan.getUsed();
     eMan.rmEntity(rock);

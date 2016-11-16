@@ -15,7 +15,7 @@ import entities.PhysicsSystem;
 import entities.PositionComponent;
 import entities.RenderComponent;
 import entities.RenderSystem;
-import entities.Vec2f;
+import utility.Vec2f;
 import entities.AIComponent;
 import entities.AISystem;
 import entities.CollisionComponent;

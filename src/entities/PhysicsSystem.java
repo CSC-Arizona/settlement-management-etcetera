@@ -13,6 +13,8 @@ package entities;
 import java.util.Collections;
 import java.util.Vector;
 
+import utility.Vec2f;
+
 public class PhysicsSystem extends System {
   /*
    * This will be called with the world instance as an argument when that is
@@ -24,7 +26,7 @@ public class PhysicsSystem extends System {
 
   public void tick() {
     updateEntityVector();
-    //processCollisions();
+    processCollisions();
     processMovements();
   }
 
@@ -57,7 +59,7 @@ public class PhysicsSystem extends System {
     }
   }
 
-/*  private void processCollisions() {
+    private void processCollisions() {
     Vector<Entity> collidables = eManager.getMatchingEntities(Component.POSITION | Component.COLLISION);
     Vector<Collision> collisions = new Vector<Collision>();
     for (Entity e : entitiesToProcess) {
@@ -88,18 +90,22 @@ public class PhysicsSystem extends System {
     for (Collision c : collisions) {
       // If f doesn't have MOBILITY treat it as if all of its MOBILITY
       // components were 0.
+      MobilityComponent fMobComp = (MobilityComponent) eManager.getComponent(Component.MOBILITY, c.b);
+      CollisionComponent fColComp = (CollisionComponent) eManager.getComponent(Component.COLLISION, c.b);
       Vec2f fVelocity = new Vec2f(0.0f, 0.0f);
       float fInvMass = 1 / 100; // 1kg
-      float fRest = ((CollisionComponent) eManager.getComponent(Component.COLLISION, c.b)).restitution;
-      MobilityComponent fMobComp = (MobilityComponent) eManager.getComponent(Component.MOBILITY, c.b);
+      float fRest = fColComp.restitution;
+
       if (fMobComp != null) {
         fVelocity = fMobComp.velocity;
-        fInvMass = fMobComp.invMass;
+        fInvMass = fColComp.invMass;
       }
 
       MobilityComponent eMobComp = (MobilityComponent) eManager.getComponent(Component.MOBILITY, c.a);
+      CollisionComponent eColComp = (CollisionComponent) eManager.getComponent(Component.COLLISION, c.a);
+
       Vec2f eVelocity = eMobComp.velocity;
-      float eInvMass = eMobComp.invMass;
+      float eInvMass = eColComp.invMass;
       float eRest = ((CollisionComponent) eManager.getComponent(Component.COLLISION, c.a)).restitution;
 
       Vec2f relVel = fVelocity.sub(eVelocity);
@@ -187,6 +193,6 @@ public class PhysicsSystem extends System {
     float penetration;
     Vec2f normal;
   }
-*/
+
   static final int TICKS_PER_SECOND = 30;
 }

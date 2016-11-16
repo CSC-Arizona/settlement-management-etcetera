@@ -1,6 +1,6 @@
 /**
- *	Specifies the position of the entity.
- *	@author Artyom Perov
+ *  Specifies the position of the entity.
+ *  @author Artyom Perov
  */
 
 package entities;
