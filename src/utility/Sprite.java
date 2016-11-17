@@ -4,7 +4,8 @@ public enum Sprite {
   ALIEN(15, 7),
   AMMO(1, 1),
   GODZILLA(19, 4),
-  BANDAGE(13, 0);
+  BANDAGE(13, 0),
+  BLOOD_POOL(47, 0);
 
   private Sprite(int row, int col){
     x = col * WIDTH;

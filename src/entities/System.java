@@ -50,5 +50,6 @@ public abstract class System {
   protected Vector<Entity> entitiesToProcess;
 
   protected EntityManager eManager;
+  protected static final int TICKS_PER_SECOND = 30;
   private long cbs;
 }

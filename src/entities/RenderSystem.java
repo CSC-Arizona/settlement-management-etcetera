@@ -22,8 +22,9 @@ public class RenderSystem extends System {
 
       // ppm = pixels per meter
       final int ppm = rc.width;
-      g.drawImage(rc.texture, (int) (pc.x * ppm) - (rc.width / 2), (int) (pc.y * ppm) - (rc.width / 2), rc.width,
-          rc.height, null);
+      g.drawImage(rc.texture, (int)(pc.x * ppm) - (rc.width / 2),
+                  (int)(pc.y * ppm) - (rc.width / 2),
+                  rc.width, rc.height, null);
     }
   }
 
