@@ -35,25 +35,6 @@ public class RenderComponent extends Component {
     texture = tileset.getSprite(s);
     this.width = s.getWidth();
     this.height = s.getHeight();
-    /*
-    BufferedImage tileset = Tileset.instance().tileset();
-    switch(pic){
-    case "alien":
-      this.texture = tileset.getSubimage(7*32, 15*32, 32, 32);
-      break;
-    case "ammo":
-      this.texture = tileset.getSubimage(32, 32, 32, 32);
-      break;
-    case "godzilla":
-      this.texture = tileset.getSubimage(4*32, 19*32, 32, 32);
-      break;
-    case "bandage":
-      this.texture = tileset.getSubimage(0, 13*32, 32, 32);
-      break;
-    }
-    this.width = 32;
-    this.height = 32;
-    */
   }
 
   BufferedImage texture;

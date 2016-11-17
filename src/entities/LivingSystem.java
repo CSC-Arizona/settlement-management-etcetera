@@ -13,18 +13,18 @@ public class LivingSystem extends System {
         (LivingComponent)eManager.getComponent(Component.LIVING, e);
 
       handleHydration(lc);
-      if(lc.hp <= 0.0f)
+      if(lc.HP <= 0.0f)
         purgeTheDead(e);
     }
   }
 
   private void handleHydration(LivingComponent lc){
     if(lc.hydration < 30.0f)
-      lc.hp -= 1.0f / TICKS_PER_SECOND;
+      lc.HP -= 5.0f / TICKS_PER_SECOND;
     else if(lc.hydration < 15.0f)
-      lc.hp -= 5.0f / TICKS_PER_SECOND;
+      lc.HP -= 15.0f / TICKS_PER_SECOND;
     else if(lc.hydration < 10.0f)
-      lc.hp -= 10.0f / TICKS_PER_SECOND;
+      lc.HP -= 30.0f / TICKS_PER_SECOND;
     lc.hydration -= 1.0f / TICKS_PER_SECOND;
   }
 
