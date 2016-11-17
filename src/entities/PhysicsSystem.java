@@ -31,28 +31,30 @@ public class PhysicsSystem extends System {
   }
 
   private void processMovements() {
-    for (Entity e : entitiesToProcess) {
-      PositionComponent posComp = (PositionComponent) eManager.getComponent(Component.POSITION, e);
-      MobilityComponent mobComp = (MobilityComponent) eManager.getComponent(Component.MOBILITY, e);
+    for(Entity e : entitiesToProcess) {
+      PositionComponent posComp =
+        (PositionComponent) eManager.getComponent(Component.POSITION, e);
+      MobilityComponent mobComp =
+        (MobilityComponent) eManager.getComponent(Component.MOBILITY, e);
       posComp.x += mobComp.velocity.x / TICKS_PER_SECOND;
       posComp.y += mobComp.velocity.y / TICKS_PER_SECOND;
 
       float xmod = 0;
       float ymod = 0;
       final float mod = 0.5f;
-      if (mobComp.velocity.x > 0)
+      if(mobComp.velocity.x > 0)
         xmod = -mod;
       else
         xmod = mod;
-      if (mobComp.velocity.y > 0)
+      if(mobComp.velocity.y > 0)
         ymod = -mod;
       else
         ymod = mod;
       // mobComp.velocity = mobComp.velocity.mul(0.2f);
       Vec2f oldVel = mobComp.velocity;
       Vec2f newVel = mobComp.velocity.sub(new Vec2f(xmod, ymod));
-      if (oldVel.x >= 0 && newVel.x <= 0 || oldVel.x <= 0 && newVel.x >= 0 || oldVel.y >= 0 && newVel.y <= 0
-          || oldVel.y <= 0 && newVel.y >= 0)
+      if(oldVel.x >= 0 && newVel.x <= 0 || oldVel.x <= 0 && newVel.x >= 0 ||
+         oldVel.y >= 0 && newVel.y <= 0 || oldVel.y <= 0 && newVel.y >= 0)
         mobComp.velocity = new Vec2f(0.0f, 0.0f);
       else
         mobComp.velocity = newVel;
@@ -60,17 +62,18 @@ public class PhysicsSystem extends System {
   }
 
     private void processCollisions() {
-    Vector<Entity> collidables = eManager.getMatchingEntities(Component.POSITION | Component.COLLISION);
+    Vector<Entity> collidables =
+      eManager.getMatchingEntities(Component.POSITION | Component.COLLISION);
     Vector<Collision> collisions = new Vector<Collision>();
-    for (Entity e : entitiesToProcess) {
-      if (eManager.hasComponents(Component.COLLISION, e)) {
+    for(Entity e : entitiesToProcess) {
+      if(eManager.hasComponents(Component.COLLISION, e)) {
         // In here: all e have: COLLISION, POSITION, MOBILITY
         // all f have: COLLISION, POSITION
-        for (Entity f : collidables) {
-          if (f.getID() != e.getID()) {
+        for(Entity f : collidables) {
+          if(f.getID() != e.getID()) {
 
             Collision efCollision = new Collision(e, f);
-            if (efCollision.occured)
+            if(efCollision.occured)
               collisions.add(efCollision);
           }
         }
@@ -81,37 +84,41 @@ public class PhysicsSystem extends System {
     Collections.sort(collisions);
     Vector<Collision> potColls = collisions;
     collisions = new Vector<Collision>();
-    for (int i = 0; i < potColls.size(); ++i) {
+    for(int i = 0; i < potColls.size(); ++i) {
       collisions.add(potColls.get(i));
-      for (int k = i + 1; k < potColls.size() && potColls.get(k).equals(potColls.get(i)); ++i, ++k)
-        ;
+      for(int k = i + 1; k < potColls.size() && potColls.get(k).equals(potColls.get(i)); ++i, ++k);
     }
 
-    for (Collision c : collisions) {
+    for(Collision c : collisions) {
       // If f doesn't have MOBILITY treat it as if all of its MOBILITY
       // components were 0.
-      MobilityComponent fMobComp = (MobilityComponent) eManager.getComponent(Component.MOBILITY, c.b);
-      CollisionComponent fColComp = (CollisionComponent) eManager.getComponent(Component.COLLISION, c.b);
+      MobilityComponent fMobComp =
+        (MobilityComponent)eManager.getComponent(Component.MOBILITY, c.b);
+      CollisionComponent fColComp =
+        (CollisionComponent)eManager.getComponent(Component.COLLISION, c.b);
       Vec2f fVelocity = new Vec2f(0.0f, 0.0f);
-      float fInvMass = 1 / 100; // 1kg
+      float fInvMass = 1; // 1kg
       float fRest = fColComp.restitution;
 
-      if (fMobComp != null) {
+      if(fMobComp != null) {
         fVelocity = fMobComp.velocity;
         fInvMass = fColComp.invMass;
       }
 
-      MobilityComponent eMobComp = (MobilityComponent) eManager.getComponent(Component.MOBILITY, c.a);
-      CollisionComponent eColComp = (CollisionComponent) eManager.getComponent(Component.COLLISION, c.a);
+      MobilityComponent eMobComp =
+        (MobilityComponent)eManager.getComponent(Component.MOBILITY, c.a);
+      CollisionComponent eColComp =
+        (CollisionComponent)eManager.getComponent(Component.COLLISION, c.a);
 
       Vec2f eVelocity = eMobComp.velocity;
       float eInvMass = eColComp.invMass;
-      float eRest = ((CollisionComponent) eManager.getComponent(Component.COLLISION, c.a)).restitution;
+      float eRest = ((CollisionComponent)eManager.getComponent(
+            Component.COLLISION, c.a)).restitution;
 
       Vec2f relVel = fVelocity.sub(eVelocity);
       float velAlongNormal = relVel.dot(c.normal);
       // Do not resolve if the entities are separating.
-      if (velAlongNormal < 0) {
+      if(velAlongNormal < 0) {
         // Min restitution
         float ep = eRest < fRest ? eRest : fRest;
         float j = -(1 + ep) * velAlongNormal;
@@ -120,7 +127,7 @@ public class PhysicsSystem extends System {
         // Apply impulse
         Vec2f impulse = c.normal.mul(j);
         eMobComp.velocity = eMobComp.velocity.sub(impulse.mul(eInvMass));
-        if (fMobComp != null) {
+        if(fMobComp != null) {
           fMobComp.velocity = fMobComp.velocity.add(impulse.mul(fInvMass));
         }
       }
@@ -133,10 +140,14 @@ public class PhysicsSystem extends System {
       this.a = a;
       this.b = b;
       occured = false;
-      PositionComponent aPos = (PositionComponent) eManager.getComponent(Component.POSITION, a);
-      PositionComponent bPos = (PositionComponent) eManager.getComponent(Component.POSITION, b);
-      CollisionComponent aCol = (CollisionComponent) eManager.getComponent(Component.COLLISION, a);
-      CollisionComponent bCol = (CollisionComponent) eManager.getComponent(Component.COLLISION, b);
+      PositionComponent aPos =
+        (PositionComponent)eManager.getComponent(Component.POSITION, a);
+      PositionComponent bPos =
+        (PositionComponent)eManager.getComponent(Component.POSITION, b);
+      CollisionComponent aCol =
+        (CollisionComponent)eManager.getComponent(Component.COLLISION, a);
+      CollisionComponent bCol =
+        (CollisionComponent)eManager.getComponent(Component.COLLISION, b);
 
       // Vector pointing from a to b
       Vec2f fromAtoB = new Vec2f(bPos.x - aPos.x, bPos.y - aPos.y);
@@ -148,23 +159,23 @@ public class PhysicsSystem extends System {
 
       // If there is an overlap on the x axis, the collision is possible, but
       // first we need to check if there is an overlap on y.
-      if (xOverlap > 0) {
+      if(xOverlap > 0) {
         float aHalfHeight = aCol.height / 2;
         float bHalfHeight = bCol.height / 2;
 
         float yOverlap = aHalfHeight + bHalfHeight - Math.abs(fromAtoB.y);
 
-        if (yOverlap > 0) {
+        if(yOverlap > 0) {
           // X is the axis of least penetration
-          if (xOverlap < yOverlap) {
+          if(xOverlap < yOverlap) {
             // Make sure the normal points in the right direction.
-            if (fromAtoB.x < 0)
+            if(fromAtoB.x < 0)
               normal = new Vec2f(-1.0f, 0.0f);
             else
               normal = new Vec2f(1.0f, 0.0f);
             penetration = xOverlap;
           } else {
-            if (fromAtoB.y < 0)
+            if(fromAtoB.y < 0)
               normal = new Vec2f(0.0f, -1.0f);
             else
               normal = new Vec2f(0.0f, 1.0f);
@@ -176,8 +187,8 @@ public class PhysicsSystem extends System {
     }
 
     public int compareTo(Collision that) {
-      if ((this.a.getID() == that.a.getID() && this.b.getID() == that.b.getID())
-          || (this.a.getID() == that.b.getID() && this.b.getID() == that.a.getID()))
+      if((this.a.getID() == that.a.getID() && this.b.getID() == that.b.getID()) ||
+         (this.a.getID() == that.b.getID() && this.b.getID() == that.a.getID()))
         return 0;
       else
         return 1;
@@ -193,6 +204,5 @@ public class PhysicsSystem extends System {
     float penetration;
     Vec2f normal;
   }
-
-  static final int TICKS_PER_SECOND = 30;
 }
+

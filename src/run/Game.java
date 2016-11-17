@@ -10,16 +10,18 @@ import javax.swing.JLabel;
 import entities.Entity;
 import entities.EntityFactory;
 import entities.EntityManager;
+import entities.Component;
 import entities.MobilityComponent;
-import entities.PhysicsSystem;
 import entities.PositionComponent;
 import entities.RenderComponent;
-import entities.RenderSystem;
-import utility.Vec2f;
-import entities.AIComponent;
-import entities.AISystem;
 import entities.CollisionComponent;
-import entities.Component;
+import entities.AIComponent;
+
+import entities.RenderSystem;
+import entities.PhysicsSystem;
+import entities.AISystem;
+import entities.LivingSystem;
+import utility.Vec2f;
 
 public class Game extends Thread {
 
@@ -49,7 +51,8 @@ public class Game extends Thread {
     Graphics g = renderDest.getGraphics();
     RenderSystem rs = new RenderSystem(g);
     PhysicsSystem ps = new PhysicsSystem();
-    AISystem ais = new AISystem();
+    AISystem as = new AISystem();
+    LivingSystem ls = new LivingSystem();
 
     // We want to have 30 ticks/s
     int goal = 30;
@@ -61,7 +64,8 @@ public class Game extends Thread {
       g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
       rs.tick();
       ps.tick();
-      ais.tick();
+      as.tick();
+      ls.tick();
       label.repaint();
 
       long endMil = System.currentTimeMillis();
