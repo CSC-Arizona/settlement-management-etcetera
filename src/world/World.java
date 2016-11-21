@@ -83,6 +83,13 @@ public class World implements Serializable {
 			world = new World();
 		return world;
 	}
+	
+	/*
+	 * Returns the size of the world.
+	 */
+	public int getSize() {
+		return WORLD_SIZE;
+	}
 
 	/*
 	 * Returns the selected tile.
