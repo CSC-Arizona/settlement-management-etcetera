@@ -7,7 +7,7 @@ package entities;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class RenderSystem extends System {
+public class RenderSystem extends Systems {
   public RenderSystem(Graphics g) {
     super(Component.POSITION | Component.RENDER);
     this.g = g;

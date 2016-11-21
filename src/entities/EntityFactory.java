@@ -29,6 +29,7 @@ public class EntityFactory {
     Entity bandage = eMan.genNewEntity();
     eMan.addComponent(new PositionComponent(x, y, 0.0f),  bandage);
     eMan.addComponent(new RenderComponent(Sprite.BANDAGE), bandage);
+    eMan.addComponent(new CollisionComponent(0.7f, 0.7f, 0.05f, 80.0f), bandage);
     return bandage;
   }
   
@@ -36,6 +37,7 @@ public class EntityFactory {
     Entity ammo = eMan.genNewEntity();
     eMan.addComponent(new PositionComponent(x, y, 0.0f), ammo);
     eMan.addComponent(new RenderComponent(Sprite.AMMO), ammo);
+    eMan.addComponent(new CollisionComponent(0.7f, 0.7f, 0.05f, 80.0f), ammo);
     return ammo;
   }
 

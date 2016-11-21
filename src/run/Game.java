@@ -33,14 +33,17 @@ public class Game extends Thread {
   public void run() {
     EntityFactory.makeNewGodzilla(5.0f, 5.0f);
     EntityFactory.makeNewGodzilla(15.0f, 5.0f);
-    EntityFactory.makeNewGodzilla(25.0f, 15.0f);
+    EntityFactory.makeNewGodzilla(15.0f, 15.0f);
     EntityFactory.makeNewGodzilla(5.0f, 15.0f);
 
     EntityFactory.makeNewAlien(7.0f, 8.0f);
     EntityFactory.makeNewAlien(9.0f, 2.0f);
     EntityFactory.makeNewAlien(1.0f, 1.0f);
 
-    EntityFactory.makeNewAmmo(8.0f, 9.0f);
+    EntityFactory.makeNewAmmo(3.0f, 9.0f);
+    for(int i = 4; i < 18; i++){
+    	EntityFactory.makeNewAmmo(i, 9.0f);
+    }
     EntityFactory.makeNewAmmo(18.0f, 6.0f);
     EntityFactory.makeNewAmmo(3.0f, 4.0f);
 

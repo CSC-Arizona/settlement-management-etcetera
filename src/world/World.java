@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class World implements Serializable {
 	
-	static final int WORLD_SIZE = 20;//1000;
+	public static final int WORLD_SIZE = 20;//1000;
 	static final int TILE_COUNT = 2;
 	static final int TILE_MULTIPLIER = 5;
 	

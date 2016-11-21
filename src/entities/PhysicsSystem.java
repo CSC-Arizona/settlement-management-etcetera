@@ -15,7 +15,7 @@ import java.util.Vector;
 
 import utility.Vec2f;
 
-public class PhysicsSystem extends System {
+public class PhysicsSystem extends Systems {
   /*
    * This will be called with the world instance as an argument when that is
    * done.

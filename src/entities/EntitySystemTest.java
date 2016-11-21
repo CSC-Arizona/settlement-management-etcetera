@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 
 import org.junit.Test;
 
+import utility.Vec2f;
+
 public class EntitySystemTest {
 
   @Test
@@ -19,14 +21,17 @@ public class EntitySystemTest {
     EntityManager eMan = EntityManager.INSTANCE;
     EntityFactory.makeNewGodzilla(5.0f, 5.0f);
     EntityFactory.makeNewGodzilla(15.0f, 5.0f);
-    EntityFactory.makeNewGodzilla(25.0f, 15.0f);
+    EntityFactory.makeNewGodzilla(15.0f, 15.0f);
     Entity randomHunter = EntityFactory.makeNewGodzilla(5.0f, 15.0f);
 
     EntityFactory.makeNewAlien(7.0f, 8.0f);
     EntityFactory.makeNewAlien(9.0f, 2.0f);
     EntityFactory.makeNewAlien(1.0f, 1.0f);
 
-    EntityFactory.makeNewAmmo(8.0f, 9.0f);
+    EntityFactory.makeNewAmmo(3.0f, 9.0f);
+    for(int i = 4; i < 18; i++){
+    	EntityFactory.makeNewAmmo(i, 9.0f);
+    }
     EntityFactory.makeNewAmmo(18.0f, 6.0f);
     EntityFactory.makeNewAmmo(3.0f, 4.0f);
     EntityFactory.makeNewAmmo(15.0f, 7.0f);
@@ -70,6 +75,18 @@ public class EntitySystemTest {
     RenderSystem rs = new RenderSystem(new BufferedImage(100,100,BufferedImage.TYPE_INT_ARGB).getGraphics());
     PhysicsSystem ps = new PhysicsSystem();
     AISystem ais = new AISystem();
+    /*
+    Node[][] graph = ais.getGraph();
+    for(int i = 0; i < graph.length; i++){
+	  for(int j = 0; j < graph[i].length; j++){
+	    if(!graph[i][j].isBlocked)
+		  System.out.print("(" + graph[i][j].x + ", " + graph[i][j].y + ") ");
+		else
+		  System.out.print("(" + graph[i][j] + ") ");
+	  }
+	  System.out.println();
+	}
+	*/
     for(int i = 0; i < 1000; ++i){
         rs.tick();
         ps.tick();
