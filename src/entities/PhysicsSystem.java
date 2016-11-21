@@ -36,8 +36,7 @@ public class PhysicsSystem extends Systems {
         (PositionComponent) eManager.getComponent(Component.POSITION, e);
       MobilityComponent mobComp =
         (MobilityComponent) eManager.getComponent(Component.MOBILITY, e);
-      posComp.x += mobComp.velocity.x / TICKS_PER_SECOND;
-      posComp.y += mobComp.velocity.y / TICKS_PER_SECOND;
+      posComp.pos = posComp.pos.add(mobComp.velocity.mul(1.0f/TICKS_PER_SECOND));
 
       float xmod = 0;
       float ymod = 0;
@@ -150,7 +149,7 @@ public class PhysicsSystem extends Systems {
         (CollisionComponent)eManager.getComponent(Component.COLLISION, b);
 
       // Vector pointing from a to b
-      Vec2f fromAtoB = new Vec2f(bPos.x - aPos.x, bPos.y - aPos.y);
+      Vec2f fromAtoB = new Vec2f(bPos.pos.x - aPos.pos.x, bPos.pos.y - aPos.pos.y);
 
       float aHalfWidth = aCol.width / 2;
       float bHalfWidth = bCol.width / 2;

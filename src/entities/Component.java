@@ -35,7 +35,8 @@ public abstract class Component {
   static final long RENDER        = 1 << 3;
   static final long AI            = 1 << 4;
   static final long LIVING        = 1 << 5;
-  static final long TOTAL_COMPS   =      6;
+  static final long COMMANDABLE   = 1 << 6;
+  static final long TOTAL_COMPS   =      7;
 
   /*
    * Must be called with an appropriate ComponentID taken from above.

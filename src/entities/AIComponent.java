@@ -11,9 +11,22 @@ public class AIComponent extends Component {
 
   public AIComponent() {
     super(AI);
-    destination = new Vec2f(10.0f, 10.0f);
+    destination = new Vec2f(0.0f, 0.0f);
+    state = State.WANDER;
+  }
+  
+  public enum State {
+    WANDER(-1),
+    FIND_WATER(1024);
+    
+    private State(int priority){
+      this.priority = priority;
+    }
+    
+    public int priority;
   }
 
   Vec2f destination;
   Vector<Vec2f> path;
+  State state;
 }
