@@ -98,9 +98,23 @@ public enum EntityManager {
   public Vector<Entity> getMatchingEntities(long componentBitSet) {
     Vector<Entity> ret = new Vector<Entity>();
     for (int id = 0; id < used; ++id) {
-      // if(entityBitSets.get(id) & componentBitSet == componentBitSet)
       if (hasComponents(componentBitSet, new Entity(id)))
         ret.add(new Entity(id));
+    }
+    return ret;
+  }
+
+  /*
+   * Returns a vector of entities that have CBS components AND don't have
+   * any of the blacklisted components.
+   */
+  public Vector<Entity> getMatchingEntities(long CBS, long blacklist){
+    Vector<Entity> ret = new Vector<Entity>();
+    for (int id = 0; id < used; ++id) {
+      Entity e = new Entity(id);
+      long thisCBS = entityBitSets.get(id);
+      if((thisCBS & CBS) == CBS && (thisCBS & blacklist) == 0)
+        ret.add(e);
     }
     return ret;
   }
