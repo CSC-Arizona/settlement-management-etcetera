@@ -130,6 +130,16 @@ public class AISystem extends Systems {
   }
   // Returns the rounded integer version of a given Vec2f
   private Vec2f roundVector(Vec2f initial){
+	  float x = Math.round(initial.x);
+	  float y = Math.round(initial.y);
+	  if(x == -1)
+		  x = 0;
+	  if( y == -1)
+		  y = 0;
+	  if(x == World.WORLD_SIZE)
+		  x = World.WORLD_SIZE - 1;
+	  if(y == World.WORLD_SIZE)
+		  y = World.WORLD_SIZE - 1;
 	  return new Vec2f(Math.round(initial.x), Math.round(initial.y));
   }
   
