@@ -2,8 +2,6 @@ package entities;
 
 import static org.junit.Assert.*;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -63,8 +61,8 @@ public class EntitySystemTest {
     assertEquals(oldSize, newSize);
     
     PositionComponent rrp = (PositionComponent)eMan.getCompVec(Component.POSITION).get(randomRock.getID());
-    assertEquals(rrp.x, 8.0f, 0.001);
-    assertEquals(rrp.y, 14.0f, 0.001);
+    assertEquals(rrp.pos.x, 8.0f, 0.001);
+    assertEquals(rrp.pos.y, 14.0f, 0.001);
 
    // assertTrue(eMan.hasComponents(Component.RENDER, e));
     RenderSystem rs = new RenderSystem(new BufferedImage(100,100,BufferedImage.TYPE_INT_ARGB).getGraphics());
