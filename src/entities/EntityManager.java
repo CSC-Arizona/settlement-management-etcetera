@@ -56,7 +56,7 @@ public enum EntityManager {
         --used;
       else
         recycleBin.add(e.getID());
-      entityBitSets.setElementAt(null, e.getID());
+      entityBitSets.setElementAt(new Long(0), e.getID());
       for (Vector<Component> cv : compVecs)
         cv.setElementAt(null, e.getID());
     }
@@ -113,16 +113,9 @@ public enum EntityManager {
     int id;
     for (id = 0; id < used; ++id) {
       Entity e = new Entity(id);
-      try{
       long thisCBS = entityBitSets.get(id);
       if((thisCBS & CBS) == CBS && (thisCBS & blacklist) == 0)
           ret.add(e);
-      }catch(NullPointerException e1){
-    	  System.out.println(entityBitSets);
-    	  System.out.println(id);
-    	  e1.printStackTrace();
-    	  System.exit(1);
-      }
     }
     return ret;
   }
@@ -131,7 +124,7 @@ public enum EntityManager {
    * Tells us whether or not an entity has specified components.
    */
   public boolean hasComponents(long componentBitSet, Entity e) {
-    if(e == null || entityBitSets.get(e.getID()) == null)
+    if(e == null)
       return false;
     else
       return (entityBitSets.get(e.getID()) & componentBitSet) == componentBitSet;
