@@ -6,13 +6,15 @@
 
 package world;
 
+import utility.Sprite;
+
 public class Bush extends Structure {
 		
 	/*
 	 * Constructor
 	 */
 	public Bush(int row, int col) {
-		super(row, col);
+		super(row, col, Sprite.BUSH);
 		setId(3);
 		togglePassable();
 	}

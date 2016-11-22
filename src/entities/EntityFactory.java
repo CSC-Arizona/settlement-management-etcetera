@@ -11,7 +11,7 @@ public class EntityFactory {
     eMan.addComponent(new RenderComponent(Sprite.ALIEN), alien);
     eMan.addComponent(new MobilityComponent(new Vec2f(0.0f, 0.0f)), alien);
     eMan.addComponent(new AIComponent(), alien);
-    eMan.addComponent(new CollisionComponent(0.7f, 0.7f, 0.05f, 80.0f), alien);
+    eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), alien);
     eMan.addComponent(new LivingComponent(), alien);
     return alien;
   }
@@ -29,7 +29,7 @@ public class EntityFactory {
     Entity bandage = eMan.genNewEntity();
     eMan.addComponent(new PositionComponent(x, y, 0.0f),  bandage);
     eMan.addComponent(new RenderComponent(Sprite.BANDAGE), bandage);
-    eMan.addComponent(new CollisionComponent(0.7f, 0.7f, 0.05f, 80.0f), bandage);
+    eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), bandage);
     return bandage;
   }
   
@@ -37,7 +37,7 @@ public class EntityFactory {
     Entity ammo = eMan.genNewEntity();
     eMan.addComponent(new PositionComponent(x, y, 0.0f), ammo);
     eMan.addComponent(new RenderComponent(Sprite.AMMO), ammo);
-    eMan.addComponent(new CollisionComponent(0.7f, 0.7f, 0.05f, 80.0f), ammo);
+    eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ammo);
     return ammo;
   }
 

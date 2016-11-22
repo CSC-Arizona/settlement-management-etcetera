@@ -25,8 +25,8 @@ public class RenderSystem extends Systems {
 
       // ppm = pixels per meter
       final int ppm = rc.width;
-      int x = (int)(pc.pos.x * ppm) - (rc.width / 2);
-      int y = (int)(pc.pos.y * ppm) - (rc.height / 2);
+      int x = (int)(pc.pos.x * ppm);// - (rc.width / 2);
+      int y = (int)(pc.pos.y * ppm);// - (rc.height / 2);
       g.drawImage(rc.texture, x, y, rc.width, rc.height, null);
 
       // Draw HP bar.

@@ -123,8 +123,8 @@ public class AISystem extends Systems {
 
   // Returns the rounded integer version of a given Vec2f
   private Vec2f roundVector(Vec2f initial){
-    float x = Math.round(initial.x);
-    float y = Math.round(initial.y);
+    float x = (int)(initial.x);
+    float y = (int)(initial.y);
     if(x == -1)
       x = 0;
     if( y == -1)
@@ -149,31 +149,36 @@ public class AISystem extends Systems {
   
   //Generates the graph for getPath to use
   public Node[][] getGraph(){
-  Node[][] graph = new Node[World.WORLD_SIZE][World.WORLD_SIZE];
-  // Put a Vec2f in each spot for getPath to use later
-  for(int y = 0; y < graph.length; y++){
-    for(int x = 0; x < graph[y].length; x++){
-      graph[y][x] = new Node(new Vec2f(x, y));
-    }
-  }
-  // Make the locations that have a CollisionComponent and a PositionComponent but no MobilityComponent null
-  Vector<Entity> entitiesToAvoid = eManager.getMatchingEntities(Component.POSITION | Component.COLLISION, Component.MOBILITY);
-  for(Entity e: entitiesToAvoid){
-    PositionComponent ps = (PositionComponent) eManager.getComponent(Component.POSITION, e);
-    //System.out.println("(" + ps.x + ", " + ps.y + ") ");
-    int x = Math.round(ps.pos.x);
-    int y = Math.round(ps.pos.y);
-    if(x == World.WORLD_SIZE)
-      x = World.WORLD_SIZE - 1;
-    if( x == -1)
-      x = 0;
-    if(y == World.WORLD_SIZE)
-      y = World.WORLD_SIZE - 1;
-    if(y == -1)
-      y = 0;
-    graph[y][x].isBlocked = true;
-  }
-  
+	  Node[][] graph = new Node[World.WORLD_SIZE][World.WORLD_SIZE];
+    World w = World.getWorld();
+	  // Put a Vec2f in each spot for getPath to use later
+	  for(int y = 0; y < graph.length; y++){
+	    for(int x = 0; x < graph[y].length; x++){
+	      graph[y][x] = new Node(new Vec2f(x, y));
+        graph[y][x].isBlocked = !w.getTile(y, x).isPassable();
+	    }
+	  }
+
+    /*
+	  // Make the locations that have a CollisionComponent and a PositionComponent but no MobilityComponent null
+	  Vector<Entity> entitiesToAvoid = eManager.getMatchingEntities(Component.POSITION | Component.COLLISION, Component.MOBILITY);
+	  for(Entity e: entitiesToAvoid){
+	    PositionComponent ps = (PositionComponent) eManager.getComponent(Component.POSITION, e);
+	    //System.out.println("(" + ps.x + ", " + ps.y + ") ");
+	    int x = Math.round(ps.pos.x);
+	    int y = Math.round(ps.pos.y);
+	    if(x == World.WORLD_SIZE)
+	      x = World.WORLD_SIZE - 1;
+	    if( x == -1)
+	      x = 0;
+	    if(y == World.WORLD_SIZE)
+	      y = World.WORLD_SIZE - 1;
+	    if(y == -1)
+	      y = 0;
+	    graph[y][x].isBlocked = true;
+	  }
+    */
+	  
   return graph;
  }
   
