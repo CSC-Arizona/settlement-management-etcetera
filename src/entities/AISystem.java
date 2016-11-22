@@ -76,32 +76,30 @@ public class AISystem extends Systems {
     		        //ac.destination = new Vec2f(r.nextFloat() % 20, r.nextFloat() % 20);
     		      }
     		      
-    		      // If there is a desired destination but no path to get there, or if the destination has changed, 
-    		      // generate a path
-    		      if(ac.path == null && !isPrettyClose(location, ac.destination)){
-    		        ac.path = getPath(roundVector(location), roundVector(ac.destination));
-    		        ac.path = ac.path;
-    		      }
-    		      
     		      // Get the location super close to the destination
-    		      if(isPrettyClose(location, ac.destination) && !isReallyClose(location, ac.destination)){
+    		      else if(isPrettyClose(location, ac.destination)){
     		    	  mc.velocity = getVelocity(location, ac.destination);
     		      }
     		      
-    		      if(ac.path != null){
-    		    	if(ac.path.size() == 1)
-    		    	  ac.path = null;
-    		    	else{
-    		    	  if(isPrettyClose(roundVector(location), ac.path.get(1)))
-    		    	    ac.path.remove(0);
-    		    	  if(ac.path.size() != 1){
-    		    	    mc.velocity = getVelocity(ac.path.get(0), ac.path.get(1));
-    		      	    mc.velocity = mc.velocity;
-    		    	  }
-    		    	  else
-    		    	    ac.path = null;
+    		      // If there is a desired destination but no path to get there, or if the destination has changed, generate a path
+    		      else if(ac.path == null){
+    		    	if(!isReallyClose(location, roundVector(location))){
+    		    		mc.velocity = getVelocity(location, roundVector(location));
     		    	}
+    		    	else
+    		    	  ac.path = getPath(roundVector(location), roundVector(ac.destination));
     		      }
+    		      else{
+    		        if(isPrettyClose(roundVector(location), ac.path.get(1)))
+    		    	  ac.path.remove(0);
+    		    	if(ac.path.size() != 1){
+    		    	  mc.velocity = getVelocity(ac.path.get(0), ac.path.get(1));
+    		      	  mc.velocity = mc.velocity;
+    		    	}
+    		    	else
+    		    	  ac.path = null;
+    		    	}
+    		      //Hey cutie ;)
       }
     		    
   }  
@@ -150,7 +148,7 @@ public class AISystem extends Systems {
   
   //Decides if the current location is pretty close to the destination
   private boolean isReallyClose(Vec2f location, Vec2f destination){
-    return Math.abs(location.sub(destination).getMag()) < 0.1f;
+    return Math.abs(location.sub(destination).getMag()) < 0.2f;
   } 
   
   //Generates the graph for getPath to use
@@ -163,7 +161,6 @@ public class AISystem extends Systems {
 	  }
 	}
 	// Make the locations that have a CollisionComponent and a PositionComponent but no MobilityComponent null
-	// Vector<Entity> entitiesTemp = eManager.getMatchingEntities(Component.POSITION | Component.COLLISION);
 	Vector<Entity> entitiesToAvoid = eManager.getMatchingEntities(Component.POSITION | Component.COLLISION, Component.MOBILITY);
 	for(Entity e: entitiesToAvoid){
 	  PositionComponent ps = (PositionComponent) eManager.getComponent(Component.POSITION, e);

@@ -110,11 +110,19 @@ public enum EntityManager {
    */
   public Vector<Entity> getMatchingEntities(long CBS, long blacklist){
     Vector<Entity> ret = new Vector<Entity>();
-    for (int id = 0; id < used; ++id) {
+    int id;
+    for (id = 0; id < used; ++id) {
       Entity e = new Entity(id);
+      try{
       long thisCBS = entityBitSets.get(id);
       if((thisCBS & CBS) == CBS && (thisCBS & blacklist) == 0)
-        ret.add(e);
+          ret.add(e);
+      }catch(NullPointerException e1){
+    	  System.out.println(entityBitSets);
+    	  System.out.println(id);
+    	  e1.printStackTrace();
+    	  System.exit(1);
+      }
     }
     return ret;
   }
