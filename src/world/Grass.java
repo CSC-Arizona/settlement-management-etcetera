@@ -6,14 +6,17 @@
 
 package world;
 
+import utility.Sprite;
+
 public class Grass extends Structure {
 		
 	/*
 	 * Constructor
 	 */
 	public Grass(int row, int col) {
-		super(row, col);
+		super(row, col, Sprite.GRASS);
 		setId(1);
+		togglePassable();
 	}
 
 	/*

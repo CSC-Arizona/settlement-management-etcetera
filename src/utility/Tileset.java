@@ -32,7 +32,7 @@ public class Tileset {
   }
 
   public BufferedImage getSprite(Sprite s){
-    return tileset.getSubimage(s.getX(), s.getY(), s.getWidth(), s.getHeight());
+    return tileset.getSubimage(s.getX(), s.getY(), Sprite.WIDTH, Sprite.HEIGHT);
   }
 
 }

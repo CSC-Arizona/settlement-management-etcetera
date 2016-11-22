@@ -6,23 +6,28 @@
  */
 package world;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
+
+import utility.Sprite;
+import utility.Tileset;
 
 public abstract class Structure implements Serializable {
 	
 	protected Structure[][] formation;
 	private boolean passable;
 	private int id;
-	private Image image; // Images need to be handled by the gui
+	BufferedImage texture;
 	
 	/*
 	 * Constructor
 	 */
-	public Structure(int row, int col) {
+	public Structure(int row, int col, Sprite s) {
 		formation = new Structure[row][col];
 		passable = true; // Structures are passable by default
 		id = -1;
+    Tileset tileset = Tileset.instance();
+    texture = tileset.getSprite(s);
 	}
 	
 	/*
@@ -61,6 +66,10 @@ public abstract class Structure implements Serializable {
 	public void togglePassable() {
 		passable = passable ? false : true;
 	}
+
+  public boolean isPassable(){
+    return passable;
+  }
 
 	/*
 	 * Initializes the formation array.

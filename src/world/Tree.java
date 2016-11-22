@@ -6,13 +6,15 @@
 
 package world;
 
+import utility.Sprite;
+
 public class Tree extends Structure {
 		
 	/*
 	 * Constructor
 	 */
 	public Tree(int row, int col) {
-		super(row, col);
+		super(row, col, Sprite.TREE);
 		setId(2);
 		togglePassable();
 	}

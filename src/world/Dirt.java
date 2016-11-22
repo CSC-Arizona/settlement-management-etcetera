@@ -5,13 +5,15 @@
  */
 package world;
 
+import utility.Sprite;
+
 public class Dirt extends Structure {
 		
 	/*
 	 * Constructor
 	 */
 	public Dirt(int row, int col) {
-		super(row, col);
+		super(row, col, Sprite.DIRT);
 		setId(4);
 	}
 
