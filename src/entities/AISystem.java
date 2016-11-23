@@ -11,7 +11,7 @@ import java.util.Vector;
 import utility.Vec2f;
 import world.World;
 
-public class AISystem extends Systems {
+public class AISystem extends System {
 
   public AISystem() {
     super(Component.AI | Component.POSITION | Component.MOBILITY);
@@ -63,11 +63,39 @@ public class AISystem extends Systems {
       goStraight(mc, pc, ac);
       */
       
-      PositionComponent ps = (PositionComponent) eManager.getComponent(Component.POSITION, e);
-      Vec2f location = new Vec2f(ps.pos.x, ps.pos.y);
+      PositionComponent pc = (PositionComponent) eManager.getComponent(Component.POSITION, e);
       AIComponent ac = ((AIComponent) eManager.getComponent(Component.AI, e));
       MobilityComponent mc = (MobilityComponent) eManager.getComponent(Component.MOBILITY, e);
+      CommandableComponent cc =
+          (CommandableComponent)eManager.getComponent(Component.COMMANDABLE, e);
       
+      if(cc != null)
+      	proccessCommands(ac, cc, pc);
+
+      if(ac.path != null && ac.path.size() > 0){
+        if(ac.path.size() == 1){
+          if(ac.path.get(0).sub(pc.pos).getMag() < CLOSE_ENOUGH){
+            mc.velocity = new Vec2f(0.0f, 0.0f);
+            ac.path = null;
+          }
+        }else if(ac.path.get(0).sub(pc.pos).getMag() < 0.2f){
+          ac.path.remove(0);
+          mc.velocity = getVelocity(pc.pos, ac.path.get(0));
+        }else{
+          mc.velocity = getVelocity(pc.pos, ac.path.get(0));
+        }
+        /*
+        if(ac.destination.equals(pc.pos) || ac.path.size() <= 1){
+          mc.velocity = new Vec2f(0.0f, 0.0f);
+          ac.path = null;
+        }else{
+
+        }
+        */
+      }
+
+      /*********************
+        
       // If we are close enough to our destination, terminate the velocity of the component.
       if(isReallyClose(location, ac.destination)){
         mc.velocity = new Vec2f(0.0f, 0.0f);
@@ -89,6 +117,7 @@ public class AISystem extends Systems {
         ac.path = null;
         }
       }
+      ***********************/
       /*
       if(location.x < -0.1 || location.y < -0.1 || location.x > World.WORLD_SIZE+0.1 || location.y > World.WORLD_SIZE+0.1){
     	  System.out.println("ID: " + e.getID() + "   Location: (" + location.x + ", " + location.y + ")   Velocity: (" + 
@@ -104,18 +133,30 @@ public class AISystem extends Systems {
       float distance = (cur.location.sub(pc.pos)).getMag();
       switch(cur.type){
         case RELOCATE:
+          if(distance > CLOSE_ENOUGH && ac.path == null)
+            ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
+          else if(distance <= CLOSE_ENOUGH)
+            cc.commands.pop();
+          /*
           if(distance > CLOSE_ENOUGH)
             ac.destination = cur.location;
           else
             cc.commands.pop();
+            */
           break;
         case CHOP_TREE:
+          if(distance > CLOSE_ENOUGH && ac.path == null)
+            ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
+          else if(distance <= CLOSE_ENOUGH)
+            cc.commands.pop();
+          /*
           if(distance > CLOSE_ENOUGH){
             ac.destination = cur.location;
           }else{
             // TODO: do the chopping
             cc.commands.pop();
           }
+          */
           break;
       }
     }
@@ -125,6 +166,7 @@ public class AISystem extends Systems {
   private Vec2f roundVector(Vec2f initial){
     float x = (int)(initial.x);
     float y = (int)(initial.y);
+    /*
     if(x == -1)
       x = 0;
     if( y == -1)
@@ -133,6 +175,7 @@ public class AISystem extends Systems {
       x = World.WORLD_SIZE - 1;
     if(y == World.WORLD_SIZE)
       y = World.WORLD_SIZE - 1;
+      */
     //return new Vec2f(Math.round(initial.x), Math.round(initial.y));
     return new Vec2f(x, y);
   }
@@ -266,6 +309,7 @@ public class AISystem extends Systems {
         break;
       current = current.prev;
     }
+    path.remove(0);
     return path; 
   }
   

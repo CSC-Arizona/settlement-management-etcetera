@@ -11,8 +11,9 @@ public class EntityFactory {
     eMan.addComponent(new RenderComponent(Sprite.ALIEN), alien);
     eMan.addComponent(new MobilityComponent(new Vec2f(0.0f, 0.0f)), alien);
     eMan.addComponent(new AIComponent(), alien);
-    eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), alien);
+    eMan.addComponent(new CollisionComponent(0.4f, 0.4f, 0.05f, 80.0f), alien);
     eMan.addComponent(new LivingComponent(), alien);
+    eMan.addComponent(new CommandableComponent(), alien);
     return alien;
   }
   
