@@ -32,7 +32,7 @@ public class LivingSystem extends System {
     if(lc.HP > lc.maxHP)
       lc.HP = lc.maxHP;
     
-    java.lang.System.out.println(lc.hydration);
+    //java.lang.System.out.println(lc.hydration);
   }
 
   private void purgeTheDead(Entity e){

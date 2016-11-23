@@ -11,7 +11,9 @@ public class Command {
   public enum Type {
     RELOCATE,
     CHOP_TREE,
-	BUILD_HOUSE;
+    BUILD_HOUSE,
+    DEPOSIT_ITEMS,
+    GET_WOOD;
   }
   
   Type type;

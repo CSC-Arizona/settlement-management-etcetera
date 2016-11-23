@@ -129,6 +129,10 @@ public enum EntityManager {
     else
       return (entityBitSets.get(e.getID()) & componentBitSet) == componentBitSet;
   }
+
+  public void markAs(long componentBitSet, Entity e){
+    entityBitSets.setElementAt(entityBitSets.get(e.getID()) | componentBitSet, e.getID());
+  }
   
   public int getUsed(){
     return used;

@@ -75,9 +75,11 @@ public class AISystem extends System {
         (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
       LivingComponent lc =
         (LivingComponent)eManager.getComponent(Component.LIVING, e);
+      ContainerComponent conc =
+        (ContainerComponent)eManager.getComponent(Component.CONTAINER, e);
       
       if(cc != null && !cc.commands.isEmpty() && ac.state.priority < 16)
-      	proccessCommands(ac, cc, pc);
+      	proccessCommands(ac, cc, pc, conc);
       
       // Handle hydration
       if(ac.state != AIComponent.State.FIND_WATER && lc != null && lc.hydration < 30.0f){
@@ -169,21 +171,27 @@ public class AISystem extends System {
     }
   }  
 
-  private void proccessCommands(AIComponent ac, CommandableComponent cc, PositionComponent pc){
+  private void proccessCommands(AIComponent ac, CommandableComponent cc, PositionComponent pc, ContainerComponent conc){
     if(cc.commands.size() != 0){
       Command cur = cc.commands.peek();
       World w = World.getWorld();
       float distance = (cur.location.sub(pc.pos)).getMag();
+    	final int WOOD_REQUIRED = 2;
       switch(cur.type){
         case BUILD_HOUSE:
-          if(distance > CLOSE_ENOUGH && ac.path == null)
+        	java.lang.System.out.println("House " + conc.items.size());
+        	if(conc.items.size() < WOOD_REQUIRED){
+        		Command tmp = cc.commands.poll();
+        		cc.commands.add(new Command(Command.Type.GET_WOOD, new Vec2f(0.0f, 0.0f)));
+        		cc.commands.add(tmp);
+        	}else if(distance > CLOSE_ENOUGH && ac.path == null){
             ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
-          else if(distance <= CLOSE_ENOUGH){
+        	}else if(distance <= CLOSE_ENOUGH){
             cc.commands.poll();
-        	EntityFactory.makeNewHouse(cur.location.x, cur.location.y);
+            EntityFactory.makeNewHouse(cur.location.x, cur.location.y);
+            conc.items.remove(0);
+            conc.items.remove(0);
           }
-          
-          
           break;
         case RELOCATE:
           if(distance > CLOSE_ENOUGH && ac.path == null)
@@ -196,10 +204,48 @@ public class AISystem extends System {
             ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
           }if(distance <= CLOSE_ENOUGH){
             w.setTile((int)cur.location.y, (int)cur.location.x, new Dirt((int)cur.location.y, (int)cur.location.x));
-            ac.path = getPath(roundVector(pc.pos), new Vec2f(0,0));
-            //cc.commands.poll();
+            //ac.path = getPath(roundVector(pc.pos), new Vec2f(0,0));
+            conc.items.add(new Item(Item.Type.WOOD));
+            cc.commands.poll();
+            if(conc.maxCapacity <= conc.items.size())
+            	cc.commands.add(new Command(Command.Type.DEPOSIT_ITEMS, new Vec2f(0.0f, 0.0f)));
           }
           break;
+        case DEPOSIT_ITEMS:
+          if(distance > CLOSE_ENOUGH && ac.path == null){
+            ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
+          }else if(distance <= CLOSE_ENOUGH){
+            Vector<Entity> ship = eManager.getMatchingEntities(Component.SHIP);
+            ContainerComponent scc =
+              (ContainerComponent)eManager.getComponent(Component.CONTAINER, ship.get(0));
+            scc.items.addAll(conc.items);
+            conc.items.clear();
+            cc.commands.poll();
+            java.lang.System.out.println(scc.items.size());
+          }
+          break;
+        case GET_WOOD:
+        	java.lang.System.out.println("get wood");
+        	if(distance > CLOSE_ENOUGH && ac.path == null){
+        		ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
+        	}else if(distance <= CLOSE_ENOUGH){
+            Vector<Entity> ship = eManager.getMatchingEntities(Component.SHIP);
+            ContainerComponent scc =
+              (ContainerComponent)eManager.getComponent(Component.CONTAINER, ship.get(0));
+            if(scc.items.size() < WOOD_REQUIRED){
+            	cc.commands.poll();
+            	cc.commands.poll();
+            }else{
+	            conc.items.add(scc.items.get(0));
+	            scc.items.remove(0);
+	            conc.items.add(scc.items.get(0));
+	            scc.items.remove(0);
+	            cc.commands.poll();
+	            //cc.commands.poll();
+	            java.lang.System.out.println(scc.items.size());
+            }
+          }
+        	break;
       }
     }
   }

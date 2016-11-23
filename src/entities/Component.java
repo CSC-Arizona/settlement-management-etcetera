@@ -36,7 +36,9 @@ public abstract class Component {
   static final long AI            = 1 << 4;
   static final long LIVING        = 1 << 5;
   static final long COMMANDABLE   = 1 << 6;
-  static final long TOTAL_COMPS   =      7;
+  static final long CONTAINER     = 1 << 7;
+  static final long SHIP          = 1 << 8;
+  static final long TOTAL_COMPS   =      9;
 
   /*
    * Must be called with an appropriate ComponentID taken from above.
