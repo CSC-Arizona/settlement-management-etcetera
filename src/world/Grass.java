@@ -16,7 +16,7 @@ public class Grass extends Structure {
 	public Grass(int row, int col) {
 		super(row, col, Sprite.GRASS);
 		setId(1);
-		togglePassable();
+		//togglePassable();
 	}
 
 	/*

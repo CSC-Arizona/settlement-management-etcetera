@@ -67,13 +67,12 @@ public class AISystem extends Systems {
       Vec2f location = new Vec2f(ps.pos.x, ps.pos.y);
       AIComponent ac = ((AIComponent) eManager.getComponent(Component.AI, e));
       MobilityComponent mc = (MobilityComponent) eManager.getComponent(Component.MOBILITY, e);
-
+      
       // If we are close enough to our destination, terminate the velocity of the component.
       if(isReallyClose(location, ac.destination)){
         mc.velocity = new Vec2f(0.0f, 0.0f);
         // For the purpose of testing, keep generating new destinations
-        ac.destination = new Vec2f(r.nextFloat() * 20, r.nextFloat() * 20);
-        //ac.destination = new Vec2f(r.nextFloat() % 20, r.nextFloat() % 20);
+        // ac.destination = new Vec2f(r.nextFloat() * 20, r.nextFloat() * 20);
       // Get the location super close to the destination
       }else if(isPrettyClose(location, ac.destination)){
     	  
@@ -209,14 +208,34 @@ public class AISystem extends Systems {
       float longIncrement = (float) Math.sqrt(2);
       float shortIncrement = 1;
       
-      changeDistance(yless, xless, graph, current, longIncrement);
+      try{
+        if(!graph[y][xless].isBlocked || !graph[yless][x].isBlocked)
+    	  changeDistance(yless, xless, graph, current, longIncrement);
+      } catch(IndexOutOfBoundsException e){
+    	  // Nothing
+      }
       changeDistance(yless, x, graph, current, shortIncrement);
-      changeDistance(yless, xmore, graph, current, longIncrement);
+      try{
+        if(!graph[yless][x].isBlocked || !graph[y][xmore].isBlocked)
+    	  changeDistance(yless, xmore, graph, current, longIncrement);
+      } catch(IndexOutOfBoundsException e){
+    	  // Nothing
+      }
       changeDistance(y, xless, graph, current, shortIncrement);
       changeDistance(y, xmore, graph, current, shortIncrement);
-      changeDistance(ymore, xless, graph, current, longIncrement);
+      try{
+        if(!graph[y][xless].isBlocked || !graph[ymore][x].isBlocked)
+          changeDistance(ymore, xless, graph, current, longIncrement);
+      } catch(IndexOutOfBoundsException e){
+    	  // Nothing
+      }
       changeDistance(ymore, x, graph, current, shortIncrement);
-      changeDistance(ymore, xmore, graph, current, longIncrement);
+      try{
+    	if(!graph[ymore][x].isBlocked || !graph[y][xmore].isBlocked)
+    	  changeDistance(ymore, xmore, graph, current, longIncrement);
+      } catch(IndexOutOfBoundsException e){
+    	  // Nothing
+      }
       
       current.isVisited = true;
       unvisitedNodes.remove(current);
@@ -226,8 +245,19 @@ public class AISystem extends Systems {
       
       current = getNextNode(unvisitedNodes);
         
-      if(current == null)
-      return null;
+      if(current == null){
+    	/*for(int i = 0; i < World.WORLD_SIZE; i++){
+    		for(int j = 0; j < World.WORLD_SIZE; j++){
+    			//System.out.print(!graph[i][j].isBlocked + " ");
+    			//System.out.print(!(graph[i][j].isBlocked == ) + " ");
+    		}
+    		System.out.println();
+    	}
+    	System.out.println();
+    	System.out.println();
+    	*/
+        return null;
+      }
     }
   
     while(true){
