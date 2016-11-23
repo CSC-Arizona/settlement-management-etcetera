@@ -18,6 +18,7 @@ public abstract class Structure implements Serializable {
 	private boolean passable;
 	private int id;
 	BufferedImage texture;
+	Sprite s;
 	
 	/*
 	 * Constructor
@@ -25,9 +26,14 @@ public abstract class Structure implements Serializable {
 	public Structure(int row, int col, Sprite s) {
 		formation = new Structure[row][col];
 		passable = true; // Structures are passable by default
+		this.s = s;
 		id = -1;
     Tileset tileset = Tileset.instance();
     texture = tileset.getSprite(s);
+	}
+	
+	public Sprite getType() {
+		return s;
 	}
 	
 	/*
