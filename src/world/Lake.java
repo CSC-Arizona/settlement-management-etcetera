@@ -17,7 +17,7 @@ public class Lake extends Structure {
 		super(row, col, Sprite.LAKE);
 		setFormation();
 		setId(6);
-		togglePassable();
+		//togglePassable();
 	}
 
 	/*
