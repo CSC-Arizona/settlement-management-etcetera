@@ -58,6 +58,7 @@ public class Game extends Thread {
     EntityFactory.makeNewBandage(8.0f, 13.0f);
     EntityFactory.makeNewBandage(4.0f, 5.0f);
 */
+	label.addMouseListener(new ClickListener());
     World w = World.getWorld();
     Random r = new Random();
   	for(int i = 0; i < 5; ++i){
@@ -113,6 +114,9 @@ public class Game extends Thread {
 		}
 		else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2
 			new Command(Type.RELOCATE, new Vec2f(e.getX()/32, e.getY()/32));
+		}
+		else if(e.getButton()==MouseEvent.BUTTON2){
+			EntityFactory.makeNewHouse(e.getX()/32, e.getY()/32);
 		}
 	}
 	

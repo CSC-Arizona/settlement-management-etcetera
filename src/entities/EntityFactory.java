@@ -48,6 +48,13 @@ public class EntityFactory {
     return bloodPool;
   }
 
+  public static Entity makeNewHouse(float x, float y){
+	    Entity bloodPool = eMan.genNewEntity();
+	    eMan.addComponent(new PositionComponent(x, y, 0.0f), bloodPool);
+	    eMan.addComponent(new RenderComponent(Sprite.HOUSE), bloodPool);
+	    return bloodPool;
+	  }
+  
   private static EntityManager eMan = EntityManager.INSTANCE;
   // We don't want it to be instantiated.
   private EntityFactory(){}
