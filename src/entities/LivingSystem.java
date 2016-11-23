@@ -31,6 +31,8 @@ public class LivingSystem extends System {
       lc.HP += 10.0f / TICKS_PER_SECOND;
     if(lc.HP > lc.maxHP)
       lc.HP = lc.maxHP;
+    
+    java.lang.System.out.println(lc.hydration);
   }
 
   private void purgeTheDead(Entity e){

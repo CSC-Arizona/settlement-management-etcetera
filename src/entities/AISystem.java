@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.Random;
 import java.util.Vector;
 
+import utility.Sprite;
 import utility.Vec2f;
 import world.World;
 
@@ -63,22 +64,61 @@ public class AISystem extends System {
       goStraight(mc, pc, ac);
       */
       
-      PositionComponent pc = (PositionComponent) eManager.getComponent(Component.POSITION, e);
-      AIComponent ac = ((AIComponent) eManager.getComponent(Component.AI, e));
-      MobilityComponent mc = (MobilityComponent) eManager.getComponent(Component.MOBILITY, e);
+    	PositionComponent pc =
+        (PositionComponent)eManager.getComponent(Component.POSITION, e);
+      AIComponent ac =
+        (AIComponent)eManager.getComponent(Component.AI, e);
       CommandableComponent cc =
-          (CommandableComponent)eManager.getComponent(Component.COMMANDABLE, e);
+        (CommandableComponent)eManager.getComponent(Component.COMMANDABLE, e);
+      MobilityComponent mc =
+        (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
+      LivingComponent lc =
+        (LivingComponent)eManager.getComponent(Component.LIVING, e);
       
-      if(cc != null)
+      if(cc != null && !cc.commands.isEmpty() && ac.state.priority < 16)
       	proccessCommands(ac, cc, pc);
+      
+      // Handle hydration
+      if(ac.state != AIComponent.State.FIND_WATER && lc != null && lc.hydration < 30.0f){
+      	ac.state = AIComponent.State.FIND_WATER;
+      	ac.path = null;
+      }else if(lc.hydration >= 100.0f){
+      	ac.state = AIComponent.State.WANDER;
+      }
+      
+      World w = World.getWorld();
+      switch(ac.state){
+      	case WANDER:
+      		if(ac.path == null){
+	      		if(r.nextInt(50) == 42){
+	      			Vec2f dest;
+	      			do{
+	      				dest = pc.pos.sub(new Vec2f((r.nextFloat() - 0.5f) * 4, (r.nextFloat() - 0.5f) * 4));
+	      			}while(dest.y < 0.0f || dest.x < 0.0f || dest.y >= World.WORLD_SIZE ||
+	      						 dest.x >= World.WORLD_SIZE || !w.getTile((int)dest.y, (int)dest.x).isPassable());
+	      			ac.path = getPath(roundVector(pc.pos), roundVector(dest));
+	      		}
+      		}
+      		break;
+      	case FIND_WATER:
+      		if(ac.path == null){
+      			Vec2f water = findClosest(Sprite.LAKE, pc.pos);
+      			if(water != null)
+      				ac.path = getPath(roundVector(pc.pos), roundVector(water));
+      		}
+      		if(w.getTile(Math.round(pc.pos.y), Math.round(pc.pos.x)).getType() == Sprite.LAKE)
+      			lc.hydration += 30.0f / TICKS_PER_SECOND;
+      		break;
+      }
+      
+      if(ac.path != null && ac.path.size() == 0)
+      	ac.path = null;
 
       if(ac.path != null && ac.path.size() > 0){
       	//java.lang.System.out.println(ac.path.size());
-        if(ac.path.size() == 1){
-          if(ac.path.get(0).sub(pc.pos).getMag() < CLOSE_ENOUGH){
-            mc.velocity = new Vec2f(0.0f, 0.0f);
-            ac.path = null;
-          }
+        if(ac.path.lastElement().sub(pc.pos).getMag() < CLOSE_ENOUGH){
+          mc.velocity = new Vec2f(0.0f, 0.0f);
+          ac.path = null;
         }else if(ac.path.get(0).sub(pc.pos).getMag() < 0.2f){
           ac.path.remove(0);
           mc.velocity = getVelocity(pc.pos, ac.path.get(0));
@@ -390,32 +430,23 @@ public class AISystem extends System {
     newVel = newVel.mul(1 / newVel.getMag());
     // Here we adjust the speed to be 1.5 m/s
     newVel = newVel.mul(1.5f);
-    java.lang.System.out.println(newVel);
     return newVel;
-  }
-
-  private void goStraight(MobilityComponent mc, PositionComponent pc, AIComponent ac){
-    if(ac.destination.sub(pc.pos).getMag() > CLOSE_ENOUGH){
-      // We first need to calculate the direction vector from where we
-      // are to where we are going.
-      Vec2f newVel = ac.destination.sub(pc.pos);
-      // Dividing the resulting vector by it's magnitude gives us a vector
-      // pointing in the right direction with
-      // magnitude of 1 (m/s).
-      newVel = newVel.mul(1 / newVel.getMag());
-      // Here we adjust the speed to be 1.5 m/s
-      newVel = newVel.mul(1.5f);
-      mc.velocity = newVel;
-    }else{
-      mc.velocity = new Vec2f(0.0f, 0.0f);
-    }
   }
   
   // TODO: Should be find(Tile t)
-  private Vec2f find(){
-    return new Vec2f(1.0f, 1.0f);
+  private Vec2f findClosest(Sprite s, Vec2f pos){
+  	World w = World.getWorld();
+  	for(int i = 0; i < World.WORLD_SIZE; ++i){
+  		for(int j = (int)pos.x - i; j < (int)pos.x + i; ++j){
+  			for(int k = (int)pos.y - i; k < (int)pos.y + i; ++k){
+  				if(k >= 0 && k < World.WORLD_SIZE && j >= 0 && j < World.WORLD_SIZE && w.getTile(k, j).getType() == s)
+  					return new Vec2f(j, k);
+  			}
+  		}
+  	}
+  	return null;
   }
 
   private static Random r = new Random();
-  private static final float CLOSE_ENOUGH = 1.0f;
+  private static final float CLOSE_ENOUGH = 0.4f;
 }
