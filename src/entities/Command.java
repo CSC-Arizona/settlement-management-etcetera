@@ -10,7 +10,8 @@ public class Command {
 
   public enum Type {
     RELOCATE,
-    CHOP_TREE;
+    CHOP_TREE,
+	BUILD_HOUSE;
   }
   
   Type type;
