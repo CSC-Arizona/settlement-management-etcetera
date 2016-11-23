@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.swing.JLabel;
 
@@ -22,6 +23,7 @@ import entities.PhysicsSystem;
 import entities.AISystem;
 import entities.LivingSystem;
 import utility.Vec2f;
+import world.World;
 
 public class Game extends Thread {
 
@@ -31,28 +33,45 @@ public class Game extends Thread {
   }
 
   public void run() {
+  	/*
     EntityFactory.makeNewGodzilla(5.0f, 5.0f);
     EntityFactory.makeNewGodzilla(15.0f, 5.0f);
-    EntityFactory.makeNewGodzilla(25.0f, 15.0f);
+    EntityFactory.makeNewGodzilla(15.0f, 15.0f);
     EntityFactory.makeNewGodzilla(5.0f, 15.0f);
 
     EntityFactory.makeNewAlien(7.0f, 8.0f);
     EntityFactory.makeNewAlien(9.0f, 2.0f);
     EntityFactory.makeNewAlien(1.0f, 1.0f);
 
-    EntityFactory.makeNewAmmo(8.0f, 9.0f);
+    EntityFactory.makeNewAmmo(3.0f, 9.0f);
+    for(int i = 4; i < 18; i++){
+    	EntityFactory.makeNewAmmo(i, 9.0f);
+    }
     EntityFactory.makeNewAmmo(18.0f, 6.0f);
     EntityFactory.makeNewAmmo(3.0f, 4.0f);
 
     EntityFactory.makeNewBandage(3.0f, 3.0f);
     EntityFactory.makeNewBandage(8.0f, 13.0f);
     EntityFactory.makeNewBandage(4.0f, 5.0f);
-
-    Graphics g = renderDest.getGraphics();
+*/
+    World w = World.getWorld();
+    Random r = new Random();
+  	for(int i = 0; i < 5; ++i){
+  		int x = r.nextInt(World.WORLD_SIZE - 1);
+  		int y = r.nextInt(World.WORLD_SIZE - 1);
+  		while(!w.getTile(y, x).isPassable()){
+  			x = r.nextInt(World.WORLD_SIZE - 1);
+  			y = r.nextInt(World.WORLD_SIZE - 1);
+  		}
+  		EntityFactory.makeNewAlien(x, y);
+  	}
+  	EntityFactory.makeNewAmmo(0.0f, 0.0f);
+  	Graphics g = renderDest.getGraphics();
     RenderSystem rs = new RenderSystem(g);
     PhysicsSystem ps = new PhysicsSystem();
     AISystem as = new AISystem();
     LivingSystem ls = new LivingSystem();
+    
 
     // We want to have 30 ticks/s
     int goal = 30;
@@ -62,6 +81,7 @@ public class Game extends Thread {
 
       g.setColor(Color.GRAY);
       g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
+      w.render(g);
       rs.tick();
       ps.tick();
       as.tick();

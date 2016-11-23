@@ -26,8 +26,8 @@ package entities;
 
 import java.util.Vector;
 
-public abstract class System {
-  public System(long requiredComponentBitSet){
+public abstract class Systems {
+  public Systems(long requiredComponentBitSet){
     cbs = requiredComponentBitSet;
     eManager = EntityManager.INSTANCE;
     updateEntityVector();

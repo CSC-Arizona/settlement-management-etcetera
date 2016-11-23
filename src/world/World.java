@@ -7,18 +7,24 @@
  */
 package world;
 
+import java.awt.Graphics;
 import java.io.Serializable;
 import java.util.Random;
 
+import utility.Sprite;
+
 public class World implements Serializable {
-
-	static final int WORLD_SIZE = 25;// 1000;
-
+	
+	public static final int WORLD_SIZE = 25;//1000;
+	static final int TILE_COUNT = 2;
+	static final int TILE_MULTIPLIER = 5;	
 	/*-- For testing purposes --*/
+  /*
 	public static void main(String[] args) {
-		World world = World.getWorld();
-		System.out.println(world);
+		//World world = World.getWorld();
+		//System.out.println(world);
 	}
+	*/
 
 	public String toString() {
 		String world = "";
@@ -109,5 +115,14 @@ public class World implements Serializable {
 	public Structure[][] getBoard() {
 		return board;
 	}
+
+  public void render(Graphics g){
+    for(int j = 0; j < WORLD_SIZE; ++j){
+      for(int k = 0; k < WORLD_SIZE; ++k){
+        g.drawImage(board[j][k].texture, k * Sprite.WIDTH,
+                    j * Sprite.HEIGHT, null);
+      }
+    }
+  }
 
 }

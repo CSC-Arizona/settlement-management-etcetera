@@ -4,6 +4,8 @@
 package entities;
 
 import utility.Vec2f;
+//import java.awt.Point;
+import java.util.Vector;
 
 public class AIComponent extends Component {
 
@@ -25,5 +27,6 @@ public class AIComponent extends Component {
   }
 
   Vec2f destination;
+  Vector<Vec2f> path;
   State state;
 }

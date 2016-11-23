@@ -6,15 +6,18 @@
 
 package world;
 
+import utility.Sprite;
+
 public class Crater extends Structure {
 
 	/*
 	 * Constructor
 	 */
 	public Crater(int row, int col) {
-		super(row, col);
+		super(row, col, Sprite.CRATER);
 		setFormation();
 		setId(5);
+		togglePassable();
 	}
 	
 	/*

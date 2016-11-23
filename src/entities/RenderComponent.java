@@ -33,8 +33,8 @@ public class RenderComponent extends Component {
     super(RENDER);
     Tileset tileset = Tileset.instance();
     texture = tileset.getSprite(s);
-    this.width = s.getWidth();
-    this.height = s.getHeight();
+    this.width = Sprite.WIDTH;
+    this.height = Sprite.HEIGHT;
   }
 
   BufferedImage texture;

@@ -6,13 +6,15 @@
 
 package world;
 
+import utility.Sprite;
+
 public class Rock extends Structure {
 		
 	/*
 	 * Constructor
 	 */
 	public Rock(int row, int col) {
-		super(row, col);
+		super(row, col, Sprite.ROCK);
 		setId(0);
 		togglePassable();
 	}

@@ -7,7 +7,7 @@ package entities;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class RenderSystem extends System {
+public class RenderSystem extends Systems {
   public RenderSystem(Graphics g) {
     super(Component.POSITION | Component.RENDER);
     this.g = g;
@@ -25,8 +25,8 @@ public class RenderSystem extends System {
 
       // ppm = pixels per meter
       final int ppm = rc.width;
-      int x = (int)(pc.pos.x * ppm) - (rc.width / 2);
-      int y = (int)(pc.pos.y * ppm) - (rc.height / 2);
+      int x = (int)(pc.pos.x * ppm);// - (rc.width / 2);
+      int y = (int)(pc.pos.y * ppm);// - (rc.height / 2);
       g.drawImage(rc.texture, x, y, rc.width, rc.height, null);
 
       // Draw HP bar.
