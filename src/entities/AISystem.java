@@ -182,7 +182,7 @@ public class AISystem extends System {
         	java.lang.System.out.println("House " + conc.items.size());
         	if(conc.items.size() < WOOD_REQUIRED){
         		Command tmp = cc.commands.poll();
-        		cc.commands.add(new Command(Command.Type.GET_WOOD, new Vec2f(0.0f, 0.0f)));
+        		cc.commands.add(new Command(Command.Type.GET_WOOD, new Vec2f(1.0f, 1.0f)));
         		cc.commands.add(tmp);
         	}else if(distance > CLOSE_ENOUGH && ac.path == null){
             ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
@@ -208,7 +208,7 @@ public class AISystem extends System {
             conc.items.add(new Item(Item.Type.WOOD));
             cc.commands.poll();
             if(conc.maxCapacity <= conc.items.size())
-            	cc.commands.add(new Command(Command.Type.DEPOSIT_ITEMS, new Vec2f(0.0f, 0.0f)));
+            	cc.commands.add(new Command(Command.Type.DEPOSIT_ITEMS, new Vec2f(1.0f, 1.0f)));
           }
           break;
         case DEPOSIT_ITEMS:

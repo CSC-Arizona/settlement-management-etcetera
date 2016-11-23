@@ -81,7 +81,7 @@ public class Game extends Thread {
     LivingSystem ls = new LivingSystem();
     CommandSystem cs = new CommandSystem();
 
-  	EntityFactory.makeNewShip(0,0);
+  	EntityFactory.makeNewShip(1,1);
     // We want to have 30 ticks/s
     int goal = 30;
     long milPerTick = (long) ((1.0f / goal) * 1000);
