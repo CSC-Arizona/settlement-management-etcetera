@@ -7,13 +7,14 @@ public enum Sprite {
   BANDAGE(13, 0),
   BLOOD_POOL(47, 0),
   
-  BUSH(137, 5),
-  CRATER(130, 1),
+  BUSH(68, 9),
+  CRATER(134, 13),
   DIRT(40, 0),
   GRASS(128, 2),
   LAKE(141, 15),
-  ROCK(139, 11),
-  TREE(135, 15);
+  ROCK(225, 3),
+  TREE(135, 15),
+  HOUSE(70, 10);
 
   private Sprite(int row, int col){
     x = col * WIDTH;
