@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
@@ -77,7 +76,6 @@ public class Game extends Thread {
     AISystem as = new AISystem();
     LivingSystem ls = new LivingSystem();
     
-
     // We want to have 30 ticks/s
     int goal = 30;
     long milPerTick = (long) ((1.0f / goal) * 1000);
@@ -104,27 +102,20 @@ public class Game extends Thread {
     }
   }
 
-  private class ClickListener implements MouseListener {
+  private class ClickListener extends MouseAdapter {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1){
+			// if(tile is a tree)
 			new Command(Type.CHOP_TREE, new Vec2f(e.getX()/32, e.getY()/32));
+			System.out.println("you clicked a thing");
 		}
 		else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2
 			new Command(Type.RELOCATE, new Vec2f(e.getX()/32, e.getY()/32));
 		}
 	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-	@Override
-	public void mouseExited(MouseEvent e) {}
-	@Override
-	public void mousePressed(MouseEvent e) {}
-	@Override
-	public void mouseReleased(MouseEvent e) {}
-	  
+	
   }
   
   BufferedImage renderDest;
