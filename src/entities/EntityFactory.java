@@ -41,6 +41,14 @@ public class EntityFactory {
     eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ammo);
     return ammo;
   }
+  
+  public static Entity makeNewShip(float x, float y) {
+	    Entity ammo = eMan.genNewEntity();
+	    eMan.addComponent(new PositionComponent(x, y, 0.0f), ammo);
+	    eMan.addComponent(new RenderComponent(Sprite.SHIP), ammo);
+	    eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ammo);
+	    return ammo;
+	  }
 
   public static Entity makeNewBloodPool(float x, float y){
     Entity bloodPool = eMan.genNewEntity();

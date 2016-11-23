@@ -190,28 +190,15 @@ public class AISystem extends System {
             ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
           else if(distance <= CLOSE_ENOUGH)
             cc.commands.poll();
-          /*
-          if(distance > CLOSE_ENOUGH)
-            ac.destination = cur.location;
-          else
-            cc.commands.pop();
-            */
           break;
         case CHOP_TREE:
           if(distance > CLOSE_ENOUGH && ac.path == null){
             ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
           }if(distance <= CLOSE_ENOUGH){
-            cc.commands.poll();
             w.setTile((int)cur.location.y, (int)cur.location.x, new Dirt((int)cur.location.y, (int)cur.location.x));
+            ac.path = getPath(roundVector(pc.pos), new Vec2f(0,0));
+            //cc.commands.poll();
           }
-          /*
-          if(distance > CLOSE_ENOUGH){
-            ac.destination = cur.location;
-          }else{
-            // TODO: do the chopping
-            cc.commands.pop();
-          }
-          */
           break;
       }
     }

@@ -74,14 +74,14 @@ public class Game extends Thread {
   		}
   		EntityFactory.makeNewAlien(x, y);
   	}
-  	EntityFactory.makeNewAmmo(0.0f, 0.0f);
   	Graphics g = renderDest.getGraphics();
     RenderSystem rs = new RenderSystem(g);
     PhysicsSystem ps = new PhysicsSystem();
     AISystem as = new AISystem();
     LivingSystem ls = new LivingSystem();
     CommandSystem cs = new CommandSystem();
-    
+
+  	EntityFactory.makeNewShip(0,0);
     // We want to have 30 ticks/s
     int goal = 30;
     long milPerTick = (long) ((1.0f / goal) * 1000);
