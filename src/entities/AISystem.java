@@ -175,6 +175,16 @@ public class AISystem extends System {
       World w = World.getWorld();
       float distance = (cur.location.sub(pc.pos)).getMag();
       switch(cur.type){
+        case BUILD_HOUSE:
+          if(distance > CLOSE_ENOUGH && ac.path == null)
+            ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
+          else if(distance <= CLOSE_ENOUGH){
+            cc.commands.poll();
+        	EntityFactory.makeNewHouse(cur.location.x, cur.location.y);
+          }
+          
+          
+          break;
         case RELOCATE:
           if(distance > CLOSE_ENOUGH && ac.path == null)
             ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));

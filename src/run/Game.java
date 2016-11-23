@@ -127,7 +127,7 @@ public class Game extends Thread {
         //System.out.println("RELOCATE" + e.getX() / 32 + ", " + e.getY() / 32);
       }else if(e.getButton()==MouseEvent.BUTTON2){
         if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
-          EntityFactory.makeNewHouse(e.getX()/32, e.getY()/32);
+          commands.push(new Command(Type.BUILD_HOUSE, new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
         }
       }
     }
