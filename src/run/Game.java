@@ -2,6 +2,9 @@ package run;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
@@ -16,6 +19,8 @@ import entities.MobilityComponent;
 import entities.PositionComponent;
 import entities.RenderComponent;
 import entities.CollisionComponent;
+import entities.Command;
+import entities.Command.Type;
 import entities.AIComponent;
 
 import entities.RenderSystem;
@@ -99,6 +104,29 @@ public class Game extends Thread {
     }
   }
 
+  private class ClickListener implements MouseListener {
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getButton() == MouseEvent.BUTTON1){
+			new Command(Type.CHOP_TREE, new Vec2f(e.getX()/32, e.getY()/32));
+		}
+		else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2
+			new Command(Type.RELOCATE, new Vec2f(e.getX()/32, e.getY()/32));
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+	  
+  }
+  
   BufferedImage renderDest;
   JLabel label;
 }
