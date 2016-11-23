@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import utility.Sprite;
 import utility.Vec2f;
+import world.Dirt;
 import world.World;
 
 public class AISystem extends System {
@@ -90,10 +91,10 @@ public class AISystem extends System {
       switch(ac.state){
       	case WANDER:
       		if(ac.path == null){
-	      		if(r.nextInt(50) == 42){
+	      		if(r.nextInt(100) == 42){
 	      			Vec2f dest;
 	      			do{
-	      				dest = pc.pos.sub(new Vec2f((r.nextFloat() - 0.5f) * 4, (r.nextFloat() - 0.5f) * 4));
+	      				dest = pc.pos.sub(new Vec2f((r.nextFloat() - 0.5f) * 3, (r.nextFloat() - 0.5f) * 3));
 	      			}while(dest.y < 0.0f || dest.x < 0.0f || dest.y >= World.WORLD_SIZE ||
 	      						 dest.x >= World.WORLD_SIZE || !w.getTile((int)dest.y, (int)dest.x).isPassable());
 	      			ac.path = getPath(roundVector(pc.pos), roundVector(dest));
@@ -171,6 +172,7 @@ public class AISystem extends System {
   private void proccessCommands(AIComponent ac, CommandableComponent cc, PositionComponent pc){
     if(cc.commands.size() != 0){
       Command cur = cc.commands.peek();
+      World w = World.getWorld();
       float distance = (cur.location.sub(pc.pos)).getMag();
       switch(cur.type){
         case RELOCATE:
@@ -186,10 +188,12 @@ public class AISystem extends System {
             */
           break;
         case CHOP_TREE:
-          if(distance > CLOSE_ENOUGH && ac.path == null)
+          if(distance > CLOSE_ENOUGH && ac.path == null){
             ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
-          else if(distance <= CLOSE_ENOUGH)
+          }if(distance <= CLOSE_ENOUGH){
             cc.commands.poll();
+            w.setTile((int)cur.location.y, (int)cur.location.x, new Dirt((int)cur.location.y, (int)cur.location.x));
+          }
           /*
           if(distance > CLOSE_ENOUGH){
             ac.destination = cur.location;
