@@ -1,6 +1,6 @@
 package entities;
 
-public class LivingSystem extends Systems {
+public class LivingSystem extends System {
   public LivingSystem(){
     //TODO
     super(Component.LIVING | Component.POSITION);

@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Stack;
 
 import javax.swing.JLabel;
 
@@ -20,6 +21,7 @@ import entities.RenderComponent;
 import entities.CollisionComponent;
 import entities.Command;
 import entities.Command.Type;
+import entities.CommandSystem;
 import entities.AIComponent;
 
 import entities.RenderSystem;
@@ -58,6 +60,8 @@ public class Game extends Thread {
     EntityFactory.makeNewBandage(8.0f, 13.0f);
     EntityFactory.makeNewBandage(4.0f, 5.0f);
 */
+  	label.addMouseListener(new ClickListener());
+  	commands = new Stack<Command>();
     World w = World.getWorld();
     Random r = new Random();
   	for(int i = 0; i < 5; ++i){
@@ -75,6 +79,7 @@ public class Game extends Thread {
     PhysicsSystem ps = new PhysicsSystem();
     AISystem as = new AISystem();
     LivingSystem ls = new LivingSystem();
+    CommandSystem cs = new CommandSystem();
     
     // We want to have 30 ticks/s
     int goal = 30;
@@ -87,6 +92,8 @@ public class Game extends Thread {
       w.render(g);
       rs.tick();
       ps.tick();
+      cs.addCommands(commands);
+      cs.tick();
       as.tick();
       ls.tick();
       label.repaint();
@@ -108,16 +115,18 @@ public class Game extends Thread {
 	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1){
 			// if(tile is a tree)
-			new Command(Type.CHOP_TREE, new Vec2f(e.getX()/32, e.getY()/32));
-			System.out.println("you clicked a thing");
+			commands.push(new Command(Type.CHOP_TREE, new Vec2f(e.getX()/32, e.getY()/32)));
+			System.out.println("CHOP_TREE " + e.getX() / 32 + ", " + e.getY() / 32);
 		}
 		else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2
-			new Command(Type.RELOCATE, new Vec2f(e.getX()/32, e.getY()/32));
+			commands.push(new Command(Type.RELOCATE, new Vec2f(e.getX()/32, e.getY()/32)));
+			System.out.println("RELOCATE" + e.getX() / 32 + ", " + e.getY() / 32);
 		}
 	}
 	
   }
   
-  BufferedImage renderDest;
-  JLabel label;
+  private Stack<Command> commands;
+  private BufferedImage renderDest;
+  private JLabel label;
 }
