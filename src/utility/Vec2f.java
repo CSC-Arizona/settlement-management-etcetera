@@ -53,6 +53,10 @@ public class Vec2f {
   public float getMag() {
     return (float) Math.sqrt(getMagSquared());
   }
+  
+  public String toString(){
+  	return "(" + x + ", " + y + ")";
+  }
 
   public final float x;
   public final float y;

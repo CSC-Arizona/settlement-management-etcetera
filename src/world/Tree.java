@@ -16,7 +16,7 @@ public class Tree extends Structure {
 	public Tree(int row, int col) {
 		super(row, col, Sprite.TREE);
 		setId(2);
-		togglePassable();
+		//togglePassable();
 	}
 
 	/*

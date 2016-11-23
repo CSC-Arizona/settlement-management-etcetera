@@ -16,7 +16,7 @@ public class Bush extends Structure {
 	public Bush(int row, int col) {
 		super(row, col, Sprite.BUSH);
 		setId(3);
-		togglePassable();
+		//togglePassable();
 	}
 
 	/*

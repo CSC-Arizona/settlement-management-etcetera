@@ -28,6 +28,7 @@ import entities.RenderSystem;
 import entities.PhysicsSystem;
 import entities.AISystem;
 import entities.LivingSystem;
+import utility.Sprite;
 import utility.Vec2f;
 import world.World;
 
@@ -93,6 +94,7 @@ public class Game extends Thread {
       rs.tick();
       ps.tick();
       cs.addCommands(commands);
+      commands.clear();
       cs.tick();
       as.tick();
       ls.tick();
@@ -113,14 +115,17 @@ public class Game extends Thread {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		World w = World.getWorld();
 		if(e.getButton() == MouseEvent.BUTTON1){
 			// if(tile is a tree)
-			commands.push(new Command(Type.CHOP_TREE, new Vec2f(e.getX()/32, e.getY()/32)));
-			System.out.println("CHOP_TREE " + e.getX() / 32 + ", " + e.getY() / 32);
+			if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).getType() == Sprite.TREE)
+				commands.push(new Command(Type.CHOP_TREE, new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
+			//System.out.println("CHOP_TREE " + e.getX() / 32 + ", " + e.getY() / 32);
 		}
 		else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2
-			commands.push(new Command(Type.RELOCATE, new Vec2f(e.getX()/32, e.getY()/32)));
-			System.out.println("RELOCATE" + e.getX() / 32 + ", " + e.getY() / 32);
+			if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).isPassable())
+				commands.push(new Command(Type.RELOCATE, new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
+			//System.out.println("RELOCATE" + e.getX() / 32 + ", " + e.getY() / 32);
 		}
 	}
 	

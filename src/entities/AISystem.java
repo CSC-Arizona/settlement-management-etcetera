@@ -73,6 +73,7 @@ public class AISystem extends System {
       	proccessCommands(ac, cc, pc);
 
       if(ac.path != null && ac.path.size() > 0){
+      	//java.lang.System.out.println(ac.path.size());
         if(ac.path.size() == 1){
           if(ac.path.get(0).sub(pc.pos).getMag() < CLOSE_ENOUGH){
             mc.velocity = new Vec2f(0.0f, 0.0f);
@@ -136,7 +137,7 @@ public class AISystem extends System {
           if(distance > CLOSE_ENOUGH && ac.path == null)
             ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
           else if(distance <= CLOSE_ENOUGH)
-            cc.commands.pop();
+            cc.commands.poll();
           /*
           if(distance > CLOSE_ENOUGH)
             ac.destination = cur.location;
@@ -148,7 +149,7 @@ public class AISystem extends System {
           if(distance > CLOSE_ENOUGH && ac.path == null)
             ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
           else if(distance <= CLOSE_ENOUGH)
-            cc.commands.pop();
+            cc.commands.poll();
           /*
           if(distance > CLOSE_ENOUGH){
             ac.destination = cur.location;
@@ -379,6 +380,7 @@ public class AISystem extends System {
     newVel = newVel.mul(1 / newVel.getMag());
     // Here we adjust the speed to be 1.5 m/s
     newVel = newVel.mul(1.5f);
+    java.lang.System.out.println(newVel);
     return newVel;
   }
 

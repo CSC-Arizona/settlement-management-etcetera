@@ -1,13 +1,14 @@
 package entities;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class CommandableComponent extends Component {
   public CommandableComponent(){
    super(COMMANDABLE);
-   commands = new Stack<Command>();
+   commands = new ArrayDeque<Command>();
   }
   
-  Stack<Command> commands;
+  Queue<Command> commands;
 }
 

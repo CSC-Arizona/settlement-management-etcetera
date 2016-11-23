@@ -1,12 +1,14 @@
 
 package entities;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.Stack;
 
 public class CommandSystem extends System {
   public CommandSystem(){
     super(Component.COMMANDABLE);
-    commands = new Stack<Command>();
+    commands = new ArrayDeque<Command>();
   }
 
   public void tick(){
@@ -17,7 +19,7 @@ public class CommandSystem extends System {
       CommandableComponent cc =
         (CommandableComponent)eManager.getComponent(Component.COMMANDABLE, e);
       if(cc.commands.isEmpty())
-        cc.commands.push(commands.pop());
+        cc.commands.add(commands.poll());
     }
 
     if(!commands.isEmpty()){
@@ -26,7 +28,7 @@ public class CommandSystem extends System {
       		break;
         CommandableComponent cc =
           (CommandableComponent)eManager.getComponent(Component.COMMANDABLE, e);
-        cc.commands.push(commands.pop());
+        cc.commands.add(commands.poll());
       }
     }
   }
@@ -35,6 +37,6 @@ public class CommandSystem extends System {
     this.commands.addAll(commands);
   }
 
-  private Stack<Command> commands;
+  private Queue<Command> commands;
 }
 
