@@ -22,49 +22,6 @@ public class AISystem extends System {
   public void tick() {
     updateEntityVector();
     for(Entity e : entitiesToProcess){
-      /*PositionComponent pc =
-        (PositionComponent)eManager.getComponent(Component.POSITION, e);
-      AIComponent ac =
-        (AIComponent)eManager.getComponent(Component.AI, e);
-      CommandableComponent cc =
-        (CommandableComponent)eManager.getComponent(Component.COMMANDABLE, e);
-      MobilityComponent mc =
-        (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
-      
-      if(cc != null && !cc.commands.isEmpty() && ac.state.priority < 16){
-        proccessCommands(ac, cc, pc);
-      }else{
-        LivingComponent lc =
-          (LivingComponent)eManager.getComponent(Component.LIVING, e);
-
-        
-        // Change the state TODO: should be it's own method
-        if(lc != null){
-          java.lang.System.out.println(lc.HP + " w: " + lc.hydration);
-
-          if(lc.hydration < 30.0f)
-            ac.state = AIComponent.State.FIND_WATER;
-          else if(lc.hydration >= 100.0f)
-            ac.state = AIComponent.State.WANDER;
-        }
-        
-        switch(ac.state){
-          case WANDER:
-            if(r.nextInt(100) == 42){
-              ac.destination = pc.pos.sub(new Vec2f((r.nextFloat() - 1.0f) * 3,
-                  (r.nextFloat() - 1.0f) * 3));
-            }
-            break;
-          case FIND_WATER:
-            ac.destination = find(/*TileType.WATER);
-            if(ac.destination.sub(pc.pos).getMag() <= CLOSE_ENOUGH)
-              lc.hydration += 5.0f;
-            break;
-        }
-      }
-      goStraight(mc, pc, ac);
-      */
-      
     	PositionComponent pc =
         (PositionComponent)eManager.getComponent(Component.POSITION, e);
       AIComponent ac =
@@ -128,46 +85,7 @@ public class AISystem extends System {
         }else{
           mc.velocity = getVelocity(pc.pos, ac.path.get(0));
         }
-        /*
-        if(ac.destination.equals(pc.pos) || ac.path.size() <= 1){
-          mc.velocity = new Vec2f(0.0f, 0.0f);
-          ac.path = null;
-        }else{
-
-        }
-        */
       }
-
-      /*********************
-        
-      // If we are close enough to our destination, terminate the velocity of the component.
-      if(isReallyClose(location, ac.destination)){
-        mc.velocity = new Vec2f(0.0f, 0.0f);
-        // For the purpose of testing, keep generating new destinations
-        // ac.destination = new Vec2f(r.nextFloat() * 20, r.nextFloat() * 20);
-      // Get the location super close to the destination
-      }else if(isPrettyClose(location, ac.destination)){
-    	  
-        mc.velocity = getVelocity(location, ac.destination);
-      // If there is a desired destination but no path to get there, or if the destination has changed, generate a path
-      }else if(ac.path == null){
-        ac.path = getPath(roundVector(location), roundVector(ac.destination));
-      }else{
-        if(isReallyClose(location, ac.path.get(1)))
-          ac.path.remove(0);
-        if(ac.path.size() != 1){
-        mc.velocity = getVelocity(location, ac.path.get(1));
-        } else{
-        ac.path = null;
-        }
-      }
-      ***********************/
-      /*
-      if(location.x < -0.1 || location.y < -0.1 || location.x > World.WORLD_SIZE+0.1 || location.y > World.WORLD_SIZE+0.1){
-    	  System.out.println("ID: " + e.getID() + "   Location: (" + location.x + ", " + location.y + ")   Velocity: (" + 
-        	      mc.velocity.x + ", " + mc.velocity.y + ")   Destination: (" + ac.destination.x + ", " + ac.destination.y + ")");
-      }
-      */
     }
   }  
 
@@ -254,17 +172,6 @@ public class AISystem extends System {
   private Vec2f roundVector(Vec2f initial){
     float x = (int)(initial.x);
     float y = (int)(initial.y);
-    /*
-    if(x == -1)
-      x = 0;
-    if( y == -1)
-      y = 0;
-    if(x == World.WORLD_SIZE)
-      x = World.WORLD_SIZE - 1;
-    if(y == World.WORLD_SIZE)
-      y = World.WORLD_SIZE - 1;
-      */
-    //return new Vec2f(Math.round(initial.x), Math.round(initial.y));
     return new Vec2f(x, y);
   }
   
@@ -290,26 +197,6 @@ public class AISystem extends System {
 	    }
 	  }
 
-    /*
-	  // Make the locations that have a CollisionComponent and a PositionComponent but no MobilityComponent null
-	  Vector<Entity> entitiesToAvoid = eManager.getMatchingEntities(Component.POSITION | Component.COLLISION, Component.MOBILITY);
-	  for(Entity e: entitiesToAvoid){
-	    PositionComponent ps = (PositionComponent) eManager.getComponent(Component.POSITION, e);
-	    //System.out.println("(" + ps.x + ", " + ps.y + ") ");
-	    int x = Math.round(ps.pos.x);
-	    int y = Math.round(ps.pos.y);
-	    if(x == World.WORLD_SIZE)
-	      x = World.WORLD_SIZE - 1;
-	    if( x == -1)
-	      x = 0;
-	    if(y == World.WORLD_SIZE)
-	      y = World.WORLD_SIZE - 1;
-	    if(y == -1)
-	      y = 0;
-	    graph[y][x].isBlocked = true;
-	  }
-    */
-	  
   return graph;
  }
   
@@ -376,19 +263,8 @@ public class AISystem extends System {
       
       current = getNextNode(unvisitedNodes);
         
-      if(current == null){
-    	/*for(int i = 0; i < World.WORLD_SIZE; i++){
-    		for(int j = 0; j < World.WORLD_SIZE; j++){
-    			//System.out.print(!graph[i][j].isBlocked + " ");
-    			//System.out.print(!(graph[i][j].isBlocked == ) + " ");
-    		}
-    		System.out.println();
-    	}
-    	System.out.println();
-    	System.out.println();
-    	*/
+      if(current == null)
         return null;
-      }
     }
   
     while(true){

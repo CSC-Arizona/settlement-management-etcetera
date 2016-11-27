@@ -40,28 +40,7 @@ public class Game extends Thread {
   }
 
   public void run() {
-  	/*
-    EntityFactory.makeNewGodzilla(5.0f, 5.0f);
-    EntityFactory.makeNewGodzilla(15.0f, 5.0f);
-    EntityFactory.makeNewGodzilla(15.0f, 15.0f);
-    EntityFactory.makeNewGodzilla(5.0f, 15.0f);
-
-    EntityFactory.makeNewAlien(7.0f, 8.0f);
-    EntityFactory.makeNewAlien(9.0f, 2.0f);
-    EntityFactory.makeNewAlien(1.0f, 1.0f);
-
-    EntityFactory.makeNewAmmo(3.0f, 9.0f);
-    for(int i = 4; i < 18; i++){
-    	EntityFactory.makeNewAmmo(i, 9.0f);
-    }
-    EntityFactory.makeNewAmmo(18.0f, 6.0f);
-    EntityFactory.makeNewAmmo(3.0f, 4.0f);
-
-    EntityFactory.makeNewBandage(3.0f, 3.0f);
-    EntityFactory.makeNewBandage(8.0f, 13.0f);
-    EntityFactory.makeNewBandage(4.0f, 5.0f);
-*/
-	label.addMouseListener(new ClickListener());
+  	label.addMouseListener(new ClickListener());
   	commands = new Stack<Command>();
     World w = World.getWorld();
     Random r = new Random();
@@ -89,16 +68,16 @@ public class Game extends Thread {
       long startMil = System.currentTimeMillis();
 
       g.setColor(Color.GRAY);
-      g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
+      //g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
       w.render(g);
       rs.tick();
+      label.repaint();
       ps.tick();
       cs.addCommands(commands);
       commands.clear();
       cs.tick();
       as.tick();
       ls.tick();
-      label.repaint();
 
       long endMil = System.currentTimeMillis();
       if (endMil - startMil < milPerTick) {

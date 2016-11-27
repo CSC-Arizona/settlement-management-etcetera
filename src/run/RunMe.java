@@ -14,7 +14,7 @@ class RunMe {
     new RunMe();
   }
   
-  final int viewWidth = 25;
+  final int viewWidth = 30;
   final int viewHeight = 25;
   
   final int viewWidthPixels = viewWidth * Sprite.WIDTH;
@@ -32,7 +32,7 @@ class RunMe {
 
   RunMe() {
 	frame.setLayout(new BorderLayout());
-	frame.setPreferredSize(new Dimension(viewWidthPixels + 300, viewHeightPixels));
+	frame.setPreferredSize(new Dimension(viewWidthPixels + 10, viewHeightPixels));
     label.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
     scrollPane.setPreferredSize(new Dimension(viewWidthPixels, viewHeightPixels));
 
