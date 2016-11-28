@@ -1,5 +1,8 @@
 package entities;
 
+import utility.Sprite;
+import world.World;
+
 public class LivingSystem extends System {
   public LivingSystem(){
     //TODO
@@ -11,14 +14,16 @@ public class LivingSystem extends System {
     for(Entity e : entitiesToProcess){
       LivingComponent lc =
         (LivingComponent)eManager.getComponent(Component.LIVING, e);
+      PositionComponent pc =
+        (PositionComponent)eManager.getComponent(Component.POSITION, e);
 
-      handleHydration(lc);
+      handleHydration(lc, pc);
       if(lc.HP <= 0.0f)
         purgeTheDead(e);
     }
   }
 
-  private void handleHydration(LivingComponent lc){
+  private void handleHydration(LivingComponent lc, PositionComponent pc){
     if(lc.hydration < 30.0f)
       lc.HP -= 5.0f / TICKS_PER_SECOND;
     else if(lc.hydration < 15.0f)
@@ -32,6 +37,14 @@ public class LivingSystem extends System {
     if(lc.HP > lc.maxHP)
       lc.HP = lc.maxHP;
     
+    World w = World.getWorld();
+    int y = Math.round(pc.pos.y);
+    int x = Math.round(pc.pos.x);
+    if(w.getTile(y, x).getType() == Sprite.LAKE)
+      lc.hydration += 30.0f / TICKS_PER_SECOND;
+
+    if(lc.hydration > lc.maxHydration)
+      lc.hydration = lc.maxHydration;
     //java.lang.System.out.println(lc.hydration);
   }
 

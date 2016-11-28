@@ -35,10 +35,14 @@ public abstract class Component {
   static final long RENDER        = 1 << 3;
   static final long AI            = 1 << 4;
   static final long LIVING        = 1 << 5;
+  // COMMANDABLE does not have a corresponding component, it simply tells us
+  // that the entity should receive the commands issued by the player.
   static final long COMMANDABLE   = 1 << 6;
   static final long CONTAINER     = 1 << 7;
+  // Just like with COMMANDABLE, SHIP is only a tag.
   static final long SHIP          = 1 << 8;
-  static final long TOTAL_COMPS   =      9;
+  static final long MESSAGE       = 1 << 9;
+  static final long TOTAL_COMPS   =     10;
 
   /*
    * Must be called with an appropriate ComponentID taken from above.
