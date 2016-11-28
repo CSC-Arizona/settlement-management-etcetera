@@ -13,7 +13,11 @@
 
 package entities;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Vector;
+
+import world.World;
 
 public enum EntityManager {
   INSTANCE;
@@ -142,6 +146,20 @@ public enum EntityManager {
     int ret = 0;
     for (long i = componentID; i != 1; i >>>= 1, ++ret);
     return ret;
+  }
+  
+  public void loadInstance(Vector<Integer> r, Vector<Vector<Component>> c, Vector<Long> e, int u) {
+	  recycleBin = r;
+	  compVecs = c;
+	  entityBitSets = e;
+	  used = u;
+  }
+  
+  public void saveInstance(ObjectOutputStream outFile) throws IOException {
+	  outFile.writeObject(recycleBin);
+	  outFile.writeObject(compVecs);
+	  outFile.writeObject(entityBitSets);
+	  outFile.writeObject(used);
   }
 
   // Holds freed up ID's

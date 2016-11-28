@@ -5,7 +5,9 @@
 
 package utility;
 
-public class Vec2f {
+import java.io.Serializable;
+
+public class Vec2f implements Serializable {
   public Vec2f(float x, float y) {
     this.x = x;
     this.y = y;
