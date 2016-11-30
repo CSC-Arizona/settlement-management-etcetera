@@ -209,6 +209,8 @@ public class InfoPanel extends JPanel{
   
   // Updates the name feature of the InfoPanel
   public void updateHealth(){
+	if(!eManager.hasComponents(Component.LIVING, e))
+	  return;
 	LivingComponent lc = (LivingComponent) eManager.getComponent(Component.LIVING, e);
 	String text = lc.HP + "/" + lc.maxHP;
 	healthLabel.setText(text);
@@ -216,6 +218,8 @@ public class InfoPanel extends JPanel{
   
   // Updates the inventory feature of the InfoPanel
   public void updateInventory(){
+	if(!eManager.hasComponents(Component.CONTAINER, e))
+	  return;
     ContainerComponent cc = (ContainerComponent) eManager.getComponent(Component.CONTAINER, e);
 	Vector<Item> items = cc.items;
 	DefaultListModel<String> model = new DefaultListModel<String>();
@@ -227,6 +231,8 @@ public class InfoPanel extends JPanel{
   
   // Updates the command feature of the InfoPanel
   public void updateCommandQueue(){
+	if(!eManager.hasComponents(Component.COMMANDABLE, e))
+	  return;
 	CommandableComponent cc = (CommandableComponent) eManager.getComponent(Component.COMMANDABLE, e);
 	Queue<Command> commands = cc.commands;
 	DefaultListModel<String> model = new DefaultListModel<String>();
