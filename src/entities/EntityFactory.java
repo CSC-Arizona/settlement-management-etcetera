@@ -15,12 +15,13 @@ public class EntityFactory {
     eMan.addComponent(new LivingComponent(), alien);
 
     // TODO: which lines are correct?
-    eMan.addComponent(new CommandableComponent(), alien);
-    eMan.addComponent(new ContainerComponent(2), alien);
+    //eMan.addComponent(new CommandableComponent(), alien);
+    //eMan.addComponent(new ContainerComponent(2), alien);
+    //eMan.addComponent(new NameComponent("alien"), alien);
+    eMan.addComponent(new ContainerComponent(4), alien);
+    eMan.addComponent(new MessageComponent(), alien);
     eMan.addComponent(new NameComponent("alien"), alien);
-    //eMan.addComponent(new ContainerComponent(4), alien);
-    //eMan.addComponent(new MessageComponent(), alien);
-    //eMan.markAs(Component.COMMANDABLE, alien);
+    eMan.markAs(Component.COMMANDABLE, alien);
     return alien;
   }
   
@@ -61,6 +62,7 @@ public class EntityFactory {
     eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ship);
     eMan.addComponent(new ContainerComponent(100), ship);
     eMan.markAs(Component.SHIP, ship);
+    eMan.addComponent(new MessageComponent(), ship);
     eMan.addComponent(new NameComponent("ship"), ship);
     return ship;
     //Entity ammo = eMan.genNewEntity();

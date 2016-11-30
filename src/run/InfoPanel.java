@@ -9,6 +9,7 @@ package run;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.util.EnumMap;
 import java.util.Queue;
 import java.util.Vector;
 
@@ -85,7 +86,7 @@ public class InfoPanel extends JPanel{
 	removeAll();
 	createName();
 	createImage();
-	//createHealth();
+	createHealth();
 	//createInventory();
 	createCommandQueue();
 	revalidate();
@@ -99,9 +100,9 @@ public class InfoPanel extends JPanel{
 	//name.setSize(this.getSize().width, 40);
 	name.setAlignmentX(alignment);
 	if(e != null){
-	  //NameComponent nc = (NameComponent) eManager.getComponent(Component.NAME, e);
-	  //name.setBorder(nameBorder);
-	  //name.setText(nc.name + "        ");
+	  NameComponent nc = (NameComponent) eManager.getComponent(Component.NAME, e);
+	  name.setBorder(nameBorder);
+	  name.setText(nc.name + "        ");
 	}
 	else if(s != null){
 	  name.setBorder(nameBorder);
@@ -120,24 +121,24 @@ public class InfoPanel extends JPanel{
 		return;
 	ImageIcon icon;
 	if(e != null){
-	  //RenderComponent rc = (RenderComponent) eManager.getComponent(Component.RENDER, e);
-	  //Image image = rc.texture;
-	  //icon = new ImageIcon(image);
+	  RenderComponent rc = (RenderComponent) eManager.getComponent(Component.RENDER, e);
+	  Image image = rc.texture;
+	  icon = new ImageIcon(image);
 	}
 	else{
 	  Image image = Tileset.instance().getSprite(s);
 	  icon = new ImageIcon(image);
 	}
-	//JLabel imageLabel = new JLabel("    ", icon, 0);
-	//imageLabel.setAlignmentX(alignment);
-	//Border imageBorder = BorderFactory.createTitledBorder("Image");
-	//imageLabel.setBorder(imageBorder);
-	//add(imageLabel);
-	//add(Box.createRigidArea(buffer));
+	JLabel imageLabel = new JLabel("    ", icon, 0);
+	imageLabel.setAlignmentX(alignment);
+	Border imageBorder = BorderFactory.createTitledBorder("Image");
+	imageLabel.setBorder(imageBorder);
+	add(imageLabel);
+	add(Box.createRigidArea(buffer));
  }
   
   // Sets up the health feature for the entity if it has a LivingComponent
-  /*private void createHealth(){
+  private void createHealth(){
     if(e == null || !eManager.hasComponents(Component.LIVING, e))
 	  return;
 	healthLabel = new JLabel();
@@ -150,19 +151,19 @@ public class InfoPanel extends JPanel{
 	healthLabel.setText(text);
 	add(healthLabel);
 	add(Box.createRigidArea(buffer));
-  }*/
+  }
   
-  // Sets up the inventory feature for the entity if it has a ContainerComponent
-  /*private void createInventory(){
+  /*// Sets up the inventory feature for the entity if it has a ContainerComponent
+  private void createInventory(){
 	if(e == null || !eManager.hasComponents(Component.CONTAINER, e))
 	  return;
 	ContainerComponent cc = (ContainerComponent) eManager.getComponent(Component.CONTAINER, e);
     // TODO: CALEB fix this
-	//Vector<Item> items = cc.items;
+	EnumMap<Item, Integer> items = cc.items;
 	DefaultListModel<String> model = new DefaultListModel<String>();
-	//for(Item i : items){
-	//  model.addElement(i.type.name());
-	//}
+	for(Item i : items){
+	  model.addElement(i.type.name());
+	}
 	inventoryList = new JList<String>(model);
 	JScrollPane inventoryScroller = new JScrollPane(inventoryList);
 	//list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -179,7 +180,7 @@ public class InfoPanel extends JPanel{
   
   // Sets up the task queue for the entity if it has a CommandableComponent
   private void createCommandQueue(){
-	/*if(e == null || !eManager.hasComponents(Component.COMMANDABLE, e))
+	if(e == null || !eManager.hasComponents(Component.COMMANDABLE, e))
 	  return;
 	CommandableComponent cc = (CommandableComponent) eManager.getComponent(Component.COMMANDABLE, e);
 	Queue<Command> commands = cc.commands;
@@ -195,7 +196,7 @@ public class InfoPanel extends JPanel{
 	commandScroller.setBorder(commandBorder);
 	commandScroller.setAlignmentX(alignment);
 	add(commandScroller);
-	add(Box.createRigidArea(buffer));*/
+	add(Box.createRigidArea(buffer));
   }
   
   // Updates the panel assuming that the panel has the same entity as before
@@ -203,23 +204,23 @@ public class InfoPanel extends JPanel{
 	if(e == null)
 	  return;
 	updateHealth();
-	updateInventory();
+	//updateInventory();
 	updateCommandQueue();
 	repaint();
   }
   
   // Updates the name feature of the InfoPanel
   public void updateHealth(){
-	/*if(!eManager.hasComponents(Component.LIVING, e))
+	if(!eManager.hasComponents(Component.LIVING, e))
 	  return;
 	LivingComponent lc = (LivingComponent) eManager.getComponent(Component.LIVING, e);
 	String text = lc.HP + "/" + lc.maxHP;
-	healthLabel.setText(text);*/
+	healthLabel.setText(text);
   }
   
-  // Updates the inventory feature of the InfoPanel
+  /*// Updates the inventory feature of the InfoPanel
   public void updateInventory(){
-	/*if(!eManager.hasComponents(Component.CONTAINER, e))
+	if(!eManager.hasComponents(Component.CONTAINER, e))
 	  return;
     ContainerComponent cc = (ContainerComponent) eManager.getComponent(Component.CONTAINER, e);
     // TODO: CALEB fix this
@@ -228,12 +229,12 @@ public class InfoPanel extends JPanel{
 	//for(Item i : items){
 	//  model.addElement(i.type.name());
 	//}
-	inventoryList.setModel(model);*/
-  }
+	inventoryList.setModel(model);
+  }*/
   
   // Updates the command feature of the InfoPanel
   public void updateCommandQueue(){
-	/*if(!eManager.hasComponents(Component.COMMANDABLE, e))
+	if(!eManager.hasComponents(Component.COMMANDABLE, e))
 	  return;
 	CommandableComponent cc = (CommandableComponent) eManager.getComponent(Component.COMMANDABLE, e);
 	Queue<Command> commands = cc.commands;
@@ -241,6 +242,6 @@ public class InfoPanel extends JPanel{
 	for(Command c : commands){
 	  model.addElement(c.type.name());
 	}
-	commandList.setModel(model);*/
+	commandList.setModel(model);
   }
 }

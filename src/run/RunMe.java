@@ -34,7 +34,7 @@ class RunMe {
   
   final int infoPanelWidth = 300;
   
-  final BufferedImage image = (new BufferedImage(totalWidthPixels, totalHeightPixels, BufferedImage.TYPE_INT_ARGB));
+  final transient BufferedImage image = (new BufferedImage(totalWidthPixels, totalHeightPixels, BufferedImage.TYPE_INT_ARGB));
 
   final JFrame frame = new JFrame();
 
@@ -69,10 +69,10 @@ class RunMe {
     int result = JOptionPane.showConfirmDialog(null, "Resume from previous session?","alert", JOptionPane.YES_NO_OPTION);
 	  if (result != 1) {
 	    readData();
-	    g.setBackground(image, frame);
+	    g.setBackground(image, frame, label);
 	  }
     if (g == null) {
-      g = new Game(image, frame);
+      g = new Game(image, frame, label);
       g.spawnAliens(2);
     }
     g.start();

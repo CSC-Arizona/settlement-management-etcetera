@@ -41,16 +41,17 @@ import world.World;
 
 public class Game extends Thread implements Serializable {
 
-/*<<<<<<< HEAD
-  public Game(BufferedImage renderDest, JLabel label) {
+//<<<<<<< HEAD
+  public Game(BufferedImage renderDest, JFrame frame, JLabel label) {
     this.renderDest = renderDest;
     this.label = label;
+    this.frame = frame;
     this.infoPanel = InfoPanel.getInstance();
     eMan = EntityManager.INSTANCE;
     userClickVector = (Vec2f) null;
   }
   
-  public void run() {
+  /*public void run() {
 	  
   
   	label.addMouseListener(new ClickListener());
@@ -68,14 +69,15 @@ public class Game extends Thread implements Serializable {
   	}
   	Graphics g = renderDest.getGraphics();
 =======*/
-  public Game(BufferedImage renderDest, JFrame label) {
+  /*public Game(BufferedImage renderDest, JFrame label) {
     this.renderDest = renderDest;
     this.label = label;
-  }
+  }*/
 
-  public void setBackground(BufferedImage renderDest, JFrame label) {
+  public void setBackground(BufferedImage renderDest, JFrame frame, JLabel label) {
     this.renderDest = renderDest;
     this.label = label;
+    this.frame = frame;
   }
 
   public void spawnAliens(int num) {
@@ -93,6 +95,7 @@ public class Game extends Thread implements Serializable {
   }
 
   public void run() {
+	//java.awt.Component glassPane = label.getGlassPane();
     label.addMouseListener(new ClickListener());
     label.addKeyListener(new KeyboardListener());
     commands = new Stack<Command>();
@@ -203,7 +206,7 @@ public class Game extends Thread implements Serializable {
       rs.tick();
       label.repaint();
 =======*/
-    MessageSystem ms = new MessageSystem();
+    //MessageSystem ms = new MessageSystem();
 
     EntityFactory.makeNewShip(1, 1);
     // We want to have 30 ticks/s
@@ -212,7 +215,7 @@ public class Game extends Thread implements Serializable {
     for (;;) {
       long startMil = System.currentTimeMillis();
       g.setColor(Color.GRAY);
-      g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
+      //g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
       w.render(g);
       rs.tick();
 //>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
@@ -220,6 +223,7 @@ public class Game extends Thread implements Serializable {
       cs.addCommands(commands);
       commands.clear();
       cs.tick();
+      //ms.tick();
       as.tick();
       ls.tick();
 /*<<<<<<< HEAD
@@ -234,8 +238,16 @@ public class Game extends Thread implements Serializable {
       }
 =======*/
       label.repaint();
-      ms.tick();
-      Vector<String> messages = ms.getMessages();
+      //ms.tick();
+      if(userClickVector == null)
+    	  infoPanel.updatePanel();
+      else{
+    	  Entity entity = eMan.getTopEntityAt(userClickVector);
+    	  Sprite sprite = w.getTile((int)userClickVector.y, (int)userClickVector.x).getType();
+    	  infoPanel.setModelEntitySprite(entity, sprite);
+    	  userClickVector = null;
+      }
+      //Vector<String> messages = ms.getMessages();
       //for(String s : messages)
         //java.lang.System.out.println(s);
       
@@ -253,19 +265,20 @@ public class Game extends Thread implements Serializable {
       }
     }
   }
-
   private class ClickListener extends MouseAdapter {
     @Override
-/*<<<<<<< HEAD
+//<<<<<<< HEAD
     public void mousePressed(MouseEvent e) {
       World w = World.getWorld();
       if(e.getButton() == MouseEvent.BUTTON1){
         // if(tile is a tree)
         if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).getType() == Sprite.TREE)
-          commands.push(new Command(Type.CHOP_TREE, new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
+        	commands.push(new Command(Command.Type.CHOP_TREE,
+                    new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
         //System.out.println("CHOP_TREE " + e.getX() / 32 + ", " + e.getY() / 32);
         else if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).isPassable())
-          commands.push(new Command(Type.RELOCATE, new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
+        	commands.push(new Command(Command.Type.RELOCATE,
+                    new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
         //System.out.println("RELOCATE" + e.getX() / 32 + ", " + e.getY() / 32);
       }
       else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2    	  
@@ -275,8 +288,9 @@ public class Game extends Thread implements Serializable {
     	  //infoPanel.setModelEntitySprite(entity, sprite);
       }else if(e.getButton()==MouseEvent.BUTTON2){
         if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
-          commands.push(new Command(Type.BUILD_HOUSE, new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
-=======*/
+        	commands.push(new Command(Command.Type.BUILD_HOUSE,
+                    new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
+/*=======
     public void mouseClicked(MouseEvent e) {
       World w = World.getWorld();
       if(e.getButton() == MouseEvent.BUTTON1){
@@ -297,7 +311,7 @@ public class Game extends Thread implements Serializable {
         if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
           commands.push(new Command(Command.Type.BUILD_HOUSE,
               new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
-//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
+//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264*/
         }
       }
     }
@@ -353,7 +367,11 @@ public class Game extends Thread implements Serializable {
   private int aliensToAdd;
   private Stack<Command> commands;
   private transient BufferedImage renderDest;
-  private JFrame label;
+  private JFrame frame;
+  private JLabel label;
+  private InfoPanel infoPanel;
+  private static EntityManager eMan;
+  private Vec2f userClickVector;
 //>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
 }
 

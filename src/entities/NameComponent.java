@@ -8,10 +8,10 @@ package entities;
 
 public class NameComponent extends Component{
 
-  /*public NameComponent(String name) {
+  public NameComponent(String name) {
     super(MESSAGE);
     this.name = name;
   }
 	
-  public String name;*/
+  public String name;
 }

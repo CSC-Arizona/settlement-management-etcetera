@@ -71,13 +71,13 @@ public class AISystem extends System {
       			lc.hydration += 30.0f / TICKS_PER_SECOND;
       		break;
 =======*/
-    	pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
+      pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
       ac = (AIComponent)eManager.getComponent(Component.AI, e);
       mc = (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
       lc = (LivingComponent)eManager.getComponent(Component.LIVING, e);
       cc = (ContainerComponent)eManager.getComponent(Component.CONTAINER, e);
       // TODO: rob changed this from message to name
-      msc = (MessageComponent)eManager.getComponent(Component.MESSAGE, e);
+      //msc = (MessageComponent)eManager.getComponent(Component.MESSAGE, e);
       
       if(ac.states.isEmpty())
       	ac.states.add(new State(State.Type.WANDER, getTime()));
