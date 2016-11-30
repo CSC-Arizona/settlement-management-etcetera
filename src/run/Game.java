@@ -206,7 +206,7 @@ public class Game extends Thread implements Serializable {
   }
   
   private Stack<Command> commands;
-  private BufferedImage renderDest;
+  private transient BufferedImage renderDest;
   private JLabel label;
   private InfoPanel infoPanel;
   private static EntityManager eMan;
