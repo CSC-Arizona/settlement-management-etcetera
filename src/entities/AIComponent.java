@@ -5,6 +5,7 @@ package entities;
 
 import utility.Vec2f;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 //import java.awt.Point;
@@ -15,14 +16,16 @@ public class AIComponent extends Component {
   public AIComponent() {
     super(AI);
     //destination = new Vec2f(0.0f, 0.0f);
-     states = new PriorityQueue<State>(10, new Comparator<State>() {
-       public int compare(State a, State b){
-      	 if(b.priority != a.priority)
-      		 return b.priority - a.priority;
-      	 else
-      		 return (int)(a.timestamp - b.timestamp);
-       }
-     });
+     states = new PriorityQueue<State>(10, new StateComparator());
+  }
+  
+  private class StateComparator implements Comparator<State>, Serializable {
+    public int compare(State a, State b){
+   	 if(b.priority != a.priority)
+   		 return b.priority - a.priority;
+   	 else
+   		 return (int)(a.timestamp - b.timestamp);
+    }
   }
   
   //Vec2f destination;

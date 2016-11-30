@@ -98,6 +98,7 @@ public class Game extends Thread implements Serializable {
     AISystem as = new AISystem();
     LivingSystem ls = new LivingSystem();
     CommandSystem cs = new CommandSystem();
+    MessageSystem ms = new MessageSystem();
 
     EntityFactory.makeNewShip(1, 1);
     // We want to have 30 ticks/s
