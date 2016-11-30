@@ -40,17 +40,17 @@ class RunMe {
     frame.setLocationRelativeTo(null);
     //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.addWindowListener(new MyWindowListener());
-  frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     frame.setVisible(true);
     
     int result = JOptionPane.showConfirmDialog(null, "Resume from previous session?","alert", JOptionPane.YES_NO_OPTION);
-  if (result != 1) {
-    readData();
-    g.setBackground(image, label);
-  }
+	  if (result != 1) {
+	    readData();
+	    g.setBackground(image, frame);
+	  }
     if (g == null) {
-      g = new Game(image, label);
-      g.spawnAliens();
+      g = new Game(image, frame);
+      g.spawnAliens(2);
     }
     g.start();
   }

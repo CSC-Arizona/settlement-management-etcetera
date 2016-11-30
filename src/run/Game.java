@@ -2,6 +2,8 @@ package run;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -11,7 +13,9 @@ import java.util.Random;
 import java.util.Stack;
 import java.util.Vector;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import entities.Entity;
 import entities.EntityFactory;
@@ -37,20 +41,20 @@ import world.World;
 
 public class Game extends Thread implements Serializable {
 
-  public Game(BufferedImage renderDest, JLabel label) {
+  public Game(BufferedImage renderDest, JFrame label) {
     this.renderDest = renderDest;
     this.label = label;
   }
 
-  public void setBackground(BufferedImage renderDest, JLabel label) {
+  public void setBackground(BufferedImage renderDest, JFrame label) {
     this.renderDest = renderDest;
     this.label = label;
   }
 
-  public void spawnAliens() {
+  public void spawnAliens(int num) {
     World w = World.getWorld();
     Random r = new Random();
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < num; ++i) {
       int x = r.nextInt(World.WORLD_SIZE - 1);
       int y = r.nextInt(World.WORLD_SIZE - 1);
       while (!w.getTile(y, x).isPassable()) {
@@ -62,29 +66,12 @@ public class Game extends Thread implements Serializable {
   }
 
   public void run() {
-    /*
-     * EntityFactory.makeNewGodzilla(5.0f, 5.0f);
-     * EntityFactory.makeNewGodzilla(15.0f, 5.0f);
-     * EntityFactory.makeNewGodzilla(15.0f, 15.0f);
-     * EntityFactory.makeNewGodzilla(5.0f, 15.0f);
-     * 
-     * EntityFactory.makeNewAlien(7.0f, 8.0f);
-     * EntityFactory.makeNewAlien(9.0f, 2.0f);
-     * EntityFactory.makeNewAlien(1.0f, 1.0f);
-     * 
-     * EntityFactory.makeNewAmmo(3.0f, 9.0f); for(int i = 4; i < 18; i++){
-     * EntityFactory.makeNewAmmo(i, 9.0f); }
-     * EntityFactory.makeNewAmmo(18.0f, 6.0f);
-     * EntityFactory.makeNewAmmo(3.0f, 4.0f);
-     * 
-     * EntityFactory.makeNewBandage(3.0f, 3.0f);
-     * EntityFactory.makeNewBandage(8.0f, 13.0f);
-     * EntityFactory.makeNewBandage(4.0f, 5.0f);
-     */
     label.addMouseListener(new ClickListener());
+    label.addKeyListener(new KeyboardListener());
     commands = new Stack<Command>();
     World w = World.getWorld();
     Random r = new Random();
+    aliensToAdd = 0;
     /*
      * for(int i = 0; i < 5; ++i){ int x = r.nextInt(World.WORLD_SIZE - 1);
      * int y = r.nextInt(World.WORLD_SIZE - 1); while(!w.getTile(y,
@@ -121,6 +108,9 @@ public class Game extends Thread implements Serializable {
       Vector<String> messages = ms.getMessages();
       //for(String s : messages)
         //java.lang.System.out.println(s);
+      
+      for(; aliensToAdd > 0; --aliensToAdd)
+      	spawnAliens(1);
 
       long endMil = System.currentTimeMillis();
       if (endMil - startMil < milPerTick) {
@@ -160,8 +150,26 @@ public class Game extends Thread implements Serializable {
     }
   }
   
+  private class KeyboardListener implements KeyListener {
+
+		@Override
+		public void keyPressed(KeyEvent arg0) {
+			if(arg0.getKeyCode() == KeyEvent.VK_N){
+				++aliensToAdd;
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {}
+  	
+  }
+  
+  private int aliensToAdd;
   private Stack<Command> commands;
   private transient BufferedImage renderDest;
-  private JLabel label;
+  private JFrame label;
 }
 
