@@ -11,7 +11,7 @@ public class Tileset {
 
   private static final String TILESET_PATH = "gfx/tiles.png";
   private static Tileset instance = null;
-  private static BufferedImage tileset;
+  private transient static BufferedImage tileset;
 
   public static Tileset instance() {
     if(instance == null) {
