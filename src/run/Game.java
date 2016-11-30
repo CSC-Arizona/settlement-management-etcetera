@@ -2,6 +2,8 @@ package run;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -9,8 +11,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Random;
 import java.util.Stack;
+import java.util.Vector;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import entities.Entity;
 import entities.EntityFactory;
@@ -21,20 +26,22 @@ import entities.PositionComponent;
 import entities.RenderComponent;
 import entities.CollisionComponent;
 import entities.Command;
-import entities.Command.Type;
 import entities.CommandSystem;
+import entities.State;
 import entities.AIComponent;
 
 import entities.RenderSystem;
 import entities.PhysicsSystem;
 import entities.AISystem;
 import entities.LivingSystem;
+import entities.MessageSystem;
 import utility.Sprite;
 import utility.Vec2f;
 import world.World;
 
 public class Game extends Thread implements Serializable {
 
+/*<<<<<<< HEAD
   public Game(BufferedImage renderDest, JLabel label) {
     this.renderDest = renderDest;
     this.label = label;
@@ -42,7 +49,7 @@ public class Game extends Thread implements Serializable {
     eMan = EntityManager.INSTANCE;
     userClickVector = (Vec2f) null;
   }
-  /*
+  
   public void run() {
 	  
   
@@ -60,18 +67,60 @@ public class Game extends Thread implements Serializable {
   		EntityFactory.makeNewAlien(x, y);
   	}
   	Graphics g = renderDest.getGraphics();
+=======*/
+  public Game(BufferedImage renderDest, JFrame label) {
+    this.renderDest = renderDest;
+    this.label = label;
+  }
+
+  public void setBackground(BufferedImage renderDest, JFrame label) {
+    this.renderDest = renderDest;
+    this.label = label;
+  }
+
+  public void spawnAliens(int num) {
+    World w = World.getWorld();
+    Random r = new Random();
+    for (int i = 0; i < num; ++i) {
+      int x = r.nextInt(World.WORLD_SIZE - 1);
+      int y = r.nextInt(World.WORLD_SIZE - 1);
+      while (!w.getTile(y, x).isPassable()) {
+        x = r.nextInt(World.WORLD_SIZE - 1);
+        y = r.nextInt(World.WORLD_SIZE - 1);
+      }
+      EntityFactory.makeNewAlien(x, y);
+    }
+  }
+
+  public void run() {
+    label.addMouseListener(new ClickListener());
+    label.addKeyListener(new KeyboardListener());
+    commands = new Stack<Command>();
+    World w = World.getWorld();
+    Random r = new Random();
+    aliensToAdd = 0;
+    /*
+     * for(int i = 0; i < 5; ++i){ int x = r.nextInt(World.WORLD_SIZE - 1);
+     * int y = r.nextInt(World.WORLD_SIZE - 1); while(!w.getTile(y,
+     * x).isPassable()){ x = r.nextInt(World.WORLD_SIZE - 1); y =
+     * r.nextInt(World.WORLD_SIZE - 1); } EntityFactory.makeNewAlien(x, y);
+     * }
+     */
+    Graphics g = renderDest.getGraphics();
+//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
     RenderSystem rs = new RenderSystem(g);
     PhysicsSystem ps = new PhysicsSystem();
     AISystem as = new AISystem();
     LivingSystem ls = new LivingSystem();
     CommandSystem cs = new CommandSystem();
-    */
-	/*
+/*<<<<<<< HEAD
+    
+	//
 	public Game(BufferedImage renderDest, JLabel label) {
 		this.renderDest = renderDest;
 		this.label = label;
 	}
-	 */
+	 //
   public void setBackground(BufferedImage renderDest, JLabel label) {
 	this.renderDest = renderDest;
 	this.label = label;
@@ -92,7 +141,7 @@ public class Game extends Thread implements Serializable {
   }
 
   public void run() {
-    /*
+    //
 	* EntityFactory.makeNewGodzilla(5.0f, 5.0f);
 	* EntityFactory.makeNewGodzilla(15.0f, 5.0f);
 	* EntityFactory.makeNewGodzilla(15.0f, 15.0f);
@@ -110,18 +159,18 @@ public class Game extends Thread implements Serializable {
 	* EntityFactory.makeNewBandage(3.0f, 3.0f);
 	* EntityFactory.makeNewBandage(8.0f, 13.0f);
 	* EntityFactory.makeNewBandage(4.0f, 5.0f);
-	*/
+	//
 	label.addMouseListener(new ClickListener());
 	commands = new Stack<Command>();
 	World w = World.getWorld();
 	Random r = new Random();
-	/*
+	//
 	* for(int i = 0; i < 5; ++i){ int x = r.nextInt(World.WORLD_SIZE - 1);
 	* int y = r.nextInt(World.WORLD_SIZE - 1); while(!w.getTile(y,
 	* x).isPassable()){ x = r.nextInt(World.WORLD_SIZE - 1); y =
 	* r.nextInt(World.WORLD_SIZE - 1); } EntityFactory.makeNewAlien(x, y);
 	* }
-	*/
+	//
 	Graphics g = renderDest.getGraphics();
 	RenderSystem rs = new RenderSystem(g);
 	PhysicsSystem ps = new PhysicsSystem();
@@ -135,7 +184,7 @@ public class Game extends Thread implements Serializable {
 	long milPerTick = (long) ((1.0f / goal) * 1000);
 	for (;;) {
 	  long startMil = System.currentTimeMillis();
-	  /*
+	  ///
 	  g.setColor(Color.GRAY);
 	  g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
 	  w.render(g);
@@ -147,18 +196,33 @@ public class Game extends Thread implements Serializable {
 	  as.tick();
 	  ls.tick();
 	  label.repaint();
-	  */
+	  //
       g.setColor(Color.GRAY);
       //g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
       w.render(g);
       rs.tick();
       label.repaint();
+=======*/
+    MessageSystem ms = new MessageSystem();
+
+    EntityFactory.makeNewShip(1, 1);
+    // We want to have 30 ticks/s
+    int goal = 30;
+    long milPerTick = (long) ((1.0f / goal) * 1000);
+    for (;;) {
+      long startMil = System.currentTimeMillis();
+      g.setColor(Color.GRAY);
+      g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
+      w.render(g);
+      rs.tick();
+//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
       ps.tick();
       cs.addCommands(commands);
       commands.clear();
       cs.tick();
       as.tick();
       ls.tick();
+/*<<<<<<< HEAD
       //label.repaint();
       if(userClickVector == null)
     	  infoPanel.updatePanel();
@@ -168,6 +232,17 @@ public class Game extends Thread implements Serializable {
     	  infoPanel.setModelEntitySprite(entity, sprite);
     	  userClickVector = null;
       }
+=======*/
+      label.repaint();
+      ms.tick();
+      Vector<String> messages = ms.getMessages();
+      //for(String s : messages)
+        //java.lang.System.out.println(s);
+      
+      for(; aliensToAdd > 0; --aliensToAdd)
+      	spawnAliens(1);
+
+//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
       long endMil = System.currentTimeMillis();
       if (endMil - startMil < milPerTick) {
         try {
@@ -181,6 +256,7 @@ public class Game extends Thread implements Serializable {
 
   private class ClickListener extends MouseAdapter {
     @Override
+/*<<<<<<< HEAD
     public void mousePressed(MouseEvent e) {
       World w = World.getWorld();
       if(e.getButton() == MouseEvent.BUTTON1){
@@ -200,11 +276,34 @@ public class Game extends Thread implements Serializable {
       }else if(e.getButton()==MouseEvent.BUTTON2){
         if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
           commands.push(new Command(Type.BUILD_HOUSE, new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
+=======*/
+    public void mouseClicked(MouseEvent e) {
+      World w = World.getWorld();
+      if(e.getButton() == MouseEvent.BUTTON1){
+        // if(tile is a tree)
+        if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).getType() == Sprite.TREE){
+          commands.push(new Command(Command.Type.CHOP_TREE,
+              new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
+        }
+        //System.out.println("CHOP_TREE " + e.getX() / 32 + ", " + e.getY() / 32);
+      }
+      else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2
+        if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).isPassable()){
+          commands.push(new Command(Command.Type.RELOCATE,
+              new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
+        }
+        //System.out.println("RELOCATE" + e.getX() / 32 + ", " + e.getY() / 32);
+      }else if(e.getButton()==MouseEvent.BUTTON2){
+        if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
+          commands.push(new Command(Command.Type.BUILD_HOUSE,
+              new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
+//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
         }
       }
     }
   }
   
+/*<<<<<<< HEAD
   private Stack<Command> commands;
   private BufferedImage renderDest;
   private JLabel label;
@@ -224,34 +323,37 @@ public class Game extends Thread implements Serializable {
 	}
 	
 	private class ClickListener extends MouseAdapter {
+=======*/
+  private class KeyboardListener implements KeyListener {
+
+//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			World w = World.getWorld();
-			if (e.getButton() == MouseEvent.BUTTON1) {
-				// if(tile is a tree)
-				if (w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).getType() == Sprite.TREE)
-					commands.push(
-							new Command(Type.CHOP_TREE, new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
-				// System.out.println("CHOP_TREE " + e.getX() / 32 + ", " +
-				// e.getY() / 32);
-			} else if (e.getButton() == MouseEvent.BUTTON3) { // this might need
-																// to be a 2
-				if (w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).isPassable())
-					commands.push(
-							new Command(Type.RELOCATE, new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
-				// System.out.println("RELOCATE" + e.getX() / 32 + ", " +
-				// e.getY() / 32);
-			} else if (e.getButton() == MouseEvent.BUTTON2) {
-				if (World.getWorld().getTile(e.getX() / 32, e.getY() / 32).getType() == Sprite.DIRT) {
-					commands.push(new Command(Type.BUILD_HOUSE,
-							new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT)));
-				}
+		public void keyPressed(KeyEvent arg0) {
+			if(arg0.getKeyCode() == KeyEvent.VK_N){
+				++aliensToAdd;
 			}
 		}
+/*<<<<<<< HEAD
 	}
 	
 	private Stack<Command> commands;
 	private transient BufferedImage renderDest;
 	private JLabel label;
 	*/
+//=======*/
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {}
+  	
+  }
+  
+  private int aliensToAdd;
+  private Stack<Command> commands;
+  private transient BufferedImage renderDest;
+  private JFrame label;
+//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
 }
+

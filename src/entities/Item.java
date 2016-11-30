@@ -1,16 +1,33 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.EnumMap;
 
-public class Item implements Serializable {
-  public Item(Type t){
-    type = t;
+public enum Item implements Serializable {
+  WOOD(false, false),
+  AXE(true, true);
+
+  private Item(boolean craftable, boolean tool){
+    isCraftable = craftable;
+    isTool = tool;
   }
-
-  public enum Type {
-    WOOD;
+  
+  public EnumMap<Item, Integer> getRecipe(){
+  	switch(this){
+  		case AXE:
+  			return axeRecipe;
+  		default:
+  			return null;
+  	}
   }
+  
+  final boolean isCraftable;
+  final boolean isTool;
 
-  public Type type;
+  // TODO: which lines? -rob
+  //public Type type;
+  static final EnumMap<Item, Integer> axeRecipe = new EnumMap<Item, Integer>(Item.class){{
+    put(WOOD, 2);
+  }};
 }
 

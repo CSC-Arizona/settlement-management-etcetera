@@ -125,6 +125,14 @@ public enum EntityManager {
     return ret;
   }
 
+  public Entity getFirstMatching(long CBS){
+    for(int id = 0; id < used; ++id){
+      if((entityBitSets.get(id) & CBS) == CBS)
+        return new Entity(id);
+    }
+    return null;
+  }
+
   /*
    * Tells us whether or not an entity has specified components.
    */
@@ -166,7 +174,7 @@ public enum EntityManager {
 	entityList = INSTANCE.getMatchingEntities(Component.RENDER | Component.POSITION);
 	for(Entity e : entityList){
 	  PositionComponent pc = (PositionComponent) INSTANCE.getComponent(Component.POSITION, e);
-	  NameComponent nc = (NameComponent) INSTANCE.getComponent(Component.NAME, e);
+	  NameComponent nc = (NameComponent) INSTANCE.getComponent(Component.MESSAGE, e);
 	  if(pc.pos.sub(location).getMag() <= 0.5 && nc.name.equals(""))
 	    return e;
 	}

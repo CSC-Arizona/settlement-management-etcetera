@@ -4,6 +4,10 @@
 package entities;
 
 import utility.Vec2f;
+
+import java.io.Serializable;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 //import java.awt.Point;
 import java.util.Vector;
 
@@ -11,22 +15,20 @@ public class AIComponent extends Component {
 
   public AIComponent() {
     super(AI);
-    destination = new Vec2f(0.0f, 0.0f);
-    state = State.WANDER;
+    //destination = new Vec2f(0.0f, 0.0f);
+     states = new PriorityQueue<State>(10, new StateComparator());
   }
   
-  public enum State {
-    WANDER(-1),
-    FIND_WATER(1024);
-    
-    private State(int priority){
-      this.priority = priority;
+  private class StateComparator implements Comparator<State>, Serializable {
+    public int compare(State a, State b){
+   	 if(b.priority != a.priority)
+   		 return b.priority - a.priority;
+   	 else
+   		 return (int)(a.timestamp - b.timestamp);
     }
-    
-    public int priority;
   }
-
-  Vec2f destination;
+  
+  //Vec2f destination;
   Vector<Vec2f> path;
-  State state;
+  PriorityQueue<State> states;
 }
