@@ -37,7 +37,7 @@ public class RenderComponent extends Component {
     this.height = Sprite.HEIGHT;
   }
 
-  BufferedImage texture;
+  public BufferedImage texture;
   int width;
   int height;
 }

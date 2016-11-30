@@ -29,16 +29,17 @@ public abstract class Component {
    * ComponentType.VELOCITY.getValue() | ComponentType.AI.getValue())", and it
    * is already way too verbose for my taste.
    */
-  static final long POSITION      = 1 << 0;
-  static final long MOBILITY      = 1 << 1;
-  static final long COLLISION     = 1 << 2;
-  static final long RENDER        = 1 << 3;
-  static final long AI            = 1 << 4;
-  static final long LIVING        = 1 << 5;
-  static final long COMMANDABLE   = 1 << 6;
-  static final long CONTAINER     = 1 << 7;
-  static final long SHIP          = 1 << 8;
-  static final long TOTAL_COMPS   =      9;
+  public static final long POSITION      = 1 << 0;
+  public static final long MOBILITY      = 1 << 1;
+  public static final long COLLISION     = 1 << 2;
+  public static final long RENDER        = 1 << 3;
+  public static final long AI            = 1 << 4;
+  public static final long LIVING        = 1 << 5;
+  public static final long COMMANDABLE   = 1 << 6;
+  public static final long CONTAINER     = 1 << 7;
+  public static final long SHIP          = 1 << 8;
+  public static final long NAME		  = 1 << 9;
+  public static final long TOTAL_COMPS   =      10;
 
   /*
    * Must be called with an appropriate ComponentID taken from above.

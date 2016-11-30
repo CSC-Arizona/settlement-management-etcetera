@@ -9,6 +9,6 @@ public class CommandableComponent extends Component {
    commands = new ArrayDeque<Command>();
   }
   
-  Queue<Command> commands;
+  public Queue<Command> commands;
 }
 

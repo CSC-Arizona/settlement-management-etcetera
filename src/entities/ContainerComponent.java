@@ -10,6 +10,6 @@ public class ContainerComponent extends Component {
   }
 
   int maxCapacity;
-  Vector<Item> items;
+  public Vector<Item> items;
 }
 

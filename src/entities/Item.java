@@ -9,6 +9,6 @@ public class Item {
     WOOD;
   }
 
-  Type type;
+  public Type type;
 }
 

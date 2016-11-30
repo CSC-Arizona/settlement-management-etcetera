@@ -16,7 +16,7 @@ public class Command {
     GET_WOOD;
   }
   
-  Type type;
+  public Type type;
   Vec2f location;
 }
 
