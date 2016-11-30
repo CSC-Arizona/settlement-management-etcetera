@@ -15,10 +15,11 @@
 package entities;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 
-public abstract class Component {
+public abstract class Component implements Serializable {
   /*
    * Default access modifier: seen only within the entities package.
    *

@@ -1,8 +1,10 @@
 package entities;
 
+import java.io.Serializable;
+
 import utility.Vec2f;
 
-public class Command {
+public class Command implements Serializable {
   public Command(Type cType, Vec2f location){
     this.type = cType;
     this.location = location;
