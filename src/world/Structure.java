@@ -17,7 +17,7 @@ public abstract class Structure implements Serializable {
 	protected Structure[][] formation;
 	private boolean passable;
 	private int id;
-	BufferedImage texture;
+	transient BufferedImage texture;
 	Sprite s;
 	
 	/*
@@ -30,6 +30,12 @@ public abstract class Structure implements Serializable {
 		id = -1;
     Tileset tileset = Tileset.instance();
     texture = tileset.getSprite(s);
+	}
+	
+	public BufferedImage getTexture() {
+		Tileset tileset = Tileset.instance();
+	    texture = tileset.getSprite(s);
+		return texture;
 	}
 	
 	public Sprite getType() {

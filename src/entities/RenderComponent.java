@@ -31,13 +31,23 @@ public class RenderComponent extends Component {
 
   public RenderComponent(Sprite s){
     super(RENDER);
+    
+    this.s = s;
+    
     Tileset tileset = Tileset.instance();
     texture = tileset.getSprite(s);
     this.width = Sprite.WIDTH;
     this.height = Sprite.HEIGHT;
   }
+  
+  public BufferedImage getTexture() {
+	  Tileset tileset = Tileset.instance();
+	  texture = tileset.getSprite(s);
+	  return texture;
+  }
 
-  BufferedImage texture;
+  Sprite s;
+  transient BufferedImage texture;
   int width;
   int height;
 }

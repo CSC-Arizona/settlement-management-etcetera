@@ -1,5 +1,6 @@
 package utility;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,7 @@ public class Tileset {
 
   private static final String TILESET_PATH = "gfx/tiles.png";
   private static Tileset instance = null;
-  private static BufferedImage tileset;
+  private transient static BufferedImage tileset;
 
   public static Tileset instance() {
     if(instance == null) {
@@ -32,7 +33,23 @@ public class Tileset {
   }
 
   public BufferedImage getSprite(Sprite s){
-    return tileset.getSubimage(s.getX(), s.getY(), Sprite.WIDTH, Sprite.HEIGHT);
+	// load source images
+	BufferedImage image = tileset.getSubimage(0, 40*32, Sprite.WIDTH, Sprite.HEIGHT);
+	BufferedImage overlay = tileset.getSubimage(s.getX(), s.getY(), Sprite.WIDTH, Sprite.HEIGHT);
+
+	// create the new image, canvas size is the max. of both image sizes
+	int w = Math.max(image.getWidth(), overlay.getWidth());
+	int h = Math.max(image.getHeight(), overlay.getHeight());
+	BufferedImage combined = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+	// paint both images, preserving the alpha channels
+	Graphics g = combined.getGraphics();
+	g.drawImage(image, 0, 0, null);
+	g.drawImage(overlay, 0, 0, null);
+	
+	g.dispose();
+	  
+    return combined;
   }
 
 }
