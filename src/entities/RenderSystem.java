@@ -15,7 +15,7 @@ public class RenderSystem extends System{
 
   public void tick() {
     updateEntityVector();
-    for (Entity e : entitiesToProcess) {
+    for (Entity e : entitiesToProcess) {      
       RenderComponent rc;
       PositionComponent pc;
       LivingComponent lc;

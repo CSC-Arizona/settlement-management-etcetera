@@ -120,6 +120,14 @@ public enum EntityManager {
     return ret;
   }
 
+  public Entity getFirstMatching(long CBS){
+    for(int id = 0; id < used; ++id){
+      if((entityBitSets.get(id) & CBS) == CBS)
+        return new Entity(id);
+    }
+    return null;
+  }
+
   /*
    * Tells us whether or not an entity has specified components.
    */

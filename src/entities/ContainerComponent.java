@@ -1,15 +1,16 @@
 package entities;
 
-import java.util.Vector;
+import java.util.EnumMap;
 
 public class ContainerComponent extends Component {
   public ContainerComponent(int maxCapacity){
   	super(CONTAINER);
-    items = new Vector<Item>();
+    items = new EnumMap<Item, Integer>(Item.class);
     this.maxCapacity = maxCapacity;
+    items.put(Item.AXE, 1);
   }
 
   int maxCapacity;
-  Vector<Item> items;
+  EnumMap<Item, Integer> items;
 }
 
