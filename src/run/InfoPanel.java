@@ -121,7 +121,7 @@ public class InfoPanel extends JPanel{
 	ImageIcon icon;
 	if(e != null){
 	  RenderComponent rc = (RenderComponent) eManager.getComponent(Component.RENDER, e);
-	  Image image = rc.texture;
+	  Image image = rc.getTexture();
 	  icon = new ImageIcon(image);
 	}
 	else{

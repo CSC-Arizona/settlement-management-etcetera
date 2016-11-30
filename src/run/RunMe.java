@@ -34,7 +34,7 @@ class RunMe {
   
   final int infoPanelWidth = 300;
   
-  final BufferedImage image = (new BufferedImage(totalWidthPixels, totalHeightPixels, BufferedImage.TYPE_INT_ARGB));
+  final transient BufferedImage image = (new BufferedImage(totalWidthPixels, totalHeightPixels, BufferedImage.TYPE_INT_ARGB));
 
   final JFrame frame = new JFrame();
 
