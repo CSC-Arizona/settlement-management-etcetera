@@ -7,6 +7,7 @@ public class ContainerComponent extends Component {
   	super(CONTAINER);
     items = new EnumMap<Item, Integer>(Item.class);
     this.maxCapacity = maxCapacity;
+    items.put(Item.AXE, 1);
   }
 
   int maxCapacity;

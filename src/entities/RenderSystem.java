@@ -15,17 +15,7 @@ public class RenderSystem extends System{
 
   public void tick() {
     updateEntityVector();
-    for (Entity e : entitiesToProcess) {
-      
-      /* DEBUG */
-      if(eManager.hasComponents(Component.SHIP, e)){
-      	MessageComponent mssc =
-      			(MessageComponent)eManager.getComponent(Component.MESSAGE, e);
-      	ContainerComponent conc =
-      			(ContainerComponent)eManager.getComponent(Component.CONTAINER, e);
-      	mssc.messages.push("(ship) has " + conc.items.size() + " items");
-      }
-      
+    for (Entity e : entitiesToProcess) {      
       RenderComponent rc;
       PositionComponent pc;
       LivingComponent lc;

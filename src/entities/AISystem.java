@@ -22,25 +22,31 @@ public class AISystem extends System {
   public void tick() {
     updateEntityVector();
     for(Entity e : entitiesToProcess){
-    	PositionComponent pc =
-        (PositionComponent)eManager.getComponent(Component.POSITION, e);
-      AIComponent ac =
-        (AIComponent)eManager.getComponent(Component.AI, e);
-      MobilityComponent mc =
-        (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
-      LivingComponent lc =
-        (LivingComponent)eManager.getComponent(Component.LIVING, e);
-      ContainerComponent conc =
-        (ContainerComponent)eManager.getComponent(Component.CONTAINER, e);
-      MessageComponent mssc =
-        (MessageComponent)eManager.getComponent(Component.MESSAGE, e);
+    	pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
+      ac = (AIComponent)eManager.getComponent(Component.AI, e);
+      mc = (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
+      lc = (LivingComponent)eManager.getComponent(Component.LIVING, e);
+      cc = (ContainerComponent)eManager.getComponent(Component.CONTAINER, e);
+      msc = (MessageComponent)eManager.getComponent(Component.MESSAGE, e);
+      
+      if(ac.states.isEmpty())
+      	ac.states.add(new State(State.Type.WANDER, getTime()));
       
       /* DEBUG */
-      mssc.messages.add(" (Alien) has: " + conc.items.get(Item.WOOD) + " wood");
+      //msc.messages.add(" (Alien) has: " + conc.items.get(Item.WOOD) + " wood");
+      
+      
+      java.lang.System.out.println("*******************************");
+      java.lang.System.out.println("top: " + ac.states.peek().type + " " + ac.path);
+      for(State s : ac.states)
+      	java.lang.System.out.println(s.type);
+      java.lang.System.out.println("*******************************");
+      //*/
+
       
       // This handles dwarf's needs
       if(lc != null)
-        handleLivingInterrupts(ac, lc, pc);
+        handleLivingInterrupts();
 
       // If we don't have items required for the current command -- go get them.
       if(ac.states.peek() instanceof Command && ((Command)ac.states.peek()).reqItems != null){
@@ -48,89 +54,52 @@ public class AISystem extends System {
         EnumMap<Item, Integer> desiredItems = new EnumMap<Item, Integer>(Item.class);
         for(Item item : c.reqItems.keySet()){
           int num = c.reqItems.get(item);
-          if(!conc.items.containsKey(item))
+          if(!cc.items.containsKey(item))
             desiredItems.put(item, num);
-          else if(conc.items.get(item) < num)
-            desiredItems.put(item, num - conc.items.get(item));
-          /*
-          if(!conc.items.containsKey(item) || conc.items.get(item) < num){
-            ac.states.add(new Command(
-                  State.Type.FETCH, new Vec2f(1.0f, 1.0f), Item.WOOD));
-                  */
+          else if(cc.items.get(item) < num)
+            desiredItems.put(item, num - cc.items.get(item));
         }
-        
-        Entity ship = eManager.getFirstMatching(Component.SHIP);
-        PositionComponent shipPC =
-          (PositionComponent)eManager.getComponent(Component.POSITION, ship);
-        ac.states.add(new Command(
-              State.Type.FETCH_ITEMS, shipPC.pos, desiredItems));
+        if(!desiredItems.isEmpty()){
+	        Entity ship = eManager.getFirstMatching(Component.SHIP);
+	        PositionComponent shipPC =
+	          (PositionComponent)eManager.getComponent(Component.POSITION, ship);
+	        ac.states.add(new Command(
+	              State.Type.FETCH_ITEMS, shipPC.pos, getTime(), desiredItems));
+        }
       }
+
+    	java.lang.System.out.println("SWITCH");
 
       switch(ac.states.peek().type){
         case WANDER:
-          handleWanderState(ac, pc);
+          handleWanderState();
           break;
         case FIND_WATER:
-          handleFindWaterState(ac, pc);
+          handleFindWaterState();
           break;
         case RELOCATE:
-          handleRelocateState(ac, pc);
+          handleRelocateState();
           break;
         case FETCH_ITEMS:
-          handleFetchItemsState(ac, pc, conc);
+          handleFetchItemsState();
           break;
         case BUILD_HOUSE:
+        	java.lang.System.out.println("BUILD HOUSE");
           handleBuildHouseState();
           break;
         case DEPOSIT_ITEMS:
-          handleDepositItemsState(ac, pc, conc);
+          handleDepositItemsState();
+          break;
+        case CRAFT_ITEMS:
+          handleCraftItemsState();
           break;
         case CHOP_TREE:
-          handleChopTree(ac, pc, conc);
+          handleChopTree();
           break;
+        default:
+        	java.lang.System.out.println("FUUUUCK");
       }
       
-/******************************************************************************/
-      /*
-      if(cc != null && !cc.commands.isEmpty() && ac.state.priority < 16)
-      	proccessCommands(ac, cc, pc, conc);
-      
-      // Handle hydration
-      if(ac.state != AIComponent.State.FIND_WATER && lc != null && lc.hydration < 30.0f){
-      	ac.state = AIComponent.State.FIND_WATER;
-      	ac.path = null;
-      }else if(lc.hydration >= 100.0f){
-      	ac.state = AIComponent.State.WANDER;
-      }
-      
-      World w = World.getWorld();
-      switch(ac.state){
-      	case WANDER:
-      		if(ac.path == null){
-	      		if(r.nextInt(100) == 42){
-	      			Vec2f dest;
-	      			do{
-	      				dest = pc.pos.sub(new Vec2f((r.nextFloat() - 0.5f) * 3, (r.nextFloat() - 0.5f) * 3));
-	      			}while(dest.y < 0.0f || dest.x < 0.0f || dest.y >= World.WORLD_SIZE ||
-	      						 dest.x >= World.WORLD_SIZE || !w.getTile((int)dest.y, (int)dest.x).isPassable());
-	      			ac.path = getPath(roundVector(pc.pos), roundVector(dest));
-	      		}
-      		}
-      		break;
-      	case FIND_WATER:
-          if(mssc != null)
-            mssc.messages.push("is thursty");
-      		if(ac.path == null){
-      			Vec2f water = findClosest(Sprite.LAKE, pc.pos);
-      			if(water != null)
-      				ac.path = getPath(roundVector(pc.pos), roundVector(water));
-      		}
-      		if(w.getTile(Math.round(pc.pos.y), Math.round(pc.pos.x)).getType() == Sprite.LAKE)
-      			lc.hydration += 30.0f / TICKS_PER_SECOND;
-      		break;
-      }
-      
-    */
       // Shouldn't happen, but does non the less.
       if(ac.path != null && ac.path.size() == 0)
       	ac.path = null;
@@ -139,12 +108,6 @@ public class AISystem extends System {
         mc.velocity = new Vec2f(0.0f, 0.0f);
 
       if(ac.path != null){
-      	//java.lang.System.out.println(ac.path.size());
-      	/*
-        if(ac.path.lastElement().sub(pc.pos).getMag() < CLOSE_ENOUGH){
-          mc.velocity = new Vec2f(0.0f, 0.0f);
-          ac.path = null;
-        }else */
       	if(ac.path.get(0).sub(pc.pos).getMag() < 0.2f){
           ac.path.remove(0);
           if(!ac.path.isEmpty())
@@ -157,11 +120,10 @@ public class AISystem extends System {
 /******************************************************************************/
   }  
 
-  private void handleLivingInterrupts(AIComponent ac, LivingComponent lc,
-                                      PositionComponent pc){
+  private void handleLivingInterrupts(){
     if(ac.states.peek().type != State.Type.FIND_WATER &&
        lc.hydration <= lc.poorHydration){
-      ac.states.add(new State(State.Type.FIND_WATER));
+      ac.states.add(new State(State.Type.FIND_WATER, getTime()));
       ac.path = null;
     }else if(ac.states.peek().type == State.Type.FIND_WATER &&
              lc.hydration >= lc.maxHydration){
@@ -170,7 +132,7 @@ public class AISystem extends System {
     }
   }
 
-  private void handleWanderState(AIComponent ac, PositionComponent pc){
+  private void handleWanderState(){
     World w = World.getWorld();
     if(ac.path == null){
       if(r.nextInt(100) == 42){
@@ -186,17 +148,19 @@ public class AISystem extends System {
     }
   }
 
-  private void handleFindWaterState(AIComponent ac, PositionComponent pc){
+  private void handleFindWaterState(){
     if(ac.path == null){
       Vec2f waterLoc = findClosest(Sprite.LAKE, pc.pos);
-      if(waterLoc != null)
+      if(waterLoc != null){
         ac.path = getPath(roundVector(pc.pos), roundVector(waterLoc));
-      else
+      }else{
         ac.states.poll();
+        ac.path = null;
+      }
     }
   }
 
-  private void handleRelocateState(AIComponent ac, PositionComponent pc){
+  private void handleRelocateState(){
     Command command = (Command)ac.states.peek();
     float distance = (command.location.sub(pc.pos)).getMag();
     if(distance > CLOSE_ENOUGH && ac.path == null){
@@ -207,8 +171,7 @@ public class AISystem extends System {
     }
   }
 
-  private void handleFetchItemsState(AIComponent ac, PositionComponent pc,
-      ContainerComponent ecc){
+  private void handleFetchItemsState(){
     Command command = (Command)ac.states.peek();
     float distance = (command.location.sub(pc.pos)).getMag();
     if(distance > CLOSE_ENOUGH && ac.path == null){
@@ -216,37 +179,52 @@ public class AISystem extends System {
     }else if(distance <= CLOSE_ENOUGH){
       ContainerComponent scc = (ContainerComponent)eManager.getComponent(
           Component.CONTAINER, eManager.getFirstMatching(Component.SHIP));
+      ContainerComponent ecc = cc;
+      ac.states.poll();
+      ac.path = null;
       // scc.items -- ship inventory        | EnumMap
       // ecc.desiredItems -- desired items  | EnumMap
       boolean abortPrevCommand = false;
       for(Item item : command.desiredItems.keySet()){
-        if(scc.items.containsKey(item)){
-          int oldVal = ecc.items.get(item) == null ? 0 : ecc.items.get(item);
-          if(scc.items.get(item) < command.desiredItems.get(item)){
-            ecc.items.put(item, scc.items.get(item) + oldVal);
-            scc.items.remove(item);
-            abortPrevCommand = true;
-          }else if(scc.items.get(item) > command.desiredItems.get(item)){
-            ecc.items.put(item, command.desiredItems.get(item) + oldVal);
-            scc.items.put(item, scc.items.get(item) -
-                          command.desiredItems.get(item));
-          }else{  // Ship has the exact amount of the item we need
-            ecc.items.put(item, scc.items.remove(item) + oldVal);
+        int oldVal = ecc.items.get(item) == null ? 0 : ecc.items.get(item);
+        // TODO: right now crafting only works if the ship doesn't have any
+        // items of that type.
+        int shiphas = scc.items.get(item) == null ? 0 : scc.items.get(item);
+        if(scc.items.get(item) == null ||
+           shiphas < command.desiredItems.get(item)){
+          ecc.items.put(item, shiphas + oldVal);
+          scc.items.remove(item);
+
+          /*
+          if(item.isCraftable){
+            PositionComponent spc =
+              (PositionComponent)eManager.getComponent(Component.POSITION,
+                  eManager.getFirstMatching(Component.SHIP));
+            EnumMap<Item, Integer> itemsToCraft =
+              new EnumMap<Item, Integer>(Item.class);
+            itemsToCraft.put(item, command.desiredItems.get(item) - oldVal);
+            ac.states.add(new Command(
+                  State.Type.CRAFT_ITEMS, spc.pos, getTime(), itemsToCraft));
           }
-        }else{
-          // Ship doesn't have the needed item ABORT
+          */
+
           abortPrevCommand = true;
+        }else if(scc.items.get(item) > command.desiredItems.get(item)){
+          ecc.items.put(item, command.desiredItems.get(item) + oldVal);
+          scc.items.put(item, scc.items.get(item) -
+                        command.desiredItems.get(item));
+        }else{  // Ship has the exact amount of the item we need
+          ecc.items.put(item, scc.items.remove(item) + oldVal);
         }
       }
-      ac.states.poll();
-      if(abortPrevCommand)
+      if(abortPrevCommand){
         ac.states.poll();
-      ac.path = null;
+        ac.path = null;
+      }
     }
   }
 
-  private void handleDepositItemsState(AIComponent ac, PositionComponent pc,
-      ContainerComponent ecc){
+  private void handleDepositItemsState(){
     Command command = (Command)ac.states.peek();
     float distance = (command.location.sub(pc.pos)).getMag();
     if(distance > CLOSE_ENOUGH && ac.path == null){
@@ -254,10 +232,10 @@ public class AISystem extends System {
     }else if(distance <= CLOSE_ENOUGH){
       ContainerComponent scc = (ContainerComponent)eManager.getComponent(
           Component.CONTAINER, eManager.getFirstMatching(Component.SHIP));
+      ContainerComponent ecc = cc;
       for(Item item : command.desiredItems.keySet()){
         int oldVal = scc.items.get(item) == null ? 0 : scc.items.get(item);
         scc.items.put(item, command.desiredItems.get(item) + oldVal);
-        java.lang.System.out.println(">>>> " + command.desiredItems.get(item));
         if(ecc.items.get(item) > command.desiredItems.get(item))
           ecc.items.put(item, ecc.items.get(item) - command.desiredItems.get(item));
         else
@@ -269,10 +247,75 @@ public class AISystem extends System {
   }
 
   private void handleBuildHouseState(){
+  	java.lang.System.out.println(">>>>>>>>>>>>>>>>>>bhouse state");
+    Command command = (Command)ac.states.peek();
+    float distance = (command.location.sub(pc.pos)).getMag();
+    if(distance > CLOSE_ENOUGH && ac.path == null){
+      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
+    }else if(distance <= CLOSE_ENOUGH){
+      EntityFactory.makeNewHouse(command.location.x, command.location.y);
+      for(Item item : command.reqItems.keySet()){
+        if(!item.isTool){
+          cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
+        }
+      }
+      ac.states.poll();
+      ac.path = null;
+    }
   }
 
-  private void handleChopTree(AIComponent ac, PositionComponent pc,
-      ContainerComponent ecc){
+  private void handleCraftItemsState(){
+    /*
+    Command command = (Command)ac.states.peek();
+    float distance = (command.location.sub(pc.pos)).getMag();
+    if(distance > CLOSE_ENOUGH && ac.path == null){
+      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
+    }else if(distance <= CLOSE_ENOUGH){
+      ContainerComponent scc = (ContainerComponent)eManager.getComponent(
+          Component.CONTAINER, eManager.getFirstMatching(Component.SHIP));
+      ContainerComponent ecc = cc;
+      boolean success = true;
+      for(Item item : command.reqItems.keySet()){
+        int have = ecc.items.get(item);
+        int needed = command.reqItems.get(item) - have;
+        int shipHas = scc.items.get(item) == null ? 0 : scc.items.get(item);
+        if(shipHas < needed){
+          ecc.items.put(item, shipHas + have);
+          scc.items.remove(item);
+          success = false;
+          break;
+        }else if(shipHas > needed){
+          ecc.items.put(item, needed + have);
+          scc.items.put(item, shipHas - needed);
+        }else{  // Ship has the exact amount of the item we need
+          ecc.items.put(item, scc.items.remove(item) + have);
+        }
+      }
+      ac.states.poll();
+      ac.path = null;
+      if(success){
+        for(Item item : command.desiredItems.keySet()){
+          int have = ecc.items.get(item);
+          ecc.items.put(item, have + command.desiredItems.get(item));
+        }
+        for(Item item : command.reqItems.keySet()){
+          int have = ecc.items.get(item);
+          ecc.items.put(item, have - command.reqItems.get(item));
+          if(ecc.items.get(item) <= 0)
+            ecc.items.remove(item);
+        }
+      }else{
+      	java.lang.System.out.println("FAIL");
+        ac.states.poll();
+        ac.path = null;
+        //ac.states.poll();
+        //ac.path = null;
+      }
+    }
+    */
+  }
+
+  private void handleChopTree(){
     final int NUM_LOGS_FROM_TREE = 1;
     Command command = (Command)ac.states.peek();
     World w = World.getWorld();
@@ -280,6 +323,7 @@ public class AISystem extends System {
     if(distance > CLOSE_ENOUGH && ac.path == null){
       ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
     }else if(distance <= CLOSE_ENOUGH){
+      ContainerComponent ecc = cc;
       w.setTile((int)command.location.y, (int)command.location.x,
                 new Dirt((int)command.location.y, (int)command.location.x));
       int oldVal = ecc.items.get(Item.WOOD) == null ? 0 : ecc.items.get(Item.WOOD);
@@ -295,98 +339,10 @@ public class AISystem extends System {
         PositionComponent spc = (PositionComponent)eManager.getComponent(
             Component.POSITION, eManager.getFirstMatching(Component.SHIP));
         ac.states.add(new Command(
-              State.Type.DEPOSIT_ITEMS, spc.pos, itemsToDeposit));
+              State.Type.DEPOSIT_ITEMS, spc.pos, getTime(), itemsToDeposit));
       }
     }
   }
-  
-  /*
-
-  private void proccessCommands(AIComponent ac, CommandableComponent cc,
-                                PositionComponent pc, ContainerComponent conc){
-    if(cc.commands.size() != 0){
-      Command cur = cc.commands.peek();
-      World w = World.getWorld();
-      float distance = (cur.location.sub(pc.pos)).getMag();
-    	final int WOOD_REQUIRED = 2;
-      switch(cur.type){
-        case BUILD_HOUSE:
-        	java.lang.System.out.println("House " + conc.items.size());
-        	if(conc.items.size() < WOOD_REQUIRED){
-        		Command tmp = cc.commands.poll();
-        		cc.commands.add(
-                new Command(Command.Type.GET_WOOD, new Vec2f(1.0f, 1.0f)));
-        		cc.commands.add(tmp);
-        	}else if(distance > CLOSE_ENOUGH && ac.path == null){
-            ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
-        	}else if(distance <= CLOSE_ENOUGH){
-            cc.commands.poll();
-            EntityFactory.makeNewHouse(cur.location.x, cur.location.y);
-            conc.items.remove(0);
-            conc.items.remove(0);
-          }
-          break;
-        case RELOCATE:
-          if(distance > CLOSE_ENOUGH && ac.path == null)
-            ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
-          else if(distance <= CLOSE_ENOUGH)
-            cc.commands.poll();
-          break;
-        case CHOP_TREE:
-          if(distance > CLOSE_ENOUGH && ac.path == null){
-            ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
-          }if(distance <= CLOSE_ENOUGH){
-            w.setTile((int)cur.location.y, (int)cur.location.x,
-                new Dirt((int)cur.location.y, (int)cur.location.x));
-            //ac.path = getPath(roundVector(pc.pos), new Vec2f(0,0));
-            conc.items.add(new Item(Item.Type.WOOD));
-            cc.commands.poll();
-            if(conc.maxCapacity <= conc.items.size())
-            	cc.commands.add(new Command(
-                    Command.Type.DEPOSIT_ITEMS, new Vec2f(1.0f, 1.0f)));
-          }
-          break;
-        case DEPOSIT_ITEMS:
-          if(distance > CLOSE_ENOUGH && ac.path == null){
-            ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
-          }else if(distance <= CLOSE_ENOUGH){
-            Vector<Entity> ship = eManager.getMatchingEntities(Component.SHIP);
-            ContainerComponent scc =
-              (ContainerComponent)eManager.getComponent(Component.CONTAINER,
-                                                        ship.get(0));
-            scc.items.addAll(conc.items);
-            conc.items.clear();
-            cc.commands.poll();
-            java.lang.System.out.println(scc.items.size());
-          }
-          break;
-        case GET_WOOD:
-        	java.lang.System.out.println("get wood");
-        	if(distance > CLOSE_ENOUGH && ac.path == null){
-        		ac.path = getPath(roundVector(pc.pos), roundVector(cur.location));
-        	}else if(distance <= CLOSE_ENOUGH){
-            Vector<Entity> ship = eManager.getMatchingEntities(Component.SHIP);
-            ContainerComponent scc =
-              (ContainerComponent)eManager.getComponent(Component.CONTAINER,
-                                                        ship.get(0));
-            if(scc.items.size() < WOOD_REQUIRED){
-            	cc.commands.poll();
-            	cc.commands.poll();
-            }else{
-	            conc.items.add(scc.items.get(0));
-	            scc.items.remove(0);
-	            conc.items.add(scc.items.get(0));
-	            scc.items.remove(0);
-	            cc.commands.poll();
-	            //cc.commands.poll();
-	            java.lang.System.out.println(scc.items.size());
-            }
-          }
-        	break;
-      }
-    }
-  }
-  */
 
   // Returns the rounded integer version of a given Vec2f
   private Vec2f roundVector(Vec2f initial){
@@ -583,6 +539,17 @@ public class AISystem extends System {
   	return null;
   }
 
+  private long getTime(){
+    return java.lang.System.currentTimeMillis();
+  }
+
+  private PositionComponent pc;
+  private AIComponent ac;
+  private MobilityComponent mc;
+  private LivingComponent lc;
+  private ContainerComponent cc;
+  private MessageComponent msc;
+  
   private static Random r = new Random();
-  private static final float CLOSE_ENOUGH = 0.4f;
+  private static final float CLOSE_ENOUGH = 0.2f;
 }

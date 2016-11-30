@@ -17,10 +17,12 @@ public class AIComponent extends Component {
     //destination = new Vec2f(0.0f, 0.0f);
      states = new PriorityQueue<State>(10, new Comparator<State>() {
        public int compare(State a, State b){
-         return b.priority - a.priority;
+      	 if(b.priority != a.priority)
+      		 return b.priority - a.priority;
+      	 else
+      		 return (int)(a.timestamp - b.timestamp);
        }
      });
-     states.add(new State(State.Type.WANDER));
   }
   
   //Vec2f destination;
