@@ -64,6 +64,19 @@ public class Game extends Thread implements Serializable {
       EntityFactory.makeNewAlien(x, y);
     }
   }
+  
+  public void earthquake(LivingSystem ls, World w, Graphics g) {
+	  ls.earthquake();
+	  w.earthquake(g);
+	  label.repaint();
+	  try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+  }
+
+  int FORCEQUAKE = 3000;
 
   public void run() {
     label.addMouseListener(new ClickListener());
@@ -95,6 +108,12 @@ public class Game extends Thread implements Serializable {
       long startMil = System.currentTimeMillis();
       g.setColor(Color.GRAY);
       g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
+      
+      if (r.nextInt(FORCEQUAKE) == 0) {
+    	  earthquake(ls, w, g);
+    	  FORCEQUAKE = 3000;
+      }
+      
       w.render(g);
       rs.tick();
       ps.tick();
@@ -157,6 +176,9 @@ public class Game extends Thread implements Serializable {
 			if(arg0.getKeyCode() == KeyEvent.VK_N){
 				++aliensToAdd;
 			}
+			if(arg0.getKeyCode() == KeyEvent.VK_E){
+				FORCEQUAKE = FORCEQUAKE == 3000 ? 1 : 3000;
+			}
 		}
 
 		@Override
@@ -172,4 +194,3 @@ public class Game extends Thread implements Serializable {
   private transient BufferedImage renderDest;
   private JFrame label;
 }
-

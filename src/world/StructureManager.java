@@ -12,7 +12,7 @@ public enum StructureManager {
 	Tree(new Tree(1,1)),
 	Bush(new Bush(1,1)),
 	Dirt(new Dirt(1,1)),
-	Crater(new Crater(5,5)),
+	Crater(new Crater(3,3)),
 	Lake(new Lake(2,3));
 	
 	private Structure structure;

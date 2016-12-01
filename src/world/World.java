@@ -123,6 +123,17 @@ public class World implements Serializable {
 		return board;
 	}
 
+	public void earthquake(Graphics g) {
+		Structure c = new Crater(1,1);
+		for(int j = 0; j < WORLD_SIZE; ++j){
+		      for(int k = 0; k < WORLD_SIZE; ++k){
+		        g.drawImage((c.getTexture()), k * Sprite.WIDTH,
+		                    j * Sprite.HEIGHT, null);
+		      }
+		    }
+		WorldGenerator.generateCrater(board);
+	}
+	
   public void render(Graphics g){
     for(int j = 0; j < WORLD_SIZE; ++j){
       for(int k = 0; k < WORLD_SIZE; ++k){
