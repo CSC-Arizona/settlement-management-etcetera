@@ -11,6 +11,12 @@ public class ContainerComponent extends Component {
   }
 
   int maxCapacity;
+<<<<<<< HEAD
+
+  // TODO: Which line is correct? -Rob
+  //public Vector<Item> items;
+=======
+>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
   EnumMap<Item, Integer> items;
 }
 
