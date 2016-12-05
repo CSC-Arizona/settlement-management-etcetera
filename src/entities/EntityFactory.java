@@ -13,7 +13,6 @@ public class EntityFactory {
     eMan.addComponent(new AIComponent(), alien);
     eMan.addComponent(new CollisionComponent(0.4f, 0.4f, 0.5f, 80.0f), alien);
     eMan.addComponent(new LivingComponent(), alien);
-
     // TODO: which lines are correct?
     //eMan.addComponent(new CommandableComponent(), alien);
     //eMan.addComponent(new ContainerComponent(2), alien);
