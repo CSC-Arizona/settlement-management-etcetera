@@ -14,6 +14,6 @@ public class ContainerComponent extends Component {
 
   // TODO: Which line is correct? -Rob
   //public Vector<Item> items;
-  public EnumMap<Item, Integer> items;
+  EnumMap<Item, Integer> items;
 }
 

@@ -9,6 +9,7 @@ package run;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.util.ArrayDeque;
 import java.util.EnumMap;
 import java.util.Queue;
 import java.util.Vector;
@@ -27,6 +28,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 
 import entities.Command;
+import entities.CommandSystem;
 import entities.CommandableComponent;
 import entities.Component;
 import entities.ContainerComponent;
@@ -183,7 +185,11 @@ public class InfoPanel extends JPanel{
 	if(e == null || !eManager.hasComponents(Component.COMMANDABLE, e))
 	  return;
 	CommandableComponent cc = (CommandableComponent) eManager.getComponent(Component.COMMANDABLE, e);
-	Queue<Command> commands = cc.commands;
+	// COMMANDABLE COMPONENT IS NULL
+	//########################################################################################################
+	Queue<Command> commands = new ArrayDeque<Command>();
+	//########################################################################################################
+	
 	DefaultListModel<String> model = new DefaultListModel<String>();
 	for(Command c : commands){
 	  model.addElement(c.type.name());
@@ -237,7 +243,9 @@ public class InfoPanel extends JPanel{
 	if(!eManager.hasComponents(Component.COMMANDABLE, e))
 	  return;
 	CommandableComponent cc = (CommandableComponent) eManager.getComponent(Component.COMMANDABLE, e);
-	Queue<Command> commands = cc.commands;
+	//########################################################################################################
+	Queue<Command> commands = new ArrayDeque<Command>();
+	//########################################################################################################
 	DefaultListModel<String> model = new DefaultListModel<String>();
 	for(Command c : commands){
 	  model.addElement(c.type.name());

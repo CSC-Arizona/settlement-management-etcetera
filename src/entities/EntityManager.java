@@ -174,7 +174,7 @@ public enum EntityManager {
 	entityList = INSTANCE.getMatchingEntities(Component.RENDER | Component.POSITION);
 	for(Entity e : entityList){
 	  PositionComponent pc = (PositionComponent) INSTANCE.getComponent(Component.POSITION, e);
-	  NameComponent nc = (NameComponent) INSTANCE.getComponent(Component.MESSAGE, e);
+	  NameComponent nc = (NameComponent) INSTANCE.getComponent(Component.NAME, e);
 	  if(pc.pos.sub(location).getMag() <= 0.5 && nc.name.equals(""))
 	    return e;
 	}

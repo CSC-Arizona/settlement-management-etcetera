@@ -22,55 +22,6 @@ public class AISystem extends System {
   public void tick() {
     updateEntityVector();
     for(Entity e : entitiesToProcess){
-/*<<<<<<< HEAD
-    	PositionComponent pc =
-        (PositionComponent)eManager.getComponent(Component.POSITION, e);
-      AIComponent ac =
-        (AIComponent)eManager.getComponent(Component.AI, e);
-      CommandableComponent cc =
-        (CommandableComponent)eManager.getComponent(Component.COMMANDABLE, e);
-      MobilityComponent mc =
-        (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
-      LivingComponent lc =
-        (LivingComponent)eManager.getComponent(Component.LIVING, e);
-      ContainerComponent conc =
-        (ContainerComponent)eManager.getComponent(Component.CONTAINER, e);
-      
-      if(cc != null && !cc.commands.isEmpty() && ac.state.priority < 16)
-      	proccessCommands(ac, cc, pc, conc);
-      
-      // Handle hydration
-      if(ac.state != AIComponent.State.FIND_WATER && lc != null && lc.hydration < 30.0f){
-      	ac.state = AIComponent.State.FIND_WATER;
-      	ac.path = null;
-      }else if(lc.hydration >= 100.0f){
-      	ac.state = AIComponent.State.WANDER;
-      }
-      
-      World w = World.getWorld();
-      switch(ac.state){
-      	case WANDER:
-      		if(ac.path == null){
-	      		if(r.nextInt(100) == 42){
-	      			Vec2f dest;
-	      			do{
-	      				dest = pc.pos.sub(new Vec2f((r.nextFloat() - 0.5f) * 3, (r.nextFloat() - 0.5f) * 3));
-	      			}while(dest.y < 0.0f || dest.x < 0.0f || dest.y >= World.WORLD_SIZE ||
-	      						 dest.x >= World.WORLD_SIZE || !w.getTile((int)dest.y, (int)dest.x).isPassable());
-	      			ac.path = getPath(roundVector(pc.pos), roundVector(dest));
-	      		}
-      		}
-      		break;
-      	case FIND_WATER:
-      		if(ac.path == null){
-      			Vec2f water = findClosest(Sprite.LAKE, pc.pos);
-      			if(water != null)
-      				ac.path = getPath(roundVector(pc.pos), roundVector(water));
-      		}
-      		if(w.getTile(Math.round(pc.pos.y), Math.round(pc.pos.x)).getType() == Sprite.LAKE)
-      			lc.hydration += 30.0f / TICKS_PER_SECOND;
-      		break;
-=======*/
       pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
       ac = (AIComponent)eManager.getComponent(Component.AI, e);
       mc = (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
@@ -144,7 +95,6 @@ public class AISystem extends System {
           handleChopTree();
           break;
         default:
-//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
       }
       
       // Shouldn't happen, but does non the less.
@@ -162,8 +112,7 @@ public class AISystem extends System {
         }else{
           mc.velocity = getVelocity(pc.pos, ac.path.get(0));
         }
-//<<<<<<< HEAD
-//=======
+
       }
     }
 /******************************************************************************/
@@ -269,7 +218,6 @@ public class AISystem extends System {
       if(abortPrevCommand){
         ac.states.poll();
         ac.path = null;
-//>>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
       }
     }
   }

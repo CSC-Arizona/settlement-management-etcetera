@@ -61,7 +61,6 @@ class RunMe {
     frame.pack();
     frame.setResizable(false);
     frame.setLocationRelativeTo(null);
-    //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.addWindowListener(new MyWindowListener());
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     frame.setVisible(true);
@@ -69,10 +68,10 @@ class RunMe {
     int result = JOptionPane.showConfirmDialog(null, "Resume from previous session?","alert", JOptionPane.YES_NO_OPTION);
 	  if (result != 1) {
 	    readData();
-	    g.setBackground(image, frame);
+	    g.setBackground(image, frame, scrollPane);
 	  }
     if (g == null) {
-      g = new Game(image, frame);
+      g = new Game(image, frame, scrollPane);
       g.spawnAliens(2);
     }
     g.start();

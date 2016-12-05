@@ -44,6 +44,10 @@ public class State implements Serializable {
     FETCH_ITEMS,
     CRAFT_ITEMS;
   }
+  
+  public Type getType() {
+	  return type;
+  }
 
   short priority;
   long timestamp;
