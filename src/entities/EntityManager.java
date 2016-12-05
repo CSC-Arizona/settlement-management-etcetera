@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Vector;
 
-import utility.Vec2f;
 import world.World;
 
 public enum EntityManager {
@@ -157,30 +156,6 @@ public enum EntityManager {
     return ret;
   }
   
-  // Returns the entity with the highest priority at the given location
-  public Entity getTopEntityAt(Vec2f location){
-	Vector<Entity> entityList = INSTANCE.getMatchingEntities(Component.RENDER | Component.POSITION | Component.MOBILITY);
-	for(Entity e : entityList){
-	  PositionComponent pc = (PositionComponent) INSTANCE.getComponent(Component.POSITION, e);
-	  if(pc.pos.sub(location).getMag() <= 0.5)
-		return e;
-	}
-	entityList = INSTANCE.getMatchingEntities(Component.RENDER | Component.POSITION | Component.COLLISION);
-	for(Entity e : entityList){
-	  PositionComponent pc = (PositionComponent) INSTANCE.getComponent(Component.POSITION, e);
-	  if(pc.pos.sub(location).getMag() <= 0.5)
-		return e;
-	}
-	entityList = INSTANCE.getMatchingEntities(Component.RENDER | Component.POSITION);
-	for(Entity e : entityList){
-	  PositionComponent pc = (PositionComponent) INSTANCE.getComponent(Component.POSITION, e);
-	  NameComponent nc = (NameComponent) INSTANCE.getComponent(Component.NAME, e);
-	  if(pc.pos.sub(location).getMag() <= 0.5 && nc.name.equals(""))
-	    return e;
-	}
-	return (Entity) null;
-  }
-	  
   public void loadInstance(Vector<Integer> r, Vector<Vector<Component>> c, Vector<Long> e, int u) {
 	  recycleBin = r;
 	  compVecs = c;

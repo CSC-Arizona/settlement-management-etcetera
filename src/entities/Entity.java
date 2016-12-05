@@ -10,9 +10,7 @@
 
 package entities;
 
-import java.io.Serializable;
-
-public class Entity implements Serializable{
+public class Entity {
   /*
    * Default access modifier, can only be constructed by the classes in entities
    * package.

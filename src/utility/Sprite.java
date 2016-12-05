@@ -30,17 +30,6 @@ public enum Sprite {
     return y;
   }
   
-  public String toString(){
-	  if(this == Sprite.BUSH) return "bush";
-	  else if(this == Sprite.CRATER) return "crater";
-	  else if(this == Sprite.DIRT) return "dirt";
-	  else if(this == Sprite.GRASS) return "grass";
-	  else if(this == Sprite.LAKE) return "lake";
-	  else if(this == Sprite.ROCK) return "rock";
-	  else if(this == Sprite.TREE) return "tree";
-	  else return "Something went wrong";
-  }
-  
   private int x;
   private int y;
   public static final int WIDTH = 32;

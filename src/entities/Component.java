@@ -30,23 +30,6 @@ public abstract class Component implements Serializable {
    * ComponentType.VELOCITY.getValue() | ComponentType.AI.getValue())", and it
    * is already way too verbose for my taste.
    */
-<<<<<<< HEAD
-  public static final long POSITION      = 1 << 0;
-  public static final long MOBILITY      = 1 << 1;
-  public static final long COLLISION     = 1 << 2;
-  public static final long RENDER        = 1 << 3;
-  public static final long AI            = 1 << 4;
-  public static final long LIVING        = 1 << 5;
-  // COMMANDABLE does not have a corresponding component, it simply tells us
-  // that the entity should receive the commands issued by the player.
-  public static final long COMMANDABLE   = 1 << 6;
-  public static final long CONTAINER     = 1 << 7;
-  // Just like with COMMANDABLE, SHIP is only a tag.
-  public static final long SHIP          = 1 << 8;
-  public static final long MESSAGE       = 1 << 9;
-  public static final long NAME		  	 = 1 << 10;
-  static final long TOTAL_COMPS   =     11;
-=======
   static final long POSITION      = 1 << 0;
   static final long MOBILITY      = 1 << 1;
   static final long COLLISION     = 1 << 2;
@@ -61,7 +44,6 @@ public abstract class Component implements Serializable {
   static final long SHIP          = 1 << 8;
   static final long MESSAGE       = 1 << 9;
   static final long TOTAL_COMPS   =     10;
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
 
   /*
    * Must be called with an appropriate ComponentID taken from above.

@@ -11,10 +11,6 @@ public class Command extends State implements Serializable {
     this.location = location;
     desiredItems = null;
     reqItems = null;
-<<<<<<< HEAD
-    type = getType();
-=======
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
     setReqItems();
   }
 
@@ -23,10 +19,6 @@ public class Command extends State implements Serializable {
     this.location = location;
     this.desiredItems = desiredItems;
     reqItems = null;
-<<<<<<< HEAD
-    type = getType();
-=======
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
     setReqItems();
   }
 
@@ -49,10 +41,6 @@ public class Command extends State implements Serializable {
     }
   }
   
-<<<<<<< HEAD
-  public Type type;
-=======
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
   Vec2f location;
   EnumMap<Item, Integer> reqItems;
   EnumMap<Item, Integer>  desiredItems;
