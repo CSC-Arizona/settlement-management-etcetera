@@ -42,9 +42,9 @@ import world.World;
 public class Game extends Thread implements Serializable {
 
 //<<<<<<< HEAD
-  public Game(BufferedImage renderDest, JFrame frame, JLabel label) {
+  public Game(BufferedImage renderDest, JFrame frame) {
     this.renderDest = renderDest;
-    this.label = label;
+    //this.label = label;
     this.frame = frame;
     this.infoPanel = InfoPanel.getInstance();
     eMan = EntityManager.INSTANCE;
@@ -74,9 +74,9 @@ public class Game extends Thread implements Serializable {
     this.label = label;
   }*/
 
-  public void setBackground(BufferedImage renderDest, JFrame frame, JLabel label) {
+  public void setBackground(BufferedImage renderDest, JFrame frame) {
     this.renderDest = renderDest;
-    this.label = label;
+    //this.label = label;
     this.frame = frame;
   }
 
@@ -96,8 +96,8 @@ public class Game extends Thread implements Serializable {
 
   public void run() {
 	//java.awt.Component glassPane = label.getGlassPane();
-    label.addMouseListener(new ClickListener());
-    label.addKeyListener(new KeyboardListener());
+    frame.addMouseListener(new ClickListener());
+    frame.addKeyListener(new KeyboardListener());
     commands = new Stack<Command>();
     World w = World.getWorld();
     Random r = new Random();
@@ -206,7 +206,7 @@ public class Game extends Thread implements Serializable {
       rs.tick();
       label.repaint();
 =======*/
-    //MessageSystem ms = new MessageSystem();
+    MessageSystem ms = new MessageSystem();
 
     EntityFactory.makeNewShip(1, 1);
     // We want to have 30 ticks/s
@@ -237,8 +237,8 @@ public class Game extends Thread implements Serializable {
     	  userClickVector = null;
       }
 =======*/
-      label.repaint();
-      //ms.tick();
+      frame.repaint();
+      ms.tick();
       if(userClickVector == null)
     	  infoPanel.updatePanel();
       else{
@@ -368,7 +368,7 @@ public class Game extends Thread implements Serializable {
   private Stack<Command> commands;
   private transient BufferedImage renderDest;
   private JFrame frame;
-  private JLabel label;
+  //private JLabel label;
   private InfoPanel infoPanel;
   private static EntityManager eMan;
   private Vec2f userClickVector;

@@ -9,7 +9,7 @@ package entities;
 public class NameComponent extends Component{
 
   public NameComponent(String name) {
-    super(MESSAGE);
+    super(NAME);
     this.name = name;
   }
 	
