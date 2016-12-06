@@ -33,6 +33,9 @@ public class Tileset {
   }
 
   public BufferedImage getSprite(Sprite s){
+  	return tileset.getSubimage(s.getX(), s.getY(), Sprite.WIDTH, Sprite.HEIGHT);
+
+  	/*
 	if(s==Sprite.ALIEN){
 		return tileset.getSubimage(s.getX(), s.getY(), Sprite.WIDTH, Sprite.HEIGHT);
 	}
@@ -53,6 +56,7 @@ public class Tileset {
 	g.dispose();
 	  
     return combined;
+  */
   }
 
 }
