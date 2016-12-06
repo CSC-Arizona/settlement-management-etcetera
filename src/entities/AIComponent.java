@@ -28,6 +28,10 @@ public class AIComponent extends Component {
     }
   }
   
+  public PriorityQueue<State> getStates() {
+	  return states;
+  }
+  
   //Vec2f destination;
   Vector<Vec2f> path;
   PriorityQueue<State> states;

@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 import java.util.Stack;
@@ -77,7 +78,7 @@ public class Game extends Thread implements Serializable {
 	  ls.earthquake();
 	  w.earthquake(g);
 	  // TODO: what is this line? deletable?
-	  //label.repaint();
+	  frame.repaint();
 	  try {
           Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -116,6 +117,11 @@ public class Game extends Thread implements Serializable {
     long milPerTick = (long) ((1.0f / goal) * 1000);
     for (;;) {
       long startMil = System.currentTimeMillis();
+      if (r.nextInt(FORCEQUAKE) == 0) {
+    	  earthquake(ls, w, g);
+    	  infoPanel.updatePanel();
+    	  FORCEQUAKE = 3000;
+      }
       w.render(g);
       rs.tick();
       ps.tick();
@@ -196,7 +202,15 @@ public class Game extends Thread implements Serializable {
   	
   }
   
+  public void loadGame(EntityManager eMan, InfoPanel ip) {
+	  this.eMan = eMan;
+	  this.infoPanel = ip;
+  }
 
+  
+  public void saveGame(ObjectOutputStream outFile) throws IOException {
+	  outFile.writeObject(infoPanel);
+  }
   
   private int aliensToAdd;
   private Stack<Command> commands;

@@ -12,6 +12,6 @@ public class NameComponent extends Component{
     super(NAME);
     this.name = name;
   }
-	
+  
   public String name;
 }

@@ -90,6 +90,9 @@ class RunMe {
         int used = (Integer)inFile.readObject();
         EntityManager eMan = EntityManager.INSTANCE;
         eMan.loadInstance(recycleBin, compVecs, entityBitSets, used);
+        InfoPanel old = (InfoPanel)inFile.readObject();
+        g.loadGame(eMan, old);
+        InfoPanel.load(old);
         
         inFile.close();
       }
@@ -114,6 +117,8 @@ class RunMe {
           outFile.writeObject(World.getWorld());
           EntityManager eMan = EntityManager.INSTANCE;
           eMan.saveInstance(outFile);
+          g.saveGame(outFile);
+          
           
           outFile.close();
         } catch (IOException e) {

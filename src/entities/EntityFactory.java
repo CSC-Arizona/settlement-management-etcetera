@@ -15,6 +15,7 @@ public class EntityFactory {
     eMan.addComponent(new LivingComponent(), alien);
     eMan.addComponent(new ContainerComponent(4), alien);
     eMan.addComponent(new MessageComponent(), alien);
+    eMan.addComponent(new NameComponent("ALIEN"), alien);
     eMan.markAs(Component.COMMANDABLE, alien);
     return alien;
   }
@@ -51,6 +52,7 @@ public class EntityFactory {
     eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ammo);
     eMan.addComponent(new ContainerComponent(100), ammo);
     eMan.addComponent(new MessageComponent(), ammo);
+    eMan.addComponent(new NameComponent("SHIP"), ammo);
     eMan.markAs(Component.SHIP, ammo);
     return ammo;
   }
@@ -59,6 +61,7 @@ public class EntityFactory {
     Entity bloodPool = eMan.genNewEntity();
     eMan.addComponent(new PositionComponent(x, y, 0.0f), bloodPool);
     eMan.addComponent(new RenderComponent(Sprite.BLOOD_POOL), bloodPool);
+    eMan.addComponent(new NameComponent("Blood"), bloodPool);
     return bloodPool;
   }
 

@@ -9,8 +9,11 @@ package run;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.EnumMap;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Vector;
 
@@ -27,6 +30,7 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 
+import entities.AIComponent;
 import entities.Command;
 import entities.CommandSystem;
 import entities.CommandableComponent;
@@ -38,10 +42,11 @@ import entities.Item;
 import entities.LivingComponent;
 import entities.NameComponent;
 import entities.RenderComponent;
+import entities.State;
 import utility.Sprite;
 import utility.Tileset;
 
-public class InfoPanel extends JPanel{
+public class InfoPanel extends JPanel implements Serializable{
   private Entity e;
   private Sprite s;
   EntityManager eManager;
@@ -104,7 +109,7 @@ public class InfoPanel extends JPanel{
 	if(e != null){
 	  NameComponent nc = (NameComponent) eManager.getComponent(Component.NAME, e);
 	  name.setBorder(nameBorder);
-	  name.setText(nc.name + "        ");
+	  name.setText(nc.name+"        ");
 	}
 	else if(s != null){
 	  name.setBorder(nameBorder);
@@ -184,15 +189,12 @@ public class InfoPanel extends JPanel{
   private void createCommandQueue(){
 	if(e == null || !eManager.hasComponents(Component.COMMANDABLE, e))
 	  return;
-	CommandableComponent cc = (CommandableComponent) eManager.getComponent(Component.COMMANDABLE, e);
-	// COMMANDABLE COMPONENT IS NULL
-	//########################################################################################################
-	Queue<Command> commands = new ArrayDeque<Command>();
-	//########################################################################################################
+	AIComponent ac = (AIComponent) eManager.getComponent(Component.AI, e);
+	PriorityQueue<State> states = ac.getStates();
 	
 	DefaultListModel<String> model = new DefaultListModel<String>();
-	for(Command c : commands){
-	  model.addElement(c.type.name());
+	for(State s : states){
+	  model.addElement(s.getType().name());
 	}
 	commandList = new JList<String>(model);
 	JScrollPane commandScroller = new JScrollPane(commandList);
@@ -242,14 +244,17 @@ public class InfoPanel extends JPanel{
   public void updateCommandQueue(){
 	if(!eManager.hasComponents(Component.COMMANDABLE, e))
 	  return;
-	CommandableComponent cc = (CommandableComponent) eManager.getComponent(Component.COMMANDABLE, e);
-	//########################################################################################################
-	Queue<Command> commands = new ArrayDeque<Command>();
-	//########################################################################################################
+	AIComponent ac = (AIComponent) eManager.getComponent(Component.AI, e);
+	PriorityQueue<State> states = ac.getStates();
 	DefaultListModel<String> model = new DefaultListModel<String>();
-	for(Command c : commands){
-	  model.addElement(c.type.name());
+	for(State s : states){
+	  model.addElement(s.getType().name());
 	}
 	commandList.setModel(model);
   }
+  
+  public static void load(InfoPanel ip) {
+	  uniqueInstance = ip;
+  }
+  
 }
