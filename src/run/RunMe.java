@@ -68,17 +68,10 @@ class RunMe {
     int result = JOptionPane.showConfirmDialog(null, "Resume from previous session?","alert", JOptionPane.YES_NO_OPTION);
 	  if (result != 1) {
 	    readData();
-<<<<<<< HEAD
 	    g.setBackground(image, frame, scrollPane);
 	  }
     if (g == null) {
       g = new Game(image, frame, scrollPane);
-=======
-	    g.setBackground(image, frame);
-	  }
-    if (g == null) {
-      g = new Game(image, frame);
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
       g.spawnAliens(2);
     }
     g.start();

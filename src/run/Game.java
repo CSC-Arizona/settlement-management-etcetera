@@ -16,10 +16,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-<<<<<<< HEAD
 import javax.swing.JScrollPane;
-=======
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
 
 import entities.Entity;
 import entities.EntityFactory;
@@ -45,7 +42,6 @@ import world.World;
 
 public class Game extends Thread implements Serializable {
 
-<<<<<<< HEAD
   public Game(BufferedImage renderDest, JFrame frame, JScrollPane scrollPane) {
     this.renderDest = renderDest;
     //this.label = label;
@@ -61,16 +57,6 @@ public class Game extends Thread implements Serializable {
     //this.label = label;
     this.frame = frame;
     this.scrollPane = scrollPane;
-=======
-  public Game(BufferedImage renderDest, JFrame label) {
-    this.renderDest = renderDest;
-    this.label = label;
-  }
-
-  public void setBackground(BufferedImage renderDest, JFrame label) {
-    this.renderDest = renderDest;
-    this.label = label;
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
   }
 
   public void spawnAliens(int num) {
@@ -90,7 +76,8 @@ public class Game extends Thread implements Serializable {
   public void earthquake(LivingSystem ls, World w, Graphics g) {
 	  ls.earthquake();
 	  w.earthquake(g);
-	  label.repaint();
+	  // TODO: what is this line? deletable?
+	  //label.repaint();
 	  try {
           Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -101,29 +88,13 @@ public class Game extends Thread implements Serializable {
   int FORCEQUAKE = 3000;
 
   public void run() {
-<<<<<<< HEAD
 	scrollPane.getViewport().getView().addMouseListener(new ClickListener());
     frame.addKeyListener(new KeyboardListener());
     
-=======
-    label.addMouseListener(new ClickListener());
-    label.addKeyListener(new KeyboardListener());
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
     commands = new Stack<Command>();
     World w = World.getWorld();
     Random r = new Random();
     aliensToAdd = 0;
-<<<<<<< HEAD
-
-=======
-    /*
-     * for(int i = 0; i < 5; ++i){ int x = r.nextInt(World.WORLD_SIZE - 1);
-     * int y = r.nextInt(World.WORLD_SIZE - 1); while(!w.getTile(y,
-     * x).isPassable()){ x = r.nextInt(World.WORLD_SIZE - 1); y =
-     * r.nextInt(World.WORLD_SIZE - 1); } EntityFactory.makeNewAlien(x, y);
-     * }
-     */
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
     Graphics g = renderDest.getGraphics();
     RenderSystem rs = new RenderSystem(g);
     PhysicsSystem ps = new PhysicsSystem();
@@ -138,27 +109,12 @@ public class Game extends Thread implements Serializable {
     long milPerTick = (long) ((1.0f / goal) * 1000);
     for (;;) {
       long startMil = System.currentTimeMillis();
-<<<<<<< HEAD
       w.render(g);
       rs.tick();
-
-=======
-      g.setColor(Color.GRAY);
-      g.fillRect(0, 0, renderDest.getWidth(), renderDest.getHeight());
-      
-      if (r.nextInt(FORCEQUAKE) == 0) {
-    	  earthquake(ls, w, g);
-    	  FORCEQUAKE = 3000;
-      }
-      
-      w.render(g);
-      rs.tick();
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
       ps.tick();
       cs.addCommands(commands);
       commands.clear();
       cs.tick();
-<<<<<<< HEAD
       //ms.tick();
       as.tick();
       ls.tick();
@@ -172,15 +128,6 @@ public class Game extends Thread implements Serializable {
     	  infoPanel.setModelEntitySprite(entity, sprite);
     	  userClickVector = null;
       }
-=======
-      as.tick();
-      ls.tick();
-      label.repaint();
-      ms.tick();
-      Vector<String> messages = ms.getMessages();
-      //for(String s : messages)
-        //java.lang.System.out.println(s);
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
       
       for(; aliensToAdd > 0; --aliensToAdd)
       	spawnAliens(1);
@@ -195,7 +142,6 @@ public class Game extends Thread implements Serializable {
       }
     }
   }
-<<<<<<< HEAD
   
   private class ClickListener extends MouseAdapter {
     @Override
@@ -217,31 +163,7 @@ public class Game extends Thread implements Serializable {
         if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
         	commands.push(new Command(Command.Type.BUILD_HOUSE,
                     new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
-=======
 
-  private class ClickListener extends MouseAdapter {
-    @Override
-    public void mouseClicked(MouseEvent e) {
-      World w = World.getWorld();
-      if(e.getButton() == MouseEvent.BUTTON1){
-        // if(tile is a tree)
-        if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).getType() == Sprite.TREE){
-          commands.push(new Command(Command.Type.CHOP_TREE,
-              new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
-        }
-        //System.out.println("CHOP_TREE " + e.getX() / 32 + ", " + e.getY() / 32);
-      }
-      else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2
-        if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).isPassable()){
-          commands.push(new Command(Command.Type.RELOCATE,
-              new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
-        }
-        //System.out.println("RELOCATE" + e.getX() / 32 + ", " + e.getY() / 32);
-      }else if(e.getButton()==MouseEvent.BUTTON2){
-        if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
-          commands.push(new Command(Command.Type.BUILD_HOUSE,
-              new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
         }
       }
     }
@@ -258,7 +180,6 @@ public class Game extends Thread implements Serializable {
 				FORCEQUAKE = FORCEQUAKE == 3000 ? 1 : 3000;
 			}
 		}
-<<<<<<< HEAD
 		
 		@Override
 		public void keyReleased(KeyEvent arg0) {}
@@ -280,19 +201,4 @@ public class Game extends Thread implements Serializable {
   private Vec2f userClickVector;
   private JScrollPane scrollPane;
 
-=======
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {}
-
-		@Override
-		public void keyTyped(KeyEvent arg0) {}
-  	
-  }
-  
-  private int aliensToAdd;
-  private Stack<Command> commands;
-  private transient BufferedImage renderDest;
-  private JFrame label;
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
 }

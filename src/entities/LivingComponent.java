@@ -12,19 +12,10 @@ public class LivingComponent extends Component {
   }
 
   float hydration;
-<<<<<<< HEAD
   public float HP;
   public float maxHP;
   float maxHydration;
   float poorHydration;
   float criticalHydration;
-=======
-  float maxHydration;
-  float poorHydration;
-  float criticalHydration;
-
-  float HP;
-  float maxHP;
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
 }
 

@@ -24,11 +24,6 @@ public enum Item implements Serializable {
   final boolean isCraftable;
   final boolean isTool;
 
-<<<<<<< HEAD
-  // TODO: which lines? -rob
-  //public Type type;
-=======
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
   static final EnumMap<Item, Integer> axeRecipe = new EnumMap<Item, Integer>(Item.class){{
     put(WOOD, 2);
   }};

@@ -22,20 +22,11 @@ public class AISystem extends System {
   public void tick() {
     updateEntityVector();
     for(Entity e : entitiesToProcess){
-<<<<<<< HEAD
       pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
-=======
-    	pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
       ac = (AIComponent)eManager.getComponent(Component.AI, e);
       mc = (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
       lc = (LivingComponent)eManager.getComponent(Component.LIVING, e);
       cc = (ContainerComponent)eManager.getComponent(Component.CONTAINER, e);
-<<<<<<< HEAD
-      // TODO: rob changed this from message to name
-=======
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
-      msc = (MessageComponent)eManager.getComponent(Component.MESSAGE, e);
       
       if(ac.states.isEmpty())
       	ac.states.add(new State(State.Type.WANDER, getTime()));
@@ -119,7 +110,6 @@ public class AISystem extends System {
         }else{
           mc.velocity = getVelocity(pc.pos, ac.path.get(0));
         }
-<<<<<<< HEAD
 
       }
     }
@@ -153,42 +143,7 @@ public class AISystem extends System {
       }
     }
   }
-
-=======
-      }
-    }
-/******************************************************************************/
-  }  
-
-  private void handleLivingInterrupts(){
-    if(ac.states.peek().type != State.Type.FIND_WATER &&
-       lc.hydration <= lc.poorHydration){
-      ac.states.add(new State(State.Type.FIND_WATER, getTime()));
-      ac.path = null;
-    }else if(ac.states.peek().type == State.Type.FIND_WATER &&
-             lc.hydration >= lc.maxHydration){
-      ac.states.poll();
-      ac.path = null;
-    }
-  }
-
-  private void handleWanderState(){
-    World w = World.getWorld();
-    if(ac.path == null){
-      if(r.nextInt(100) == 42){
-        Vec2f dest;
-        do{
-          dest = pc.pos.sub(new Vec2f((r.nextFloat() - 0.5f) * 3,
-                                      (r.nextFloat() - 0.5f) * 3));
-        }while(dest.y < 0.0f || dest.x < 0.0f || dest.y >= World.WORLD_SIZE ||
-               dest.x >= World.WORLD_SIZE ||
-               !w.getTile((int)dest.y, (int)dest.x).isPassable());
-        ac.path = getPath(roundVector(pc.pos), roundVector(dest));
-      }
-    }
-  }
-
->>>>>>> 287dd10fe5d4185c801e47737cdc10a6f4945264
+  
   private void handleFindWaterState(){
     if(ac.path == null){
       Vec2f waterLoc = findClosest(Sprite.LAKE, pc.pos);
