@@ -15,7 +15,7 @@ import utility.Sprite;
 
 public class World implements Serializable {
 	
-	public static final int WORLD_SIZE = 25;//1000;
+	public static final int WORLD_SIZE = 35;//1000;
 	static final int TILE_COUNT = 2;
 	static final int TILE_MULTIPLIER = 5;	
 	/*-- For testing purposes --*/
