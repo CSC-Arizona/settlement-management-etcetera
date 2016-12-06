@@ -15,6 +15,7 @@ public class EntityFactory {
     eMan.addComponent(new LivingComponent(), alien);
     eMan.addComponent(new ContainerComponent(4), alien);
     eMan.addComponent(new MessageComponent(), alien);
+    eMan.addComponent(new NameComponent("Alien"), alien);
     eMan.markAs(Component.COMMANDABLE, alien);
     return alien;
   }
@@ -24,6 +25,7 @@ public class EntityFactory {
     eMan.addComponent(new PositionComponent(x, y, 0.0f), godzilla);
     eMan.addComponent(new RenderComponent(Sprite.GODZILLA), godzilla);
     eMan.addComponent(new MobilityComponent(new Vec2f(0.0f, 0.0f)), godzilla);
+    eMan.addComponent(new NameComponent("Godzilla"), godzilla);
     eMan.addComponent(new AIComponent(), godzilla);
     return godzilla;
   }
@@ -45,28 +47,32 @@ public class EntityFactory {
   }
   
   public static Entity makeNewShip(float x, float y) {
-    Entity ammo = eMan.genNewEntity();
-    eMan.addComponent(new PositionComponent(x, y, 0.0f), ammo);
-    eMan.addComponent(new RenderComponent(Sprite.SHIP), ammo);
-    eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ammo);
-    eMan.addComponent(new ContainerComponent(100), ammo);
-    eMan.addComponent(new MessageComponent(), ammo);
-    eMan.markAs(Component.SHIP, ammo);
-    return ammo;
+    Entity ship = eMan.genNewEntity();
+    eMan.addComponent(new PositionComponent(x, y, 0.0f), ship);
+    eMan.addComponent(new RenderComponent(Sprite.SHIP), ship);
+    eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ship);
+    eMan.addComponent(new ContainerComponent(100), ship);
+    eMan.addComponent(new MessageComponent(), ship);
+    eMan.addComponent(new NameComponent("Ship"), ship);
+    eMan.markAs(Component.SHIP, ship);
+    return ship;
   }
 
   public static Entity makeNewBloodPool(float x, float y){
     Entity bloodPool = eMan.genNewEntity();
     eMan.addComponent(new PositionComponent(x, y, 0.0f), bloodPool);
     eMan.addComponent(new RenderComponent(Sprite.BLOOD_POOL), bloodPool);
+    eMan.addComponent(new NameComponent("Blood pool"), bloodPool);
     return bloodPool;
   }
 
   public static Entity makeNewHouse(float x, float y){
-	    Entity bloodPool = eMan.genNewEntity();
-	    eMan.addComponent(new PositionComponent(x, y, 0.0f), bloodPool);
-	    eMan.addComponent(new RenderComponent(Sprite.HOUSE), bloodPool);
-	    return bloodPool;
+	    Entity house = eMan.genNewEntity();
+	    eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
+	    eMan.addComponent(new RenderComponent(Sprite.HOUSE), house);
+	    eMan.addComponent(new NameComponent("Blood pool"), house);
+	    eMan.addComponent(new NameComponent("House"), house);
+	    return house;
 	  }
   
   private static EntityManager eMan = EntityManager.INSTANCE;
