@@ -72,7 +72,7 @@ class RunMe {
 	  }
     if (g == null) {
       g = new Game(image, frame, scrollPane);
-      g.spawnAliens(2);
+      g.spawnAliens(10);
     }
     g.start();
   }

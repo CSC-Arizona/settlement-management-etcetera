@@ -66,10 +66,13 @@ public class EntityFactory {
   }
 
   public static Entity makeNewHouse(float x, float y){
-	    Entity bloodPool = eMan.genNewEntity();
-	    eMan.addComponent(new PositionComponent(x, y, 0.0f), bloodPool);
-	    eMan.addComponent(new RenderComponent(Sprite.HOUSE), bloodPool);
-	    return bloodPool;
+	    Entity house = eMan.genNewEntity();
+	    eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
+	    eMan.addComponent(new RenderComponent(Sprite.HOUSE), house);
+	    eMan.addComponent(new ContainerComponent(50), house);
+	    eMan.addComponent(new NameComponent("House"), house);
+	    eMan.addComponent(new CollisionComponent(), house);
+	    return house;
 	  }
   
   private static EntityManager eMan = EntityManager.INSTANCE;
