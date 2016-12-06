@@ -33,6 +33,9 @@ public class Tileset {
   }
 
   public BufferedImage getSprite(Sprite s){
+	if(s==Sprite.ALIEN){
+		return tileset.getSubimage(s.getX(), s.getY(), Sprite.WIDTH, Sprite.HEIGHT);
+	}
 	// load source images
 	BufferedImage image = tileset.getSubimage(0, 40*32, Sprite.WIDTH, Sprite.HEIGHT);
 	BufferedImage overlay = tileset.getSubimage(s.getX(), s.getY(), Sprite.WIDTH, Sprite.HEIGHT);

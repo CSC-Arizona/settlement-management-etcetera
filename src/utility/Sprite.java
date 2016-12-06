@@ -1,7 +1,7 @@
 package utility;
 
 public enum Sprite {
-  ALIEN(15, 7),
+  ALIEN(232, 12),
   AMMO(1, 1),
   GODZILLA(19, 4),
   BANDAGE(13, 0),
