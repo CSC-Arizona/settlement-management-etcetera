@@ -104,13 +104,15 @@ public class Game extends Thread implements Serializable {
     CommandSystem cs = new CommandSystem();
     MessageSystem ms = new MessageSystem();
 
-    int x;
-    int y;
-    do{
-      x = r.nextInt(World.WORLD_SIZE - 1);
-      y = r.nextInt(World.WORLD_SIZE - 1);
-    }while (w.getTile(y, x).getType() != Sprite.DIRT);
-    EntityFactory.makeNewShip(x, y);
+    if(spawn){
+	    int x;
+	    int y;
+	    do{
+	      x = r.nextInt(World.WORLD_SIZE - 1);
+	      y = r.nextInt(World.WORLD_SIZE - 1);
+	    }while (w.getTile(y, x).getType() != Sprite.DIRT);
+	    EntityFactory.makeNewShip(x, y);
+    }
     
     // We want to have 30 ticks/s
     int goal = 30;
@@ -206,6 +208,7 @@ public class Game extends Thread implements Serializable {
   public void loadGame(EntityManager eMan, InfoPanel ip) {
 	  this.eMan = eMan;
 	  this.infoPanel = ip;
+	  spawn = false;
   }
   
   private int aliensToAdd;
@@ -217,5 +220,6 @@ public class Game extends Thread implements Serializable {
   private static EntityManager eMan;
   private Vec2f userClickVector;
   private JScrollPane scrollPane;
+  private boolean spawn = true;
 
 }
