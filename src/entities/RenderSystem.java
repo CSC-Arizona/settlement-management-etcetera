@@ -27,7 +27,7 @@ public class RenderSystem extends System{
       final int ppm = rc.width;
       int x = (int)(pc.pos.x * ppm);// - (rc.width / 2);
       int y = (int)(pc.pos.y * ppm);// - (rc.height / 2);
-      g.drawImage(rc.getTexture(), x, y, rc.width, rc.height, null);
+      g.drawImage(/*rc.texture*/rc.getTexture(), x, y, rc.width, rc.height, null);
 
       // Draw HP bar.
       if(lc != null){
