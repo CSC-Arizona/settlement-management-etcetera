@@ -7,6 +7,10 @@ public class LivingComponent extends Component {
     maxHydration = 100.0f;
     poorHydration = 30.0f;
     criticalHydration = 25.0f;
+    restVal = 40.0f;
+    maxRestVal = 100.0f;
+    poorRestVal = 30.0f;
+    criticalRestVal = 25.0f;
     HP = 100.0f;
     maxHP = 100.0f;
   }
@@ -17,4 +21,9 @@ public class LivingComponent extends Component {
   float maxHydration;
   float poorHydration;
   float criticalHydration;
+  
+  float restVal;
+  float maxRestVal;
+  float poorRestVal;
+  float criticalRestVal;
 }
