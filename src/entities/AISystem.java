@@ -22,7 +22,7 @@ public class AISystem extends System {
   public void tick() {
     updateEntityVector();
     for(Entity e : entitiesToProcess){
-    	pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
+      pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
       ac = (AIComponent)eManager.getComponent(Component.AI, e);
       mc = (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
       lc = (LivingComponent)eManager.getComponent(Component.LIVING, e);
@@ -147,7 +147,6 @@ public class AISystem extends System {
       }
     }
   }
-
   private void handleFindWaterState(){
     if(ac.path == null){
       Vec2f waterLoc = findClosest(Sprite.LAKE, pc.pos);

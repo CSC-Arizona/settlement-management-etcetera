@@ -47,7 +47,7 @@ public class RenderComponent extends Component {
   }
 
   Sprite s;
-  transient BufferedImage texture;
+  public transient BufferedImage texture;
   int width;
   int height;
 }

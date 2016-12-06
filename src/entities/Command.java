@@ -11,6 +11,7 @@ public class Command extends State implements Serializable {
     this.location = location;
     desiredItems = null;
     reqItems = null;
+    type = getType();
     setReqItems();
   }
 
@@ -19,6 +20,7 @@ public class Command extends State implements Serializable {
     this.location = location;
     this.desiredItems = desiredItems;
     reqItems = null;
+    type = getType();
     setReqItems();
   }
 
@@ -41,6 +43,7 @@ public class Command extends State implements Serializable {
     }
   }
   
+  public Type type;
   Vec2f location;
   EnumMap<Item, Integer> reqItems;
   EnumMap<Item, Integer>  desiredItems;

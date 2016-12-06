@@ -69,5 +69,23 @@ public class WorldGenerator {
 		}
 		return board;
 	}
+	
+	public static void generateCrater(Structure[][] board) {
+		Random rng = new Random();
+		int r = 0,
+			craterCount = 0;
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				r = rng.nextInt(300);
+				if (r == 0) {
+					board = sMan.Crater.insertFormation(board, i, j);
+					craterCount++;
+				}
+				if (craterCount == 2) {
+					return;
+				}
+			}
+		}
+	}
 
 }

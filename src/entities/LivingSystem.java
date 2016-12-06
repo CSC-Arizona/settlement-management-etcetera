@@ -22,6 +22,17 @@ public class LivingSystem extends System {
         purgeTheDead(e);
     }
   }
+  
+  public void earthquake() {
+	  for(Entity e : entitiesToProcess){
+	      LivingComponent lc =
+	        (LivingComponent)eManager.getComponent(Component.LIVING, e);
+	      lc.HP -= 75.0f;
+
+	      if(lc.HP <= 0.0f)
+	        purgeTheDead(e);
+	    }
+  }
 
   private void handleHydration(LivingComponent lc, PositionComponent pc){
     if(lc.hydration < 30.0f)
@@ -40,6 +51,8 @@ public class LivingSystem extends System {
     World w = World.getWorld();
     int y = Math.round(pc.pos.y);
     int x = Math.round(pc.pos.x);
+    y = y < 0 ? 0 : y > w.getSize() ? w.getSize() : y;
+    x = x < 0 ? 0 : x > w.getSize() ? w.getSize() : x;
     if(w.getTile(y, x).getType() == Sprite.LAKE)
       lc.hydration += 30.0f / TICKS_PER_SECOND;
 
