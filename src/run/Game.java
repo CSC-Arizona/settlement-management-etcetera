@@ -133,9 +133,9 @@ public class Game extends Thread implements Serializable {
       ls.tick();
       frame.repaint();
       ms.tick();
-      if(userClickVector == null)
+      if(userClickVector == null){
     	  infoPanel.updatePanel();
-      else{
+      }else{
     	  Entity entity = eMan.getTopEntityAt(userClickVector);
     	  Sprite sprite = w.getTile((int)userClickVector.y, (int)userClickVector.x).getType();
     	  infoPanel.setModelEntitySprite(entity, sprite);
@@ -205,11 +205,6 @@ public class Game extends Thread implements Serializable {
   public void loadGame(EntityManager eMan, InfoPanel ip) {
 	  this.eMan = eMan;
 	  this.infoPanel = ip;
-  }
-
-  
-  public void saveGame(ObjectOutputStream outFile) throws IOException {
-	  outFile.writeObject(infoPanel);
   }
   
   private int aliensToAdd;
