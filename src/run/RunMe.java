@@ -82,7 +82,8 @@ class RunMe {
       if (new File("gamedata").exists()) { 
         FileInputStream rawBytes = new FileInputStream("gamedata"); 
         ObjectInputStream inFile = new ObjectInputStream(rawBytes);
-        g = (Game)inFile.readObject();
+        //g = (Game)inFile.readObject();
+        g = new Game(image, frame, scrollPane);
         World.setWorld((World)inFile.readObject());
         Vector<Integer> recycleBin = (Vector<Integer>)inFile.readObject();
         Vector<Vector<Component>> compVecs = (Vector<Vector<Component>>)inFile.readObject();
@@ -110,7 +111,7 @@ class RunMe {
         try {
           FileOutputStream bytesToDisk = new FileOutputStream("gamedata"); 
           ObjectOutputStream outFile = new ObjectOutputStream(bytesToDisk);
-          outFile.writeObject(g);
+          //outFile.writeObject(g);
           outFile.writeObject(World.getWorld());
           EntityManager eMan = EntityManager.INSTANCE;
           eMan.saveInstance(outFile);

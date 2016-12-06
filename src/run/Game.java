@@ -122,6 +122,7 @@ public class Game extends Thread implements Serializable {
     	  infoPanel.updatePanel();
     	  FORCEQUAKE = 3000;
       }
+      
       w.render(g);
       rs.tick();
       ps.tick();
