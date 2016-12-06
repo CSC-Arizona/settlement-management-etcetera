@@ -4,12 +4,17 @@ import java.io.Serializable;
 import java.util.EnumMap;
 
 public enum Item implements Serializable {
-  WOOD(false, false),
-  AXE(true, true);
+  WOOD("WOOD",false, false),
+  AXE("AXE",true, true);
 
-  private Item(boolean craftable, boolean tool){
-    isCraftable = craftable;
+  private Item(String name, boolean craftable, boolean tool){
+    this.name = name;
+	isCraftable = craftable;
     isTool = tool;
+  }
+  
+  public String getName() {
+	  return name;
   }
   
   public EnumMap<Item, Integer> getRecipe(){
@@ -21,6 +26,7 @@ public enum Item implements Serializable {
   	}
   }
   
+  final String name;
   final boolean isCraftable;
   final boolean isTool;
 

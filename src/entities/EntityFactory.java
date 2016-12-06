@@ -13,7 +13,7 @@ public class EntityFactory {
     eMan.addComponent(new AIComponent(), alien);
     //eMan.addComponent(new CollisionComponent(0.4f, 0.4f, 0.5f, 80.0f), alien);
     eMan.addComponent(new LivingComponent(), alien);
-    eMan.addComponent(new ContainerComponent(4), alien);
+    eMan.addComponent(new ContainerComponent(4, true), alien);
     eMan.addComponent(new MessageComponent(), alien);
     eMan.addComponent(new NameComponent("ALIEN"), alien);
     eMan.markAs(Component.COMMANDABLE, alien);
@@ -50,7 +50,7 @@ public class EntityFactory {
     eMan.addComponent(new PositionComponent(x, y, 0.0f), ammo);
     eMan.addComponent(new RenderComponent(Sprite.SHIP), ammo);
     eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ammo);
-    eMan.addComponent(new ContainerComponent(100), ammo);
+    eMan.addComponent(new ContainerComponent(100, false), ammo);
     eMan.addComponent(new MessageComponent(), ammo);
     eMan.addComponent(new NameComponent("SHIP"), ammo);
     eMan.markAs(Component.SHIP, ammo);

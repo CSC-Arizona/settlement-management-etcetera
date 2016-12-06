@@ -94,7 +94,7 @@ public class InfoPanel extends JPanel implements Serializable{
 	createName();
 	createImage();
 	createHealth();
-	//createInventory();
+	createInventory();
 	createCommandQueue();
 	revalidate();
 	repaint();
@@ -160,30 +160,26 @@ public class InfoPanel extends JPanel implements Serializable{
 	add(Box.createRigidArea(buffer));
   }
   
-  /*// Sets up the inventory feature for the entity if it has a ContainerComponent
+  // Sets up the inventory feature for the entity if it has a ContainerComponent
   private void createInventory(){
 	if(e == null || !eManager.hasComponents(Component.CONTAINER, e))
 	  return;
 	ContainerComponent cc = (ContainerComponent) eManager.getComponent(Component.CONTAINER, e);
-    // TODO: CALEB fix this
-	EnumMap<Item, Integer> items = cc.items;
+	EnumMap<Item, Integer> items = cc.getItems();
 	DefaultListModel<String> model = new DefaultListModel<String>();
-	for(Item i : items){
-	  model.addElement(i.type.name());
+	for(Item i : items.keySet()){
+	  model.addElement(items.get(i) + " " +i.getName());
 	}
 	inventoryList = new JList<String>(model);
 	JScrollPane inventoryScroller = new JScrollPane(inventoryList);
-	//list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-	//list.setLayoutOrientation(JList.VERTICAL);
-	//inventoryList.setVisibleRowCount(5);
 	inventoryScroller.setPreferredSize(new Dimension(this.getSize().width, 200));
 	inventoryScroller.setMaximumSize(new Dimension(this.getSize().width, 200));	  
-	Border inventoryBorder = BorderFactory.createTitledBorder("Inventory");
+	Border inventoryBorder = BorderFactory.createTitledBorder("Inventory (" + cc.getMax()+")");
 	inventoryScroller.setBorder(inventoryBorder);
 	inventoryScroller.setAlignmentX(alignment);
 	add(inventoryScroller);
 	add(Box.createRigidArea(buffer));
-  }*/
+  }
   
   // Sets up the task queue for the entity if it has a CommandableComponent
   private void createCommandQueue(){
@@ -212,7 +208,7 @@ public class InfoPanel extends JPanel implements Serializable{
 	if(e == null)
 	  return;
 	updateHealth();
-	//updateInventory();
+	updateInventory();
 	updateCommandQueue();
 	repaint();
   }
@@ -226,19 +222,18 @@ public class InfoPanel extends JPanel implements Serializable{
 	healthLabel.setText(text);
   }
   
-  /*// Updates the inventory feature of the InfoPanel
+  // Updates the inventory feature of the InfoPanel
   public void updateInventory(){
 	if(!eManager.hasComponents(Component.CONTAINER, e))
 	  return;
     ContainerComponent cc = (ContainerComponent) eManager.getComponent(Component.CONTAINER, e);
-    // TODO: CALEB fix this
-	//Vector<Item> items = cc.items;
+    EnumMap<Item, Integer> items = cc.getItems();
 	DefaultListModel<String> model = new DefaultListModel<String>();
-	//for(Item i : items){
-	//  model.addElement(i.type.name());
-	//}
+	for(Item i : items.keySet()){
+	  model.addElement(items.get(i) + " " + i.getName());
+	}
 	inventoryList.setModel(model);
-  }*/
+  }
   
   // Updates the command feature of the InfoPanel
   public void updateCommandQueue(){
