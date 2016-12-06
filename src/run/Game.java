@@ -63,12 +63,12 @@ public class Game extends Thread implements Serializable {
     World w = World.getWorld();
     Random r = new Random();
     for (int i = 0; i < num; ++i) {
-      int x = r.nextInt(World.WORLD_SIZE - 1);
-      int y = r.nextInt(World.WORLD_SIZE - 1);
-      while (!w.getTile(y, x).isPassable()) {
+      int x;
+      int y;
+      do{
         x = r.nextInt(World.WORLD_SIZE - 1);
         y = r.nextInt(World.WORLD_SIZE - 1);
-      }
+      }while (!w.getTile(y, x).isPassable());
       EntityFactory.makeNewAlien(x, y);
     }
   }
@@ -103,7 +103,14 @@ public class Game extends Thread implements Serializable {
     CommandSystem cs = new CommandSystem();
     MessageSystem ms = new MessageSystem();
 
-    EntityFactory.makeNewShip(1, 1);
+    int x;
+    int y;
+    do{
+      x = r.nextInt(World.WORLD_SIZE - 1);
+      y = r.nextInt(World.WORLD_SIZE - 1);
+    }while (w.getTile(y, x).getType() != Sprite.DIRT);
+    EntityFactory.makeNewShip(x, y);
+    
     // We want to have 30 ticks/s
     int goal = 30;
     long milPerTick = (long) ((1.0f / goal) * 1000);
@@ -129,8 +136,8 @@ public class Game extends Thread implements Serializable {
     	  userClickVector = null;
       }
       
-      for(; aliensToAdd > 0; --aliensToAdd)
-      	spawnAliens(1);
+      spawnAliens(aliensToAdd);
+      aliensToAdd = 0;
 
       long endMil = System.currentTimeMillis();
       if (endMil - startMil < milPerTick) {

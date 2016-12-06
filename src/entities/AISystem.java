@@ -35,13 +35,13 @@ public class AISystem extends System {
       /* DEBUG */
       //msc.messages.add(" (Alien) has: " + conc.items.get(Item.WOOD) + " wood");
       
-      
+      /*
       java.lang.System.out.println("*******************************");
       java.lang.System.out.println("top: " + ac.states.peek().type + " " + ac.path);
       for(State s : ac.states)
       	java.lang.System.out.println(s.type);
       java.lang.System.out.println("*******************************");
-      //*/
+      */
 
       
       // This handles dwarf's needs
@@ -68,8 +68,6 @@ public class AISystem extends System {
         }
       }
 
-    	java.lang.System.out.println("SWITCH");
-
       switch(ac.states.peek().type){
         case WANDER:
           handleWanderState();
@@ -84,7 +82,6 @@ public class AISystem extends System {
           handleFetchItemsState();
           break;
         case BUILD_HOUSE:
-        	java.lang.System.out.println("BUILD HOUSE");
           handleBuildHouseState();
           break;
         case DEPOSIT_ITEMS:
@@ -97,7 +94,6 @@ public class AISystem extends System {
           handleChopTree();
           break;
         default:
-        	java.lang.System.out.println("FUUUUCK");
       }
       
       // Shouldn't happen, but does non the less.
@@ -246,7 +242,6 @@ public class AISystem extends System {
   }
 
   private void handleBuildHouseState(){
-  	java.lang.System.out.println(">>>>>>>>>>>>>>>>>>bhouse state");
     Command command = (Command)ac.states.peek();
     float distance = (command.location.sub(pc.pos)).getMag();
     if(distance > CLOSE_ENOUGH && ac.path == null){
