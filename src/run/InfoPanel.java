@@ -124,7 +124,7 @@ public class InfoPanel extends JPanel implements Serializable{
 	storeLabel = new JLabel("e: Construct a storage unit");
 	add(storeLabel);
 	
-	nothing = new JLabel("a: Nothing. Return to normal clicking");
+	nothing = new JLabel("a: Collect resources.");
 	add(nothing);
 	
 	sleepLabel.setForeground(Color.BLACK);

@@ -98,6 +98,7 @@ public class Game extends Thread implements Serializable {
   int FORCEQUAKE = 3000;
 
   public void run() {
+	help();
 	scrollPane.getViewport().getView().addMouseListener(new ClickListener());
     frame.addKeyListener(new KeyboardListener());
     
@@ -154,6 +155,9 @@ public class Game extends Thread implements Serializable {
       spawnAliens(aliensToAdd);
       aliensToAdd = 0;
 
+      checkYouWin();
+      checkGameOver();
+      
       long endMil = System.currentTimeMillis();
       if (endMil - startMil < milPerTick) {
         try {
@@ -174,7 +178,7 @@ public class Game extends Thread implements Serializable {
       int x = xpixel / Sprite.WIDTH;
       int y = ypixel / Sprite.HEIGHT;
       if(e.getButton() == MouseEvent.BUTTON1){
-    	if(button1Char == 'Q' || button1Char == 'W' || button1Char == 'E'){
+    	if(button1Char == 'Q' || button1Char == 'W' || button1Char == 'E' || button1Char == 'R'){
     		if(!isSpotAvailable(x, y)){
     		  JOptionPane.showMessageDialog(null, "That spot is not available for construction.");
     		}
@@ -186,9 +190,13 @@ public class Game extends Thread implements Serializable {
     	      commands.push(new Command(Command.Type.BUILD_REPRODUCTIONHOUSE,
                 new Vec2f(x, y), System.currentTimeMillis()));
     		}
-    		else{
+    		else if(button1Char == 'E'){
     		  commands.push(new Command(Command.Type.BUILD_STORAGEUNIT,
                 new Vec2f(x, y), System.currentTimeMillis()));
+    		}
+    		else{
+    		  commands.push(new Command(Command.Type.BUILD_SHIP,
+    	        new Vec2f(x, y), System.currentTimeMillis()));
     		}
     	}
         else{
@@ -233,8 +241,14 @@ public class Game extends Thread implements Serializable {
 			else if(arg0.getKeyCode() == KeyEvent.VK_E){
 				button1Char = 'E';
 			}
+			if(arg0.getKeyCode() == KeyEvent.VK_R){
+				button1Char = 'R';
+			}
 			else if(arg0.getKeyCode() == KeyEvent.VK_P){
 				FORCEQUAKE = FORCEQUAKE == 6000 ? 1 : 6000;
+			}
+			else if(arg0.getKeyCode() == KeyEvent.VK_H){
+				help();
 			}
 		}
 		
@@ -275,6 +289,52 @@ public class Game extends Thread implements Serializable {
 	  this.eMan = eMan;
 	  this.infoPanel = ip;
 	  spawn = false;
+  }
+  
+  public void checkGameOver(){
+	  if(eMan.getMatchingEntities(Component.COMMANDABLE).size()==0){
+		  int n = JOptionPane.showConfirmDialog(frame, 
+				  "You lost. Try again?", "You lose!", 
+				  JOptionPane.YES_NO_OPTION);
+		  if (n == JOptionPane.YES_OPTION) {
+			  // TODO: restart the game
+		  } 
+		  else {
+			  System.exit(0);
+		  }
+	  }
+  }
+  
+  public void checkYouWin(){
+	  if(eMan.getMatchingEntities(Component.SHIP).size()>1){
+	    int n = JOptionPane.showConfirmDialog(frame, 
+		  "You win! Try again?", "You win!", 
+		  JOptionPane.YES_NO_OPTION);
+	  	if (n == JOptionPane.YES_OPTION) {
+		  // TODO: restart the game
+	  	} 
+	  	else {
+		  System.exit(0);
+	  	}
+	  }
+  }
+  
+  public void help(){
+	  JOptionPane.showMessageDialog(frame,
+			    "Welcome to Escape from Earth!\n"
+			    + "You control a band of cosmonauts on Earth. There's only one"
+			    + " problem:\n"
+			    + "a huge increase in seismic activity makes the planet unstabl"
+			    + "e. Frequent\n"
+			    + "earthquakes threaten to destroy your colony. Collect resourc"
+			    + "es to survive and\n"
+			    + "- if you can - build a ship to escape.\n\n"
+			    + "Left mouse click - collect resource / build structure\n"
+			    + "Right mouse click - see more info\n"
+			    + "Middle mouse click - build house\n"
+			    + "H - view this menu",
+			    "Help",
+			    JOptionPane.PLAIN_MESSAGE);
   }
   
   private char button1Char;
