@@ -94,6 +94,17 @@ public class Game extends Thread implements Serializable {
           e.printStackTrace();
         }
   }
+  
+  private void reproduce(){
+	  Vector<Entity> repHouses = eMan.getMatchingEntities(Component.REPRODUCTIONHOUSE);
+	  for(Entity house : repHouses){
+		  PositionComponent pc = (PositionComponent)eMan.getComponent(Component.POSITION, house);
+		  Random r = new Random();
+		  if(r.nextInt(3000) == 0){
+			  EntityFactory.makeNewAlien(pc.pos.x, pc.pos.y);
+		  }
+	  }
+  }
 
   int FORCEQUAKE = 3000;
 
@@ -131,6 +142,7 @@ public class Game extends Thread implements Serializable {
     	  //infoPanel.updatePanel(button1Char);
     	  FORCEQUAKE = 6000;
       }
+      reproduce();
       
       w.render(g);
       rs.tick();
