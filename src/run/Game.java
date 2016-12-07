@@ -16,6 +16,7 @@ import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -89,6 +90,7 @@ public class Game extends Thread implements Serializable {
   int FORCEQUAKE = 3000;
 
   public void run() {
+	help();
 	scrollPane.getViewport().getView().addMouseListener(new ClickListener());
     frame.addKeyListener(new KeyboardListener());
     
@@ -200,6 +202,9 @@ public class Game extends Thread implements Serializable {
 			if(arg0.getKeyCode() == KeyEvent.VK_E){
 				FORCEQUAKE = FORCEQUAKE == 3000 ? 1 : 3000;
 			}
+			if(arg0.getKeyCode() == KeyEvent.VK_H){
+				help();
+			}
 		}
 		
 		@Override
@@ -214,6 +219,24 @@ public class Game extends Thread implements Serializable {
 	  this.eMan = eMan;
 	  this.infoPanel = ip;
 	  spawn = false;
+  }
+  
+  public void help(){
+	  JOptionPane.showMessageDialog(frame,
+			    "Welcome to Escape from Earth!\n"
+			    + "You control a band of cosmonauts on Earth. There's only one"
+			    + " problem:\n"
+			    + "a huge increase in seismic activity makes the planet unstabl"
+			    + "e. Frequent\n"
+			    + "earthquakes threaten to destroy your colony. Collect resourc"
+			    + "es to survive and\n"
+			    + "- if you can - build a ship to escape.\n\n"
+			    + "Left mouse click - collect resource\n"
+			    + "Right mouse click - see more info\n"
+			    + "Middle mouse click - build house\n"
+			    + "H - view this menu",
+			    "Welcome",
+			    JOptionPane.PLAIN_MESSAGE);
   }
   
   private int aliensToAdd;
