@@ -25,6 +25,9 @@ public class State implements Serializable {
       case BUILD_HOUSE:
         priority = 8;
         break;
+      case BUILD_SHIP:
+    	priority = 200;
+    	break;
       case DEPOSIT_ITEMS:
         priority = 128;
         break;
@@ -46,7 +49,8 @@ public class State implements Serializable {
     BUILD_HOUSE,
     DEPOSIT_ITEMS,
     FETCH_ITEMS,
-    CRAFT_ITEMS;
+    CRAFT_ITEMS, 
+    BUILD_SHIP;
   }
   
   public Type getType() {

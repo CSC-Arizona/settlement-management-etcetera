@@ -84,6 +84,9 @@ public class AISystem extends System {
         case FETCH_ITEMS:
           handleFetchItemsState();
           break;
+        case BUILD_SHIP:
+            handleBuildShipState();
+            break;
         case BUILD_HOUSE:
           handleBuildHouseState();
           break;
@@ -293,6 +296,28 @@ public class AISystem extends System {
       ac.path = null;
     }
   }
+  
+  private void handleBuildShipState(){
+	    Command command = (Command)ac.states.peek();
+	    float distance = (command.location.sub(pc.pos)).getMag();
+	    if(distance > CLOSE_ENOUGH && ac.path == null){
+	      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
+	    }else if(distance <= CLOSE_ENOUGH){
+	      EntityFactory.makeNewShip(command.location.x, command.location.y);
+	      for(Item item : command.reqItems.keySet()){
+	        if(!item.isTool){
+	          // TODO: without these next two lines, the next line causes 
+	          //       null pointer exceptions. magic?
+	          command.reqItems.size();
+	          cc.items.size();
+	          // next line causes null pointer exceptions
+	          cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
+	        }
+	      }
+	      ac.states.poll();
+	      ac.path = null;
+	    }
+	  }
 
   private void handleCraftItemsState(){
     /*

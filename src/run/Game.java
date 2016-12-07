@@ -154,6 +154,7 @@ public class Game extends Thread implements Serializable {
       spawnAliens(aliensToAdd);
       aliensToAdd = 0;
 
+      checkYouWin();
       checkGameOver();
       
       long endMil = System.currentTimeMillis();
@@ -180,15 +181,23 @@ public class Game extends Thread implements Serializable {
         	commands.push(new Command(Command.Type.RELOCATE,
                     new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
       }
-      else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2    	  
+      else if(e.getButton() == MouseEvent.BUTTON3){   	  
     	  userClickVector = new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT);
 
-      }else if(e.getButton()==MouseEvent.BUTTON2){
-        if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
-        	commands.push(new Command(Command.Type.BUILD_HOUSE,
+      }
+      else if(e.getButton()==MouseEvent.BUTTON2){
+   	    if(buildMode=="house"){
+   	    	if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
+   	    		commands.push(new Command(Command.Type.BUILD_HOUSE,
                     new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
-
-        }
+   	    	}	
+   	    }
+   	    else if(buildMode=="ship"){
+   	    	if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
+   	        	commands.push(new Command(Command.Type.BUILD_SHIP,
+   	                    new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
+   	        }
+   	    }
       }
     }
   }
@@ -205,6 +214,12 @@ public class Game extends Thread implements Serializable {
 			}
 			if(arg0.getKeyCode() == KeyEvent.VK_H){
 				help();
+			}
+			if(arg0.getKeyCode() == KeyEvent.VK_S){
+				buildMode = "ship";
+			}
+			if(arg0.getKeyCode() == KeyEvent.VK_G){
+				buildMode = "house";
 			}
 		}
 		
@@ -223,7 +238,7 @@ public class Game extends Thread implements Serializable {
   }
   
   public void checkGameOver(){
-	  if(eMan.getMatchingEntities(Component.LIVING).size()==0){
+	  if(eMan.getMatchingEntities(Component.COMMANDABLE).size()==0){
 		  int n = JOptionPane.showConfirmDialog(frame, 
 				  "You lost. Try again?", "You lose!", 
 				  JOptionPane.YES_NO_OPTION);
@@ -233,6 +248,20 @@ public class Game extends Thread implements Serializable {
 		  else {
 			  System.exit(0);
 		  }
+	  }
+  }
+  
+  public void checkYouWin(){
+	  if(eMan.getMatchingEntities(Component.SHIP).size()>1){
+	    int n = JOptionPane.showConfirmDialog(frame, 
+		  "You win! Try again?", "You win!", 
+		  JOptionPane.YES_NO_OPTION);
+	  	if (n == JOptionPane.YES_OPTION) {
+		  // TODO: restart the game
+	  	} 
+	  	else {
+		  System.exit(0);
+	  	}
 	  }
   }
   
@@ -254,6 +283,7 @@ public class Game extends Thread implements Serializable {
 			    JOptionPane.PLAIN_MESSAGE);
   }
   
+  private String buildMode;
   private int aliensToAdd;
   private Stack<Command> commands;
   private transient BufferedImage renderDest;

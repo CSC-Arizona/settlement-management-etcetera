@@ -31,6 +31,11 @@ public class Command extends State implements Serializable {
         reqItems.put(Item.WOOD, 3);
         reqItems.put(Item.AXE, 1);
         break;
+      case BUILD_SHIP:
+        reqItems = new EnumMap<Item, Integer>(Item.class);
+        reqItems.put(Item.WOOD, 1);
+        reqItems.put(Item.AXE, 1);    	  
+        break;
       case CRAFT_ITEMS:
       	// TODO: Since putAll overwrites the previous values, we might have to
         // take care of same items being required in the future.
