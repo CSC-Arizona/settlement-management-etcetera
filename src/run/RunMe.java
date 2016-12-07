@@ -98,16 +98,8 @@ class RunMe {
     }
   }
   
-  private class MyWindowListener extends WindowAdapter implements WindowListener {
-    @Override
-    public void windowClosing(WindowEvent we) {
-      int result = JOptionPane.showConfirmDialog(null, "Save Data?","alert", JOptionPane.YES_NO_CANCEL_OPTION);
-      if (result == 1) {
-        //no
-        System.exit(0);
-      } else if (result != 2) {
-        //yes
-        try {
+  public static void saveData(){
+	  try {
           FileOutputStream bytesToDisk = new FileOutputStream("gamedata"); 
           ObjectOutputStream outFile = new ObjectOutputStream(bytesToDisk);
           outFile.writeObject(World.getWorld());
@@ -118,6 +110,18 @@ class RunMe {
         } catch (IOException e) {
           e.printStackTrace();
         }
+  }
+  
+  private class MyWindowListener extends WindowAdapter implements WindowListener {
+    @Override
+    public void windowClosing(WindowEvent we) {
+      int result = JOptionPane.showConfirmDialog(null, "Save Data?","alert", JOptionPane.YES_NO_CANCEL_OPTION);
+      if (result == 1) {
+        //no
+        System.exit(0);
+      } else if (result != 2) {
+        //yes
+        saveData();
         System.exit(0);
       }
     }

@@ -85,15 +85,16 @@ public class AISystem extends System {
           handleFetchItemsState();
           break;
         case BUILD_SLEEPHOUSE:
-          handleBuildHouseState(State.Type.BUILD_SLEEPHOUSE);
+          handleBuildState(State.Type.BUILD_SLEEPHOUSE);
           break;
         case BUILD_REPRODUCTIONHOUSE:
-          handleBuildHouseState(State.Type.BUILD_REPRODUCTIONHOUSE);
+          handleBuildState(State.Type.BUILD_REPRODUCTIONHOUSE);
           break;
         case BUILD_STORAGEUNIT:
-          handleBuildHouseState(State.Type.BUILD_STORAGEUNIT);
+          handleBuildState(State.Type.BUILD_STORAGEUNIT);
+          break;
         case BUILD_SHIP:
-          handleBuildShipState();
+          handleBuildState(State.Type.BUILD_SHIP);
           break;
         case DEPOSIT_ITEMS:
           handleDepositItemsState();
@@ -279,18 +280,22 @@ public class AISystem extends System {
     }
   }
 
-  private void handleBuildHouseState(State.Type houseType){
+  private void handleBuildState(State.Type type){
     Command command = (Command)ac.states.peek();
     float distance = (command.location.sub(pc.pos)).getMag();
     if(distance > CLOSE_ENOUGH && ac.path == null){
       ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
     }else if(distance <= CLOSE_ENOUGH){
-      if(houseType == State.Type.BUILD_SLEEPHOUSE)
+      if(type == State.Type.BUILD_SLEEPHOUSE)
     	  EntityFactory.makeNewSleepHouse(command.location.x, command.location.y);
-      else if(houseType == State.Type.BUILD_REPRODUCTIONHOUSE)
+      else if(type == State.Type.BUILD_REPRODUCTIONHOUSE)
     	  EntityFactory.makeNewReproductionHouse(command.location.x, command.location.y);
-      else{
+      else if(type == State.Type.BUILD_STORAGEUNIT)
     	  EntityFactory.makeNewStorageUnit(command.location.x, command.location.y);
+      else if(type == State.Type.BUILD_SHIP)
+    	  EntityFactory.makeNewShip(command.location.x, command.location.y);
+      else{
+    	  java.lang.System.err.println("Error with handleBuildState. This should never run.");
       }
       for(Item item : command.reqItems.keySet()){
         if(!item.isTool){
@@ -301,7 +306,7 @@ public class AISystem extends System {
       ac.path = null;
     }
   }
-  
+  /*
   private void handleBuildShipState(){
 	    Command command = (Command)ac.states.peek();
 	    float distance = (command.location.sub(pc.pos)).getMag();
@@ -313,8 +318,8 @@ public class AISystem extends System {
 	        if(!item.isTool){
 	          // TODO: without these next two lines, the next line causes 
 	          //       null pointer exceptions. magic?
-	          command.reqItems.size();
-	          cc.items.size();
+	          //command.reqItems.size();
+	          //cc.items.size();
 	          // next line causes null pointer exceptions
 	          cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
 	        }
@@ -323,7 +328,7 @@ public class AISystem extends System {
 	      ac.path = null;
 	    }
 	  }
-
+*/
   private void handleCraftItemsState(){
     /*
     Command command = (Command)ac.states.peek();

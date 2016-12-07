@@ -194,9 +194,13 @@ public class Game extends Thread implements Serializable {
     		  commands.push(new Command(Command.Type.BUILD_STORAGEUNIT,
                 new Vec2f(x, y), System.currentTimeMillis()));
     		}
-    		else{
+    		else if(button1Char == 'R'){
     		  commands.push(new Command(Command.Type.BUILD_SHIP,
     	        new Vec2f(x, y), System.currentTimeMillis()));
+    		}
+    		else{
+    			System.err.println("Error in MousePressed");
+    			return;
     		}
     	}
         else{
@@ -249,6 +253,13 @@ public class Game extends Thread implements Serializable {
 			}
 			else if(arg0.getKeyCode() == KeyEvent.VK_H){
 				help();
+			}
+			else if(arg0.getKeyCode() == KeyEvent.VK_S){
+			  int result = JOptionPane.showConfirmDialog(null, "Save Data?","alert", JOptionPane.YES_NO_CANCEL_OPTION);
+			    if (result != 2) {
+			        //yes
+			        RunMe.saveData();
+			      }
 			}
 		}
 		
@@ -332,6 +343,7 @@ public class Game extends Thread implements Serializable {
 			    + "Left mouse click - collect resource / build structure\n"
 			    + "Right mouse click - see more info\n"
 			    + "Middle mouse click - build house\n"
+			    + "S - save the game\n"
 			    + "H - view this menu",
 			    "Help",
 			    JOptionPane.PLAIN_MESSAGE);

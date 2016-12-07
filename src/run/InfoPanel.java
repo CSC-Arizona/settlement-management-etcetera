@@ -59,11 +59,10 @@ public class InfoPanel extends JPanel implements Serializable{
   private Dimension size;
   private Dimension buffer;
   //private JButton sleepButton, reproduceButton, storageButton;
-  JLabel sleepLabel, reproduceLabel, storeLabel, nothing;
+  JLabel sleepLabel, reproduceLabel, storeLabel, shipLabel, nothing;
   private JLabel healthLabel;
   private JList<String> inventoryList;
   private JList<String> commandList;
-  private String instructions;
   
   // Allows another class to get a copy of the single instance of this class
   public static InfoPanel getInstance(){
@@ -110,25 +109,34 @@ public class InfoPanel extends JPanel implements Serializable{
   
   // Adds JLabels that give instructions for creating buildings
   private void createBuildingsInstructions(){
-	instructions = "<html>Click on a key below to construct a building<br>Then click "
-			+ "somewhere to place the building<html>";
+	JLabel helpLabel = new JLabel("Press H for help");
+	helpLabel.setForeground(Color.BLUE);
+	add(helpLabel);
+	add(Box.createRigidArea(buffer));
+	
+	String instructions = "<html>Press a key below to choose a left-click setting<br>Then click "
+			+ "somewhere to build/gather<html>";
 	JLabel buildInstructions = new JLabel(instructions);
 	add(buildInstructions);
 	  
-	sleepLabel = new JLabel("q: Construct a sleeping house");
+	sleepLabel = new JLabel("Q: Construct a sleeping house");
 	add(sleepLabel);
 	  
-	reproduceLabel = new JLabel("w: Construct a reproduction house");
+	reproduceLabel = new JLabel("W: Construct a reproduction house");
 	add(reproduceLabel);
 	  
-	storeLabel = new JLabel("e: Construct a storage unit");
+	storeLabel = new JLabel("E: Construct a storage unit");
 	add(storeLabel);
 	
-	nothing = new JLabel("a: Collect resources.");
+	shipLabel = new JLabel("R: Construct the ship to escape earth!");
+	add(shipLabel);
+	
+	nothing = new JLabel("A: Collect resources.");
 	add(nothing);
 	
 	sleepLabel.setForeground(Color.BLACK);
 	reproduceLabel.setForeground(Color.BLACK);
+	storeLabel.setForeground(Color.BLACK);
 	storeLabel.setForeground(Color.BLACK);
 	nothing.setForeground(Color.RED);
 	  
@@ -275,6 +283,7 @@ public class InfoPanel extends JPanel implements Serializable{
 	  sleepLabel.setForeground(Color.BLACK);
 	  reproduceLabel.setForeground(Color.BLACK);
 	  storeLabel.setForeground(Color.BLACK);
+	  shipLabel.setForeground(Color.BLACK);
 	  nothing.setForeground(Color.BLACK);
 	  switch(buildChoice){
 	  	case 'A':
@@ -288,6 +297,13 @@ public class InfoPanel extends JPanel implements Serializable{
 	      break;
 	  	case 'E':
 		  storeLabel.setForeground(Color.RED);
+		  break;
+	  	case 'R':
+	  	  shipLabel.setForeground(Color.RED);
+	  	  break;
+		default:
+		  System.err.println("This should never happen.");
+		  System.err.println(buildChoice);
 		  break;
 	  }
   }

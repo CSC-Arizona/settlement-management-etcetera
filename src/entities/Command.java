@@ -43,7 +43,7 @@ public class Command extends State implements Serializable {
           break;
       case BUILD_SHIP:
         reqItems = new EnumMap<Item, Integer>(Item.class);
-        reqItems.put(Item.WOOD, 1);
+        reqItems.put(Item.WOOD, 3);
         reqItems.put(Item.AXE, 1);    	  
         break;
       case CRAFT_ITEMS:
