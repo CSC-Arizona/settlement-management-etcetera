@@ -33,6 +33,13 @@ public class Tileset {
   }
 
   public BufferedImage getSprite(Sprite s){
+	if(s==Sprite.HOUSE){
+		try {
+			return ImageIO.read(new File("gfx/house.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
   	return tileset.getSubimage(s.getX(), s.getY(), Sprite.WIDTH, Sprite.HEIGHT);
 
   	/*
