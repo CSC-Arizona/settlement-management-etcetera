@@ -126,6 +126,11 @@ public class InfoPanel extends JPanel implements Serializable{
 	
 	nothing = new JLabel("a: Nothing. Return to normal clicking");
 	add(nothing);
+	
+	sleepLabel.setForeground(Color.BLACK);
+	reproduceLabel.setForeground(Color.BLACK);
+	storeLabel.setForeground(Color.BLACK);
+	nothing.setForeground(Color.RED);
 	  
 	add(Box.createRigidArea(buffer));
   }
@@ -255,6 +260,7 @@ public class InfoPanel extends JPanel implements Serializable{
   
   // Updates the panel assuming that the panel has the same entity as before
   public void updatePanel(char buildChoice){
+	updateBuildChoice(buildChoice);
 	if(e == null)
 	  return;
 	updateBuildChoice(buildChoice);

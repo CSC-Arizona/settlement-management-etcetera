@@ -285,7 +285,7 @@ public class AISystem extends System {
     }else if(distance <= CLOSE_ENOUGH){
       if(houseType == State.Type.BUILD_SLEEPHOUSE)
     	  EntityFactory.makeNewSleepHouse(command.location.x, command.location.y);
-      else if(houseType == State.Type.BUILD_SLEEPHOUSE)
+      else if(houseType == State.Type.BUILD_REPRODUCTIONHOUSE)
     	  EntityFactory.makeNewReproductionHouse(command.location.x, command.location.y);
       else{
     	  EntityFactory.makeNewStorageUnit(command.location.x, command.location.y);
