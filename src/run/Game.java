@@ -78,7 +78,6 @@ public class Game extends Thread implements Serializable {
   public void earthquake(LivingSystem ls, World w, Graphics g) {
 	  ls.earthquake();
 	  w.earthquake(g);
-	  // TODO: what is this line? deletable?
 	  frame.repaint();
 	  try {
           Thread.sleep(500);
@@ -155,6 +154,8 @@ public class Game extends Thread implements Serializable {
       spawnAliens(aliensToAdd);
       aliensToAdd = 0;
 
+      checkGameOver();
+      
       long endMil = System.currentTimeMillis();
       if (endMil - startMil < milPerTick) {
         try {
@@ -221,6 +222,20 @@ public class Game extends Thread implements Serializable {
 	  spawn = false;
   }
   
+  public void checkGameOver(){
+	  if(eMan.getMatchingEntities(Component.LIVING).size()==0){
+		  int n = JOptionPane.showConfirmDialog(frame, 
+				  "You lost. Try again?", "You lose!", 
+				  JOptionPane.YES_NO_OPTION);
+		  if (n == JOptionPane.YES_OPTION) {
+			  // TODO: restart the game
+		  } 
+		  else {
+			  System.exit(0);
+		  }
+	  }
+  }
+  
   public void help(){
 	  JOptionPane.showMessageDialog(frame,
 			    "Welcome to Escape from Earth!\n"
@@ -235,7 +250,7 @@ public class Game extends Thread implements Serializable {
 			    + "Right mouse click - see more info\n"
 			    + "Middle mouse click - build house\n"
 			    + "H - view this menu",
-			    "Welcome",
+			    "Help",
 			    JOptionPane.PLAIN_MESSAGE);
   }
   
