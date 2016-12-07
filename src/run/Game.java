@@ -2,6 +2,7 @@ package run;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -16,6 +17,7 @@ import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -51,6 +53,7 @@ public class Game extends Thread implements Serializable {
     eMan = EntityManager.INSTANCE;
     userClickVector = (Vec2f) null;
     this.scrollPane = scrollPane;
+    button1Char = 'A';
   }
 
   public void setBackground(BufferedImage renderDest, JFrame frame, JScrollPane scrollPane) {
@@ -61,23 +64,29 @@ public class Game extends Thread implements Serializable {
   }
 
   public void spawnAliens(int num) {
-    World w = World.getWorld();
-    Random r = new Random();
     for (int i = 0; i < num; ++i) {
-      int x;
-      int y;
-      do{
-        x = r.nextInt(World.WORLD_SIZE - 1);
-        y = r.nextInt(World.WORLD_SIZE - 1);
-      }while (!w.getTile(y, x).isPassable());
-      EntityFactory.makeNewAlien(x, y);
+      Point p = getRandomFreeLocation();
+      EntityFactory.makeNewAlien(p.x, p.y);
     }
   }
   
   public void earthquake(LivingSystem ls, World w, Graphics g) {
 	  ls.earthquake();
 	  w.earthquake(g);
-	  // TODO: what is this line? deletable?
+	  Vector<Entity> structures = eMan.getMatchingEntities(Component.REPRODUCTIONHOUSE);
+	  Vector<Entity> structures2 = eMan.getMatchingEntities(Component.SLEEPINGHOUSE);
+	  for(Entity e : structures2){
+		  structures.add(e);
+	  }
+	  Vector<Entity> structures3 = eMan.getMatchingEntities(Component.STORAGEUNIT);
+	  for(Entity e : structures3){
+		  structures.add(e);
+	  }
+	  Random r = new Random(3);
+	  for(Entity e : structures){
+		  if(r.nextInt(3) == 0)
+			  eMan.rmEntity(e);
+	  }
 	  frame.repaint();
 	  try {
           Thread.sleep(500);
@@ -105,18 +114,10 @@ public class Game extends Thread implements Serializable {
     MessageSystem ms = new MessageSystem();
 
     if(spawn){
-	    int x;
-	    int y;
-	    do{
-	      x = r.nextInt(World.WORLD_SIZE - 1);
-	      y = r.nextInt(World.WORLD_SIZE - 1);
-	    }while (w.getTile(y, x).getType() != Sprite.DIRT);
-	    EntityFactory.makeNewShip(x, y);
-	    do{
-	    x = r.nextInt(World.WORLD_SIZE - 1);
-	    y = r.nextInt(World.WORLD_SIZE - 1);
-	    }while (w.getTile(y, x).getType() != Sprite.DIRT);
-	    EntityFactory.makeNewHouse(x, y);
+    	Point p = getRandomFreeLocation();
+	    EntityFactory.makeNewShip(p.x, p.y);
+	    p = getRandomFreeLocation();
+	    EntityFactory.makeNewSleepHouse(p.x, p.y);
     }
     
     // We want to have 30 ticks/s
@@ -126,8 +127,8 @@ public class Game extends Thread implements Serializable {
       long startMil = System.currentTimeMillis();
       if (r.nextInt(FORCEQUAKE) == 0) {
     	  earthquake(ls, w, g);
-    	  infoPanel.updatePanel();
-    	  FORCEQUAKE = 3000;
+    	  //infoPanel.updatePanel(button1Char);
+    	  FORCEQUAKE = 6000;
       }
       
       w.render(g);
@@ -142,7 +143,7 @@ public class Game extends Thread implements Serializable {
       frame.repaint();
       ms.tick();
       if(userClickVector == null){
-    	  infoPanel.updatePanel();
+    	  infoPanel.updatePanel(button1Char);
       }else{
     	  Entity entity = eMan.getTopEntityAt(userClickVector);
     	  Sprite sprite = w.getTile((int)userClickVector.y, (int)userClickVector.x).getType();
@@ -168,22 +169,45 @@ public class Game extends Thread implements Serializable {
     @Override
     public void mousePressed(MouseEvent e) {
       World w = World.getWorld();
+      int xpixel = e.getX();
+      int ypixel = e.getY();
+      int x = xpixel / Sprite.WIDTH;
+      int y = ypixel / Sprite.HEIGHT;
       if(e.getButton() == MouseEvent.BUTTON1){
-        // if(tile is a tree)
-        if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).getType() == Sprite.TREE)
+    	if(button1Char == 'Q' || button1Char == 'W' || button1Char == 'E'){
+    		if(!isSpotAvailable(x, y)){
+    		  JOptionPane.showMessageDialog(null, "That spot is not available for construction.");
+    		}
+    		else if(button1Char == 'Q'){
+    		  commands.push(new Command(Command.Type.BUILD_SLEEPHOUSE,
+                      new Vec2f(x, y), System.currentTimeMillis()));
+    		}
+    		else if(button1Char == 'W'){
+    	      commands.push(new Command(Command.Type.BUILD_REPRODUCTIONHOUSE,
+                new Vec2f(x, y), System.currentTimeMillis()));
+    		}
+    		else{
+    		  commands.push(new Command(Command.Type.BUILD_STORAGEUNIT,
+                new Vec2f(x, y), System.currentTimeMillis()));
+    		}
+    	}
+        else{
+          // if(tile is a tree)
+          if(w.getTile(y, x).getType() == Sprite.TREE)
         	commands.push(new Command(Command.Type.CHOP_TREE,
-                    new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
-        else if(w.getTile(e.getY() / Sprite.HEIGHT, e.getX() / Sprite.WIDTH).isPassable())
+                    new Vec2f(x, y), System.currentTimeMillis()));
+          else if(w.getTile(y, x).isPassable())
         	commands.push(new Command(Command.Type.RELOCATE,
-                    new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
+                    new Vec2f(x, y), System.currentTimeMillis()));
+        }
       }
       else if(e.getButton() == MouseEvent.BUTTON3){ // this might need to be a 2    	  
-    	  userClickVector = new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT);
+    	  userClickVector = new Vec2f(x, y);
 
       }else if(e.getButton()==MouseEvent.BUTTON2){
-        if(World.getWorld().getTile(e.getX()/32, e.getY()/32).getType()==Sprite.DIRT){
-        	commands.push(new Command(Command.Type.BUILD_HOUSE,
-                    new Vec2f(e.getX() / Sprite.WIDTH, e.getY() / Sprite.HEIGHT), System.currentTimeMillis()));
+        if(World.getWorld().getTile(x, y).getType()==Sprite.DIRT){
+        	commands.push(new Command(Command.Type.BUILD_SLEEPHOUSE,
+                    new Vec2f(x, y), System.currentTimeMillis()));
 
         }
       }
@@ -197,8 +221,20 @@ public class Game extends Thread implements Serializable {
 			if(arg0.getKeyCode() == KeyEvent.VK_N){
 				++aliensToAdd;
 			}
-			if(arg0.getKeyCode() == KeyEvent.VK_E){
-				FORCEQUAKE = FORCEQUAKE == 3000 ? 1 : 3000;
+			else if(arg0.getKeyCode() == KeyEvent.VK_A){
+				button1Char = 'A';
+			}
+			else if(arg0.getKeyCode() == KeyEvent.VK_Q){
+				button1Char = 'Q';
+			}
+			else if(arg0.getKeyCode() == KeyEvent.VK_W){
+				button1Char = 'W';
+			}
+			else if(arg0.getKeyCode() == KeyEvent.VK_E){
+				button1Char = 'E';
+			}
+			else if(arg0.getKeyCode() == KeyEvent.VK_P){
+				FORCEQUAKE = FORCEQUAKE == 6000 ? 1 : 6000;
 			}
 		}
 		
@@ -210,12 +246,38 @@ public class Game extends Thread implements Serializable {
   	
   }
   
+  public boolean isSpotAvailable(int x, int y){
+	  World w = World.getWorld();
+	  if(w.getTile(y, x).getType() != Sprite.DIRT)
+		  return false;
+	  Vector<Entity> list = eMan.getMatchingEntities(Component.POSITION | Component.COLLISION);
+	  for(Entity e : list){
+		  PositionComponent pc = (PositionComponent)eMan.getComponent(Component.POSITION, e);
+		  if(Math.abs(pc.pos.sub(new Vec2f(x, y)).getMag()) < 0.5f)
+			  return false;
+	  }
+	  return true;
+  }
+  
+  private Point getRandomFreeLocation(){
+	  World w = World.getWorld();
+	  Random r = new Random();
+	  int x;
+	  int y;
+	  do{
+	      x = r.nextInt(World.WORLD_SIZE - 1);
+	      y = r.nextInt(World.WORLD_SIZE - 1);
+	  }while (w.getTile(y, x).getType() != Sprite.DIRT);
+	  return new Point(x, y);
+  }
+  
   public void loadGame(EntityManager eMan, InfoPanel ip) {
 	  this.eMan = eMan;
 	  this.infoPanel = ip;
 	  spawn = false;
   }
   
+  private char button1Char;
   private int aliensToAdd;
   private Stack<Command> commands;
   private transient BufferedImage renderDest;

@@ -21,6 +21,6 @@ public class PositionComponent extends Component {
   }
 
   // Default access modifier: seen within package
-  Vec2f pos;
+  public Vec2f pos;
   float z;
 }

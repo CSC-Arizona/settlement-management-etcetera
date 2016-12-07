@@ -17,14 +17,20 @@ public class State implements Serializable {
     	priority = 256;
     	break;
       case RELOCATE:
-        priority = 8;
+        priority = 4;
         break;
       case CHOP_TREE:
         priority = 8;
         break;
-      case BUILD_HOUSE:
+      case BUILD_SLEEPHOUSE:
         priority = 8;
         break;
+      case BUILD_REPRODUCTIONHOUSE:
+          priority = 8;
+          break;
+      case BUILD_STORAGEUNIT:
+          priority = 8;
+          break;
       case DEPOSIT_ITEMS:
         priority = 128;
         break;
@@ -43,7 +49,9 @@ public class State implements Serializable {
     REST,
     RELOCATE,
     CHOP_TREE,
-    BUILD_HOUSE,
+    BUILD_SLEEPHOUSE,
+    BUILD_REPRODUCTIONHOUSE,
+    BUILD_STORAGEUNIT,
     DEPOSIT_ITEMS,
     FETCH_ITEMS,
     CRAFT_ITEMS;

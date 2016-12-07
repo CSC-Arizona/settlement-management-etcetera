@@ -6,9 +6,12 @@
  */
 package run;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayDeque;
@@ -22,6 +25,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -52,11 +56,14 @@ public class InfoPanel extends JPanel implements Serializable{
   EntityManager eManager;
   private static InfoPanel uniqueInstance;
   float alignment;
-  Dimension size;
-  Dimension buffer;
-  JLabel healthLabel;
-  JList<String> inventoryList;
-  JList<String> commandList;
+  private Dimension size;
+  private Dimension buffer;
+  //private JButton sleepButton, reproduceButton, storageButton;
+  JLabel sleepLabel, reproduceLabel, storeLabel, nothing;
+  private JLabel healthLabel;
+  private JList<String> inventoryList;
+  private JList<String> commandList;
+  private String instructions;
   
   // Allows another class to get a copy of the single instance of this class
   public static InfoPanel getInstance(){
@@ -71,7 +78,6 @@ public class InfoPanel extends JPanel implements Serializable{
 	e = (Entity) null;
 	s = (Sprite) null;
 	eManager = EntityManager.INSTANCE;
-	//this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 	alignment = java.awt.Component.LEFT_ALIGNMENT;
 	size = this.getPreferredSize();
 	buffer = new Dimension(0,5);
@@ -91,6 +97,8 @@ public class InfoPanel extends JPanel implements Serializable{
   // Draws the panel based on the current entity
   private void createPanel(){
 	removeAll();
+	createBuildingsInstructions();
+	//createButtonPanel();
 	createName();
 	createImage();
 	createHealth();
@@ -99,6 +107,45 @@ public class InfoPanel extends JPanel implements Serializable{
 	revalidate();
 	repaint();
   }
+  
+  // Adds JLabels that give instructions for creating buildings
+  private void createBuildingsInstructions(){
+	instructions = "<html>Click on a key below to construct a building<br>Then click "
+			+ "somewhere to place the building<html>";
+	JLabel buildInstructions = new JLabel(instructions);
+	add(buildInstructions);
+	  
+	sleepLabel = new JLabel("q: Construct a sleeping house");
+	add(sleepLabel);
+	  
+	reproduceLabel = new JLabel("w: Construct a reproduction house");
+	add(reproduceLabel);
+	  
+	storeLabel = new JLabel("e: Construct a storage unit");
+	add(storeLabel);
+	
+	nothing = new JLabel("a: Nothing. Return to normal clicking");
+	add(nothing);
+	  
+	add(Box.createRigidArea(buffer));
+  }
+  
+  /*		Unused but I may change my mind later
+  // Set's up the button Panel for the user to build buildings
+  private void createButtonPanel(){
+	  JLabel buttonInstructions = new JLabel("Click on a button below to construct a building");
+	  add(buttonInstructions);
+	  
+	  sleepButton = new JButton("Sleep House");
+	  reproduceButton = new JButton("Reproduction House");
+	  storageButton = new JButton("Storage House");
+	  
+	  ButtonListener buttonListener = new ButtonListener();
+	  sleepButton.addActionListener(buttonListener);
+	  reproduceButton.addActionListener(buttonListener);
+	  storageButton.addActionListener(buttonListener);
+	  
+  }*/
   
   // Sets up a title feature and adds it to the InfoPanel
   private void createName(){
@@ -207,17 +254,40 @@ public class InfoPanel extends JPanel implements Serializable{
   }
   
   // Updates the panel assuming that the panel has the same entity as before
-  public void updatePanel(){
+  public void updatePanel(char buildChoice){
 	if(e == null)
 	  return;
+	updateBuildChoice(buildChoice);
 	updateHealth();
 	updateInventory();
 	updateCommandQueue();
 	repaint();
   }
   
+  // Displays as red the build option that is currently selected
+  private void updateBuildChoice(char buildChoice){
+	  sleepLabel.setForeground(Color.BLACK);
+	  reproduceLabel.setForeground(Color.BLACK);
+	  storeLabel.setForeground(Color.BLACK);
+	  nothing.setForeground(Color.BLACK);
+	  switch(buildChoice){
+	  	case 'A':
+		  nothing.setForeground(Color.RED);
+	  	  break;
+	  	case 'Q':
+	  	  sleepLabel.setForeground(Color.RED);
+		  break;
+	  	case 'W':
+		  reproduceLabel.setForeground(Color.RED);
+	      break;
+	  	case 'E':
+		  storeLabel.setForeground(Color.RED);
+		  break;
+	  }
+  }
+  
   // Updates the name feature of the InfoPanel
-  public void updateHealth(){
+  private void updateHealth(){
 	if(!eManager.hasComponents(Component.LIVING, e))
 	  return;
 	LivingComponent lc = (LivingComponent) eManager.getComponent(Component.LIVING, e);
@@ -229,7 +299,7 @@ public class InfoPanel extends JPanel implements Serializable{
   }
   
   // Updates the inventory feature of the InfoPanel
-  public void updateInventory(){
+  private void updateInventory(){
 	if(!eManager.hasComponents(Component.CONTAINER, e))
 	  return;
     ContainerComponent cc = (ContainerComponent) eManager.getComponent(Component.CONTAINER, e);
@@ -242,7 +312,7 @@ public class InfoPanel extends JPanel implements Serializable{
   }
   
   // Updates the command feature of the InfoPanel
-  public void updateCommandQueue(){
+  private void updateCommandQueue(){
 	if(!eManager.hasComponents(Component.COMMANDABLE, e))
 	  return;
 	AIComponent ac = (AIComponent) eManager.getComponent(Component.AI, e);
@@ -257,5 +327,18 @@ public class InfoPanel extends JPanel implements Serializable{
   public static void load(InfoPanel ip) {
 	  uniqueInstance = ip;
   }
-  
+  /*		Unused but I may change my mind later
+  private class ButtonListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent arg0){
+			JButton button = (JButton) arg0.getSource();
+			if(button == sleepButton)
+				;
+			else if(button == reproduceButton)
+				;
+			else if(button == storageButton)
+				;
+		}
+	}
+  */
 }

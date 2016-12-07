@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.Random;
+
 import utility.Sprite;
 import world.World;
 
@@ -29,7 +31,10 @@ public class LivingSystem extends System {
 	  for(Entity e : entitiesToProcess){
 	      LivingComponent lc =
 	        (LivingComponent)eManager.getComponent(Component.LIVING, e);
-	      lc.HP -= 75.0f;
+	      Random r = new Random();
+	      int loss = r.nextInt(50);
+	      loss += 25;
+	      lc.HP -= loss;
 
 	      if(lc.HP <= 0.0f)
 	        purgeTheDead(e);
@@ -72,9 +77,9 @@ public class LivingSystem extends System {
 	    int x = Math.round(pc.pos.x);
 	    y = y < 0 ? 0 : y > w.getSize() ? w.getSize() : y;
 	    x = x < 0 ? 0 : x > w.getSize() ? w.getSize() : x;
-	    Entity house = eManager.getTopEntityAt(pc.pos);
-	    RenderComponent rc = (RenderComponent)eManager.getComponent(Component.RENDER, house);
-	    if(rc.s == Sprite.HOUSE)
+	    Entity sleephouse = eManager.getTopEntityAt(pc.pos);
+	    RenderComponent rc = (RenderComponent)eManager.getComponent(Component.RENDER, sleephouse);
+	    if(rc.s == Sprite.SLEEPHOUSE)
 	      lc.restVal += 3.0f / TICKS_PER_SECOND;
 
 	    if(lc.restVal > lc.maxRestVal)
@@ -84,7 +89,7 @@ public class LivingSystem extends System {
   
   private void regainHealth(LivingComponent lc){
 	  if(lc.hydration >= 80.0f && lc.restVal >= 80.0f)
-	    lc.HP += 5.0f / TICKS_PER_SECOND;
+	    lc.HP += 1.0f / TICKS_PER_SECOND;
 	  if(lc.HP > lc.maxHP)
 	    lc.HP = lc.maxHP;
   }

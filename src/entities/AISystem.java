@@ -84,8 +84,14 @@ public class AISystem extends System {
         case FETCH_ITEMS:
           handleFetchItemsState();
           break;
-        case BUILD_HOUSE:
-          handleBuildHouseState();
+        case BUILD_SLEEPHOUSE:
+          handleBuildHouseState(State.Type.BUILD_SLEEPHOUSE);
+          break;
+        case BUILD_REPRODUCTIONHOUSE:
+          handleBuildHouseState(State.Type.BUILD_REPRODUCTIONHOUSE);
+          break;
+        case BUILD_STORAGEUNIT:
+          handleBuildHouseState(State.Type.BUILD_STORAGEUNIT);
           break;
         case DEPOSIT_ITEMS:
           handleDepositItemsState();
@@ -120,31 +126,25 @@ public class AISystem extends System {
   }  
 
   private void handleLivingInterrupts(){
-    if(ac.states.peek().type != State.Type.FIND_WATER &&
-       (lc.hydration <= lc.drinkHydration || 
-          (lc.hydration <= lc.healHydration+10 && lc.HP < lc.goodHP))){
+    if(ac.states.peek().type != State.Type.FIND_WATER && ac.states.peek().type != State.Type.REST
+       && (lc.hydration <= lc.drinkHydration)){
       ac.states.add(new State(State.Type.FIND_WATER, getTime()));
       ac.path = null;
-    }		// Here I check to make sure that both FIND_WATER and REST are not in the top
-    else if(ac.states.peek().type != State.Type.REST && ac.states.peek().type != State.Type.FIND_WATER
-       && (lc.restVal <= lc.sleepRestVal) ||
-       		(lc.restVal <= lc.healRestVal+10 && lc.HP < lc.goodHP)){
+    }
+    else if(ac.states.peek().type != State.Type.FIND_WATER && ac.states.peek().type != State.Type.REST
+       && (lc.restVal <= lc.sleepRestVal)){
       ac.states.add(new State(State.Type.REST, getTime()));
   	  ac.path = null;
-  	  /*
-      State temp = ac.states.remove();
-      if(temp != null){
-        if(ac.states.peek() != null && ac.states.peek().type != State.Type.REST){
-    	    ac.states.add(new State(State.Type.REST, getTime()));
-    	    ac.path = null;
-        }
-        ac.states.add(temp);
-      }
-      else{
-    	ac.states.add(new State(State.Type.REST, getTime()));
-  	    ac.path = null;
-      }     
-      */ 
+    }
+    if(ac.states.peek().type != State.Type.FIND_WATER && ac.states.peek().type != State.Type.REST
+      && (lc.hydration <= lc.healHydration+10 && lc.HP < lc.goodHP)){
+      ac.states.add(new State(State.Type.FIND_WATER, getTime()));
+      ac.path = null;
+    }
+    else if(ac.states.peek().type != State.Type.REST && ac.states.peek().type != State.Type.FIND_WATER
+      && (lc.restVal <= lc.healRestVal+10 && lc.HP < lc.goodHP)){
+      ac.states.add(new State(State.Type.REST, getTime()));
+      ac.path = null;
     }
     else if((ac.states.peek().type == State.Type.FIND_WATER && lc.hydration >= lc.maxHydration) 
     	  || (ac.states.peek().type == State.Type.REST && lc.restVal >= lc.maxRestVal)){
@@ -181,7 +181,7 @@ public class AISystem extends System {
   }
   private void handleRestState(){
     if(ac.path == null){
-	  Vec2f houseLoc = findClosest(Sprite.HOUSE, pc.pos);
+	  Vec2f houseLoc = findClosest(Sprite.SLEEPHOUSE, pc.pos);
 	  if(houseLoc != null){
 	    ac.path = getPath(roundVector(pc.pos), roundVector(houseLoc));
 	  }else{
@@ -277,13 +277,19 @@ public class AISystem extends System {
     }
   }
 
-  private void handleBuildHouseState(){
+  private void handleBuildHouseState(State.Type houseType){
     Command command = (Command)ac.states.peek();
     float distance = (command.location.sub(pc.pos)).getMag();
     if(distance > CLOSE_ENOUGH && ac.path == null){
       ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
     }else if(distance <= CLOSE_ENOUGH){
-      EntityFactory.makeNewHouse(command.location.x, command.location.y);
+      if(houseType == State.Type.BUILD_SLEEPHOUSE)
+    	  EntityFactory.makeNewSleepHouse(command.location.x, command.location.y);
+      else if(houseType == State.Type.BUILD_SLEEPHOUSE)
+    	  EntityFactory.makeNewReproductionHouse(command.location.x, command.location.y);
+      else{
+    	  EntityFactory.makeNewStorageUnit(command.location.x, command.location.y);
+      }
       for(Item item : command.reqItems.keySet()){
         if(!item.isTool){
           cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
@@ -382,7 +388,7 @@ public class AISystem extends System {
   }
   
   // Decides if the current location is pretty close to the destination
-  private boolean isPrettyClose(Vec2f location, Vec2f destination){
+  public  boolean isPrettyClose(Vec2f location, Vec2f destination){
     return Math.abs(location.sub(destination).getMag()) < 1.0f;
   } 
   

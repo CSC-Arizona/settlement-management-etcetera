@@ -65,14 +65,34 @@ public class EntityFactory {
     return bloodPool;
   }
 
-  public static Entity makeNewHouse(float x, float y){
+  public static Entity makeNewSleepHouse(float x, float y){
     Entity house = eMan.genNewEntity();
 	eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
-	eMan.addComponent(new RenderComponent(Sprite.HOUSE), house);
-	//eMan.addComponent(new ContainerComponent(50), house);
-	eMan.addComponent(new NameComponent("House"), house);
-	//eMan.addComponent(new CollisionComponent(), house);
-	eMan.markAs(Component.HOUSE, house);
+	eMan.addComponent(new RenderComponent(Sprite.SLEEPHOUSE), house);
+	eMan.addComponent(new NameComponent("Sleeping House"), house);
+	eMan.addComponent(new CollisionComponent(), house);
+	eMan.markAs(Component.SLEEPINGHOUSE, house);
+	return house;
+  }
+  
+  public static Entity makeNewReproductionHouse(float x, float y){
+	Entity house = eMan.genNewEntity();
+	eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
+	eMan.addComponent(new RenderComponent(Sprite.REPRODUCTIONHOUSE), house);
+	eMan.addComponent(new NameComponent("Reproduction House"), house);
+	eMan.addComponent(new CollisionComponent(), house);
+	eMan.markAs(Component.REPRODUCTIONHOUSE, house);
+	return house;
+  }
+  
+  public static Entity makeNewStorageUnit(float x, float y){
+	Entity house = eMan.genNewEntity();
+	eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
+	eMan.addComponent(new RenderComponent(Sprite.STORAGEUNIT), house);
+	eMan.addComponent(new ContainerComponent(50, false), house);
+	eMan.addComponent(new NameComponent("Storage Unit"), house);
+	eMan.addComponent(new CollisionComponent(), house);
+	eMan.markAs(Component.STORAGEUNIT, house);
 	return house;
   }
   
