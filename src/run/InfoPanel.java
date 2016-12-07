@@ -149,12 +149,15 @@ public class InfoPanel extends JPanel implements Serializable{
     if(e == null || !eManager.hasComponents(Component.LIVING, e))
 	  return;
 	healthLabel = new JLabel();
-	healthLabel.setSize(this.getSize().width, 40);
+	healthLabel.setSize(this.getSize().width, 80);
 	healthLabel.setAlignmentX(alignment);
-	Border healthBorder = BorderFactory.createTitledBorder("Health");
+	Border healthBorder = BorderFactory.createTitledBorder("Welfare");
 	healthLabel.setBorder(healthBorder);
 	LivingComponent lc = (LivingComponent) eManager.getComponent(Component.LIVING, e);
-	String text = lc.HP + "/" + lc.maxHP;
+	String text1 = "Health: " + (int) lc.HP + "/" + (int) lc.maxHP + "\n"; 
+	String text2 = "Hydration: " + (int) lc.hydration + "/" + (int) lc.maxHydration; 
+	String text3 = "Rest Value: " + (int) lc.restVal + "/" + (int) lc.maxRestVal;
+	String text = "<html>" + text1 + "<br>" + text2 + "<br>" + text3;
 	healthLabel.setText(text);
 	add(healthLabel);
 	add(Box.createRigidArea(buffer));
@@ -218,7 +221,10 @@ public class InfoPanel extends JPanel implements Serializable{
 	if(!eManager.hasComponents(Component.LIVING, e))
 	  return;
 	LivingComponent lc = (LivingComponent) eManager.getComponent(Component.LIVING, e);
-	String text = lc.HP + "/" + lc.maxHP;
+	String text1 = "Health: " + (int) lc.HP + "/" + (int) lc.maxHP + "\n"; 
+	String text2 = "Hydration: " + (int) lc.hydration + "/" + (int) lc.maxHydration; 
+	String text3 = "Rest Value: " + (int) lc.restVal + "/" + (int) lc.maxRestVal;
+	String text = "<html>" + text1 + "<br>" + text2 + "<br>" + text3;
 	healthLabel.setText(text);
   }
   

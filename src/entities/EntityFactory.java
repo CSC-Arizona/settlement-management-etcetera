@@ -46,15 +46,15 @@ public class EntityFactory {
   }
   
   public static Entity makeNewShip(float x, float y) {
-    Entity ammo = eMan.genNewEntity();
-    eMan.addComponent(new PositionComponent(x, y, 0.0f), ammo);
-    eMan.addComponent(new RenderComponent(Sprite.SHIP), ammo);
-    eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ammo);
-    eMan.addComponent(new ContainerComponent(100, false), ammo);
-    eMan.addComponent(new MessageComponent(), ammo);
-    eMan.addComponent(new NameComponent("SHIP"), ammo);
-    eMan.markAs(Component.SHIP, ammo);
-    return ammo;
+    Entity ship = eMan.genNewEntity();
+    eMan.addComponent(new PositionComponent(x, y, 0.0f), ship);
+    eMan.addComponent(new RenderComponent(Sprite.SHIP), ship);
+    eMan.addComponent(new CollisionComponent(1.0f, 1.0f, 0.05f, 80.0f), ship);
+    eMan.addComponent(new ContainerComponent(100, false), ship);
+    eMan.addComponent(new MessageComponent(), ship);
+    eMan.addComponent(new NameComponent("SHIP"), ship);
+    eMan.markAs(Component.SHIP, ship);
+    return ship;
   }
 
   public static Entity makeNewBloodPool(float x, float y){
@@ -66,14 +66,15 @@ public class EntityFactory {
   }
 
   public static Entity makeNewHouse(float x, float y){
-	    Entity house = eMan.genNewEntity();
-	    eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
-	    eMan.addComponent(new RenderComponent(Sprite.HOUSE), house);
-	    eMan.addComponent(new ContainerComponent(50), house);
-	    eMan.addComponent(new NameComponent("House"), house);
-	    eMan.addComponent(new CollisionComponent(), house);
-	    return house;
-	  }
+    Entity house = eMan.genNewEntity();
+	eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
+	eMan.addComponent(new RenderComponent(Sprite.HOUSE), house);
+	//eMan.addComponent(new ContainerComponent(50), house);
+	eMan.addComponent(new NameComponent("House"), house);
+	//eMan.addComponent(new CollisionComponent(), house);
+	eMan.markAs(Component.HOUSE, house);
+	return house;
+  }
   
   private static EntityManager eMan = EntityManager.INSTANCE;
   // We don't want it to be instantiated.

@@ -159,7 +159,8 @@ public enum EntityManager {
   
   // Returns the entity with the highest priority at the given location
   public Entity getTopEntityAt(Vec2f location){
-	Vector<Entity> entityList = INSTANCE.getMatchingEntities(Component.RENDER | Component.POSITION | Component.MOBILITY);
+	Vector<Entity> entityList = INSTANCE.getMatchingEntities(Component.RENDER | Component.POSITION,
+			Component.MOBILITY);
 	for(Entity e : entityList){
 	  PositionComponent pc = (PositionComponent) INSTANCE.getComponent(Component.POSITION, e);
 	  if(pc.pos.sub(location).getMag() <= 0.5)
@@ -174,8 +175,8 @@ public enum EntityManager {
 	entityList = INSTANCE.getMatchingEntities(Component.RENDER | Component.POSITION);
 	for(Entity e : entityList){
 	  PositionComponent pc = (PositionComponent) INSTANCE.getComponent(Component.POSITION, e);
-	  NameComponent nc = (NameComponent) INSTANCE.getComponent(Component.NAME, e);
-	  if(pc.pos.sub(location).getMag() <= 0.5 && nc.name.equals(""))
+	  //NameComponent nc = (NameComponent) INSTANCE.getComponent(Component.NAME, e);
+	  if(pc.pos.sub(location).getMag() <= 0.5)
 	    return e;
 	}
 	return (Entity) null;

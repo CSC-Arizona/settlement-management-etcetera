@@ -75,6 +75,9 @@ public class AISystem extends System {
         case FIND_WATER:
           handleFindWaterState();
           break;
+        case REST:
+          handleRestState();
+          break;
         case RELOCATE:
           handleRelocateState();
           break;
@@ -118,11 +121,33 @@ public class AISystem extends System {
 
   private void handleLivingInterrupts(){
     if(ac.states.peek().type != State.Type.FIND_WATER &&
-       lc.hydration <= lc.poorHydration){
+       (lc.hydration <= lc.drinkHydration || 
+          (lc.hydration <= lc.healHydration+10 && lc.HP < lc.goodHP))){
       ac.states.add(new State(State.Type.FIND_WATER, getTime()));
       ac.path = null;
-    }else if(ac.states.peek().type == State.Type.FIND_WATER &&
-             lc.hydration >= lc.maxHydration){
+    }		// Here I check to make sure that both FIND_WATER and REST are not in the top
+    else if(ac.states.peek().type != State.Type.REST && ac.states.peek().type != State.Type.FIND_WATER
+       && (lc.restVal <= lc.sleepRestVal) ||
+       		(lc.restVal <= lc.healRestVal+10 && lc.HP < lc.goodHP)){
+      ac.states.add(new State(State.Type.REST, getTime()));
+  	  ac.path = null;
+  	  /*
+      State temp = ac.states.remove();
+      if(temp != null){
+        if(ac.states.peek() != null && ac.states.peek().type != State.Type.REST){
+    	    ac.states.add(new State(State.Type.REST, getTime()));
+    	    ac.path = null;
+        }
+        ac.states.add(temp);
+      }
+      else{
+    	ac.states.add(new State(State.Type.REST, getTime()));
+  	    ac.path = null;
+      }     
+      */ 
+    }
+    else if((ac.states.peek().type == State.Type.FIND_WATER && lc.hydration >= lc.maxHydration) 
+    	  || (ac.states.peek().type == State.Type.REST && lc.restVal >= lc.maxRestVal)){
       ac.states.poll();
       ac.path = null;
     }
@@ -153,6 +178,17 @@ public class AISystem extends System {
         ac.path = null;
       }
     }
+  }
+  private void handleRestState(){
+    if(ac.path == null){
+	  Vec2f houseLoc = findClosest(Sprite.HOUSE, pc.pos);
+	  if(houseLoc != null){
+	    ac.path = getPath(roundVector(pc.pos), roundVector(houseLoc));
+	  }else{
+	    ac.states.poll();
+	    ac.path = null;
+	  }
+	}
   }
 
   private void handleRelocateState(){
@@ -518,7 +554,24 @@ public class AISystem extends System {
   }
   
   // TODO: Should be find(Tile t)
-  private Vec2f findClosest(Sprite s, Vec2f pos){
+  public Vec2f findClosest(Sprite s, Vec2f pos){
+	Vector<Entity> allEntities = eManager.getMatchingEntities(Component.RENDER | Component.POSITION);
+	Vec2f returnVector = null;
+	for (Entity e: allEntities){
+		RenderComponent rc = (RenderComponent)eManager.getComponent(Component.RENDER, e);
+		if(rc.s == s){
+			PositionComponent pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
+			if(returnVector == null)
+				returnVector = pc.pos;
+			else{
+				if(Math.abs(pos.sub(pc.pos).getMag()) < Math.abs(pos.sub(returnVector).getMag()))
+					returnVector = pc.pos;
+			}
+		}
+	}
+	if(returnVector != null)
+		return returnVector;
+	  
   	World w = World.getWorld();
   	for(int i = 0; i < World.WORLD_SIZE; ++i){
   		for(int j = (int)pos.x - i; j < (int)pos.x + i; ++j){

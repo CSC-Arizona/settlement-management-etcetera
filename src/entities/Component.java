@@ -44,6 +44,7 @@ public abstract class Component implements Serializable {
   public static final long SHIP          = 1 << 8;
   public static final long MESSAGE       = 1 << 9;
   public static final long NAME		  	 = 1 << 10;
+  public static final long HOUSE		 = 1 << 11;
   static final long TOTAL_COMPS   =     11;
 
   /*

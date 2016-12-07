@@ -112,6 +112,11 @@ public class Game extends Thread implements Serializable {
 	      y = r.nextInt(World.WORLD_SIZE - 1);
 	    }while (w.getTile(y, x).getType() != Sprite.DIRT);
 	    EntityFactory.makeNewShip(x, y);
+	    do{
+	    x = r.nextInt(World.WORLD_SIZE - 1);
+	    y = r.nextInt(World.WORLD_SIZE - 1);
+	    }while (w.getTile(y, x).getType() != Sprite.DIRT);
+	    EntityFactory.makeNewHouse(x, y);
     }
     
     // We want to have 30 ticks/s

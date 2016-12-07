@@ -13,6 +13,9 @@ public class State implements Serializable {
       case FIND_WATER:
         priority = 256;
         break;
+      case REST:
+    	priority = 256;
+    	break;
       case RELOCATE:
         priority = 8;
         break;
@@ -37,6 +40,7 @@ public class State implements Serializable {
   public enum Type {
     WANDER,
     FIND_WATER,
+    REST,
     RELOCATE,
     CHOP_TREE,
     BUILD_HOUSE,
