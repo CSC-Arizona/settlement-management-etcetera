@@ -308,7 +308,9 @@ public class Game extends Thread implements Serializable {
 				  "You lost. Try again?", "You lose!", 
 				  JOptionPane.YES_NO_OPTION);
 		  if (n == JOptionPane.YES_OPTION) {
-			  // TODO: restart the game
+			  eMan.reset();
+			  spawnAliens(10);
+			  // TODO: SPAWN DEER WHEN IMPLEMENTED
 		  } 
 		  else {
 			  System.exit(0);
@@ -322,7 +324,9 @@ public class Game extends Thread implements Serializable {
 		  "You win! Try again?", "You win!", 
 		  JOptionPane.YES_NO_OPTION);
 	  	if (n == JOptionPane.YES_OPTION) {
-		  // TODO: restart the game
+		  eMan.reset();
+		  spawnAliens(10);
+		  // TODO: SPAWN DEER WHEN IMPLEMENTED
 	  	} 
 	  	else {
 		  System.exit(0);
@@ -339,12 +343,7 @@ public class Game extends Thread implements Serializable {
 			    + "e. Frequent\n"
 			    + "earthquakes threaten to destroy your colony. Collect resourc"
 			    + "es to survive and\n"
-			    + "- if you can - build a ship to escape.\n\n"
-			    + "Left mouse click - collect resource / build structure\n"
-			    + "Right mouse click - see more info\n"
-			    + "Middle mouse click - build house\n"
-			    + "S - save the game\n"
-			    + "H - view this menu",
+			    + "- if you can - build a ship to escape.\n",
 			    "Help",
 			    JOptionPane.PLAIN_MESSAGE);
   }

@@ -195,6 +195,21 @@ public enum EntityManager {
 	  outFile.writeObject(entityBitSets);
 	  outFile.writeObject(used);
   }
+  
+  public void reset(){
+	  used = 0;
+	  recycleBin = new Vector<Integer>();
+	  entityBitSets = new Vector<Long>(MAX_ENTITIES);
+	  for (int i = 0; i < MAX_ENTITIES; ++i) {
+	    entityBitSets.add(new Long(0));
+	  }
+	  entityBitSets.setSize(MAX_ENTITIES);
+	  compVecs = new Vector<Vector<Component>>();
+	  for (int i = 0; i < Component.TOTAL_COMPS; ++i) {
+	    compVecs.add(new Vector<Component>());
+	    compVecs.get(i).setSize(MAX_ENTITIES);
+	  }
+  }
 
   // Holds freed up ID's
   private Vector<Integer> recycleBin;
