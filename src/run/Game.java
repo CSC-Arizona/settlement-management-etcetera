@@ -345,7 +345,6 @@ public class Game extends Thread implements Serializable {
 			    + "- if you can - build a ship to escape.\n\n"
 			    + "Left mouse click - collect resource / build structure\n"
 			    + "Right mouse click - see more info\n"
-			    + "Middle mouse click - build house\n"
 			    + "S - save the game\n"
 			    + "H - view this menu",
 			    "Help",

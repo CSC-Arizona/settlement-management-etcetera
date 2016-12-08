@@ -3,10 +3,12 @@
  */
 package entities;
 
-import java.nio.file.Path;
+import java.nio.file.Path;	
 import java.util.EnumMap;
 import java.util.Random;
 import java.util.Vector;
+
+//import com.sun.glass.ui.EventLoop.State;
 
 import utility.Sprite;
 import utility.Vec2f;
@@ -154,6 +156,13 @@ public class AISystem extends System {
     	  || (ac.states.peek().type == State.Type.REST && lc.restVal >= lc.maxRestVal)){
       ac.states.poll();
       ac.path = null;
+    }
+    else if((ac.states.peek().type == State.Type.WANDER)){
+    	if(lc.hydration < lc.healHydration)
+    		ac.states.add(new State(State.Type.FIND_WATER, getTime()));
+    	else if(lc.restVal < lc.healRestVal)
+    		ac.states.add(new State(State.Type.REST, getTime()));
+    	ac.path = null;
     }
   }
 

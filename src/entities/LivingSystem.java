@@ -48,7 +48,7 @@ public class LivingSystem extends System {
       lc.HP -= 15.0f / TICKS_PER_SECOND;
     else if(lc.hydration < 10.0f)
       lc.HP -= 30.0f / TICKS_PER_SECOND;
-    lc.hydration -= 0.5f / TICKS_PER_SECOND;
+    lc.hydration -= 2.0f / TICKS_PER_SECOND;
     
     World w = World.getWorld();
     int y = Math.round(pc.pos.y);
@@ -56,7 +56,7 @@ public class LivingSystem extends System {
     y = y < 0 ? 0 : y > w.getSize() ? w.getSize() : y;
     x = x < 0 ? 0 : x > w.getSize() ? w.getSize() : x;
     if(w.getTile(y, x).getType() == Sprite.LAKE)
-      lc.hydration += 30.0f / TICKS_PER_SECOND;
+      lc.hydration += 10.0f / TICKS_PER_SECOND;
 
     if(lc.hydration > lc.maxHydration)
       lc.hydration = lc.maxHydration;
@@ -70,7 +70,7 @@ public class LivingSystem extends System {
 	      lc.HP -= 2.0f / TICKS_PER_SECOND;
 	    else if(lc.restVal < 10.0f)
 	      lc.HP -= 4.0f / TICKS_PER_SECOND;
-	    lc.restVal -= 0.05f / TICKS_PER_SECOND;
+	    lc.restVal -= 0.5f / TICKS_PER_SECOND;
 	    
 	    World w = World.getWorld();
 	    int y = Math.round(pc.pos.y);
@@ -80,7 +80,7 @@ public class LivingSystem extends System {
 	    Entity sleephouse = eManager.getTopEntityAt(pc.pos);
 	    RenderComponent rc = (RenderComponent)eManager.getComponent(Component.RENDER, sleephouse);
 	    if(rc.s == Sprite.SLEEPHOUSE)
-	      lc.restVal += 3.0f / TICKS_PER_SECOND;
+	      lc.restVal += 2.5f / TICKS_PER_SECOND;
 
 	    if(lc.restVal > lc.maxRestVal)
 	      lc.restVal = lc.maxRestVal;
