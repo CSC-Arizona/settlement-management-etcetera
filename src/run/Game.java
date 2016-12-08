@@ -367,7 +367,7 @@ public class Game extends Thread implements Serializable {
 				    + "  - Storage unit: Build a storeage unit to be able to store more resources\n"
 				    + "     It takes 3 woods to build each structure (note to Cody: Obviously this sucks.\n"
 				    + "     At the very least the ship should take much more. Unfortunately, we ran into\n"
-				    + "     this problem at the end. But please note that the other features still work.\n\n)"
+				    + "     this problem at the end. But please note that the other features still work.)\n\n"
 				    
 				    + "Important note: You can not control individual cosmonauts. Rather, the cosmonaut\n"
 				    + "that carries out your command be chosen based on an algorithm\n\n"
