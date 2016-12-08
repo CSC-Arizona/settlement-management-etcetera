@@ -369,5 +369,5 @@ public class Game extends Thread implements Serializable {
 	private Vec2f userClickVector;
 	private JScrollPane scrollPane;
 	private boolean spawn = true;
-
+	
 }

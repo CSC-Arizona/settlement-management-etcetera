@@ -234,7 +234,7 @@ public enum EntityManager {
 	    compVecs.get(i).setSize(MAX_ENTITIES);
 	  }
   }
-  
+
   // Holds freed up ID's
   private Vector<Integer> recycleBin;
   private Vector<Vector<Component>> compVecs;
