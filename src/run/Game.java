@@ -337,7 +337,7 @@ public class Game extends Thread implements Serializable {
 		if (eMan.getMatchingEntities(Component.SHIP).size() > 1) {
 			int n = JOptionPane.showConfirmDialog(frame, "You win! Try again?", "You win!", JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				// TODO: restart the game
+			    reset();	
 			} else {
 				System.exit(0);
 			}
