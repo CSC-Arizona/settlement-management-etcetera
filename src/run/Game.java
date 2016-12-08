@@ -376,8 +376,8 @@ public class Game extends Thread implements Serializable {
 				    + "    - R: Build a spaceship to leave this deadly earth!\n"
 				    + "  S - Save the game\n"
 				    + "  H - View this menu\n"
-				    + "  P - (Only for Cody's eyes) Cause an earthquake (This way you can end the\n"
-				    + "      game quickly by losing when you want)",
+				    + "  P - (Only for Cody's eyes) Cause an earthquake (This way you can lose the\n"
+				    + "      game quickly by causing earthquakes when you want)",
 				    "Help",
 				    JOptionPane.PLAIN_MESSAGE);
 	  }
