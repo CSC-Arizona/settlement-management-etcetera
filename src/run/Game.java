@@ -360,6 +360,15 @@ public class Game extends Thread implements Serializable {
 				    + "to leave this planet then the other structures (because a spaceship takes more\n"
 				    + "to build, and definitely not because the game would be lame and easy otherwise)\n\n"
 				    
+				    + "Information for structures:\n"
+				    + "  - Sleep House: Your cosmonauts will get tired. Build slep houses so they can rest\n"
+				    + "  - Reproduction House: Build a reproduction house, which will occasionally spawn a new\n"
+				    + "      cosmonaut\n"
+				    + "  - Storage unit: Build a storeage unit to be able to store more resources\n"
+				    + "     It takes 3 woods to build each structure (note to Cody: Obviously this sucks.\n"
+				    + "     At the very least the ship should take much more. Unfortunately, we ran into\n"
+				    + "     this problem at the end. But please note that the other features still work.\n\n)"
+				    
 				    + "Important note: You can not control individual cosmonauts. Rather, the cosmonaut\n"
 				    + "that carries out your command be chosen based on an algorithm\n\n"
 				    
