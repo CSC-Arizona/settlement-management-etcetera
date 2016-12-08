@@ -55,8 +55,8 @@ public class EntityFactory {
     eMan.addComponent(new NameComponent("SHIP"), ship);
     eMan.markAs(Component.SHIP, ship);
     ContainerComponent cc = (ContainerComponent)eMan.getComponent(Component.CONTAINER, ship);
-    cc.getItems().put(Item.MEAT,50);
-    cc.getItems().put(Item.BERRY, 25);
+    //cc.getItems().put(Item.MEAT,50);
+    //cc.getItems().put(Item.BERRY, 25);
     return ship;
   }
 

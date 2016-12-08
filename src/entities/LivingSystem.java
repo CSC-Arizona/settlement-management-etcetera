@@ -121,7 +121,7 @@ public class LivingSystem extends System {
 	    	   break;
 	       } else if (i == Item.BERRY && items.get(i) > 0) {
 	    	   lc.hungerVal += 10.0f;
-	    	   items.put(i,items.get(i)-1);
+	    	    items.put(i,items.get(i)-1);
 	    	   break;
 	       }
 	      }
