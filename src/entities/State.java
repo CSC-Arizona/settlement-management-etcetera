@@ -20,7 +20,7 @@ public class State implements Serializable {
     	priority = 256;
     	break;
       case RELOCATE:
-        priority = 8;
+        priority = 4;
         break;
       case CHOP_TREE:
         priority = 8;

@@ -18,7 +18,6 @@ public enum Sprite {
   REPRODUCTIONHOUSE(69, 1),
   STORAGEUNIT(70, 10),
   SHIP(164, 1),
-	
   DEER(248, 11);
 
   private Sprite(int row, int col){

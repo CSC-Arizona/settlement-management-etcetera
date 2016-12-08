@@ -121,17 +121,7 @@ class RunMe {
         System.exit(0);
       } else if (result != 2) {
         //yes
-        try {
-          FileOutputStream bytesToDisk = new FileOutputStream("gamedata"); 
-          ObjectOutputStream outFile = new ObjectOutputStream(bytesToDisk);
-          outFile.writeObject(World.getWorld());
-          EntityManager eMan = EntityManager.INSTANCE;
-          eMan.saveInstance(outFile);
-
-          outFile.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        saveData();
         System.exit(0);
       }
     }

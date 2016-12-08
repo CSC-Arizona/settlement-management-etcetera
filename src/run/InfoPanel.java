@@ -272,6 +272,7 @@ public class InfoPanel extends JPanel implements Serializable{
 	  updateBuildChoice(buildChoice);
 	  if(e == null)
 	  return;
+	updateBuildChoice(buildChoice);
 	updateHealth();
 	updateAnimalHealth();
 	updateInventory();

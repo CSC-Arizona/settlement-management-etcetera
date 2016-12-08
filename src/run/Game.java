@@ -262,7 +262,7 @@ public class Game extends Thread implements Serializable {
 			} else if (arg0.getKeyCode() == KeyEvent.VK_E) {
 				button1Char = 'E';
 			}
-			if (arg0.getKeyCode() == KeyEvent.VK_R) {
+			else if (arg0.getKeyCode() == KeyEvent.VK_R) {
 				button1Char = 'R';
 			} else if (arg0.getKeyCode() == KeyEvent.VK_P) {
 				FORCEQUAKE = FORCEQUAKE == 6000 ? 1 : 6000;
@@ -322,7 +322,7 @@ public class Game extends Thread implements Serializable {
 			int n = JOptionPane.showConfirmDialog(frame, "You lost. Try again?", "You lose!",
 					JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.YES_OPTION) {
-				// TODO: restart the game
+				reset();
 			} else {
 				System.exit(0);
 			}
@@ -350,6 +350,13 @@ public class Game extends Thread implements Serializable {
 						+ "Middle mouse click - build house\n" + "H - view this menu",
 				"Help", JOptionPane.PLAIN_MESSAGE);
 	}
+	
+	public void reset(){
+		  eMan.reset();
+		  spawnAliens(10);
+		  run();
+		  // TODO: SPAWN DEER WHEN IMPLEMENTED
+	  }
 
 	private char button1Char;
 	private int aliensToAdd;
