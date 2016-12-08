@@ -18,7 +18,8 @@ public enum Sprite {
   SLEEPHOUSE(65, 14),
   REPRODUCTIONHOUSE(69, 1),
   STORAGEUNIT(70, 10),
-  SHIP(164, 1);
+  SHIP(164, 1),
+  DEER(248, 11);
 
   private Sprite(int row, int col){
     x = col * WIDTH;

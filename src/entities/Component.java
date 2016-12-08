@@ -44,10 +44,11 @@ public abstract class Component implements Serializable {
   public static final long SHIP          = 1 << 8;
   public static final long MESSAGE       = 1 << 9;
   public static final long NAME		  	 = 1 << 10;
-  public static final long SLEEPINGHOUSE		 = 1 << 11;
-  public static final long REPRODUCTIONHOUSE	 = 1 << 12;
-  public static final long STORAGEUNIT		 	 = 1 << 13;
-  static final long TOTAL_COMPS   		 =     14;
+  public static final long SLEEPINGHOUSE = 1 << 11;
+  public static final long REPRODUCTIONHOUSE = 1 << 12;
+  public static final long STORAGEUNIT	 = 1 << 13;
+  public static final long ANIMAL		 = 1 << 14;
+  static final long TOTAL_COMPS   =     15;
 
   /*
    * Must be called with an appropriate ComponentID taken from above.

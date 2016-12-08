@@ -13,7 +13,7 @@ public class EntityFactory {
     eMan.addComponent(new AIComponent(), alien);
     //eMan.addComponent(new CollisionComponent(0.4f, 0.4f, 0.5f, 80.0f), alien);
     eMan.addComponent(new LivingComponent(), alien);
-    eMan.addComponent(new ContainerComponent(4, true), alien);
+    eMan.addComponent(new ContainerComponent(8, true), alien);
     eMan.addComponent(new MessageComponent(), alien);
     eMan.addComponent(new NameComponent("ALIEN"), alien);
     eMan.markAs(Component.COMMANDABLE, alien);
@@ -69,31 +69,43 @@ public class EntityFactory {
     Entity house = eMan.genNewEntity();
 	eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
 	eMan.addComponent(new RenderComponent(Sprite.SLEEPHOUSE), house);
-	eMan.addComponent(new NameComponent("Sleeping House"), house);
-	eMan.addComponent(new CollisionComponent(), house);
+	//eMan.addComponent(new ContainerComponent(50), house);
+	eMan.addComponent(new NameComponent("House"), house);
+	//eMan.addComponent(new CollisionComponent(), house);
 	eMan.markAs(Component.SLEEPINGHOUSE, house);
 	return house;
   }
   
   public static Entity makeNewReproductionHouse(float x, float y){
-	Entity house = eMan.genNewEntity();
-	eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
-	eMan.addComponent(new RenderComponent(Sprite.REPRODUCTIONHOUSE), house);
-	eMan.addComponent(new NameComponent("Reproduction House"), house);
-	eMan.addComponent(new CollisionComponent(), house);
-	eMan.markAs(Component.REPRODUCTIONHOUSE, house);
-	return house;
-  }
+		Entity house = eMan.genNewEntity();
+		eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
+		eMan.addComponent(new RenderComponent(Sprite.REPRODUCTIONHOUSE), house);
+		eMan.addComponent(new NameComponent("Reproduction House"), house);
+		eMan.addComponent(new CollisionComponent(), house);
+		eMan.markAs(Component.REPRODUCTIONHOUSE, house);
+		return house;
+	  }
+	  
+	  public static Entity makeNewStorageUnit(float x, float y){
+		Entity house = eMan.genNewEntity();
+		eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
+		eMan.addComponent(new RenderComponent(Sprite.STORAGEUNIT), house);
+		eMan.addComponent(new ContainerComponent(50, false), house);
+		eMan.addComponent(new NameComponent("Storage Unit"), house);
+		eMan.addComponent(new CollisionComponent(), house);
+		eMan.markAs(Component.STORAGEUNIT, house);
+		return house;
+	  }
   
-  public static Entity makeNewStorageUnit(float x, float y){
-	Entity house = eMan.genNewEntity();
-	eMan.addComponent(new PositionComponent(x, y, 0.0f), house);
-	eMan.addComponent(new RenderComponent(Sprite.STORAGEUNIT), house);
-	eMan.addComponent(new ContainerComponent(50, false), house);
-	eMan.addComponent(new NameComponent("Storage Unit"), house);
-	eMan.addComponent(new CollisionComponent(), house);
-	eMan.markAs(Component.STORAGEUNIT, house);
-	return house;
+  public static Entity makeNewDeer(float x, float y) {
+	  Entity deer = eMan.genNewEntity();
+	  eMan.addComponent(new PositionComponent(x, y, 0.0f), deer);
+	  eMan.addComponent(new RenderComponent(Sprite.DEER), deer);
+	  eMan.addComponent(new MobilityComponent(new Vec2f(0.0f, 0.0f)), deer);
+	  eMan.addComponent(new AIComponent(), deer);
+	  eMan.addComponent(new NameComponent("DEER"), deer);
+	  eMan.addComponent(new AnimalComponent(), deer);
+	  return deer;
   }
   
   private static EntityManager eMan = EntityManager.INSTANCE;

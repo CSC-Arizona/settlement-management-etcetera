@@ -23,9 +23,22 @@ public class Command extends State implements Serializable {
     type = getType();
     setReqItems();
   }
+  
+  public Command(Type cType, Entity target, long timestamp){
+	super(cType, timestamp);
+	this.desiredItems = desiredItems;
+	this.target = target;
+	reqItems = null;
+	type = getType();
+	setReqItems();
+  }
 
   private void setReqItems(){
     switch(type){
+      case KILL:
+    	reqItems = new EnumMap<Item, Integer>(Item.class);
+        reqItems.put(Item.SWORD, 1);
+    	break;
       case BUILD_SLEEPHOUSE:
         reqItems = new EnumMap<Item, Integer>(Item.class);
         reqItems.put(Item.WOOD, 3);
@@ -42,7 +55,7 @@ public class Command extends State implements Serializable {
           reqItems.put(Item.AXE, 1);
           break;
       case BUILD_SHIP:
-        reqItems = new EnumMap<Item, Integer>(Item.class);
+    	reqItems = new EnumMap<Item, Integer>(Item.class);
         reqItems.put(Item.WOOD, 3);
         reqItems.put(Item.AXE, 1);    	  
         break;
@@ -60,6 +73,7 @@ public class Command extends State implements Serializable {
   
   public Type type;
   Vec2f location;
+  public Entity target;
   EnumMap<Item, Integer> reqItems;
   EnumMap<Item, Integer>  desiredItems;
 }

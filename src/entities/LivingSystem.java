@@ -21,6 +21,7 @@ public class LivingSystem extends System {
 
       handleHydration(lc, pc);
       handleFatigue(lc, pc);
+      handleHunger(lc, pc);
       regainHealth(lc);
       if(lc.HP <= 0.0f)
         purgeTheDead(e);
@@ -60,6 +61,8 @@ public class LivingSystem extends System {
 
     if(lc.hydration > lc.maxHydration)
       lc.hydration = lc.maxHydration;
+    else if (lc.hydration < 0)
+    	lc.hydration = 0;
     //java.lang.System.out.println(lc.hydration);
   }
   
@@ -77,19 +80,49 @@ public class LivingSystem extends System {
 	    int x = Math.round(pc.pos.x);
 	    y = y < 0 ? 0 : y > w.getSize() ? w.getSize() : y;
 	    x = x < 0 ? 0 : x > w.getSize() ? w.getSize() : x;
-	    Entity sleephouse = eManager.getTopEntityAt(pc.pos);
-	    RenderComponent rc = (RenderComponent)eManager.getComponent(Component.RENDER, sleephouse);
+	    Entity house = eManager.getTopEntityAt(pc.pos);
+	    RenderComponent rc = (RenderComponent)eManager.getComponent(Component.RENDER, house);
 	    if(rc.s == Sprite.SLEEPHOUSE)
 	      lc.restVal += 2.5f / TICKS_PER_SECOND;
 
 	    if(lc.restVal > lc.maxRestVal)
 	      lc.restVal = lc.maxRestVal;
+	    else if (lc.restVal < 0)
+	    	lc.restVal = 0;
+
 	    //java.lang.System.out.println(lc.restVal);
   }
   
+  private void handleHunger(LivingComponent lc, PositionComponent pc){
+	    if(lc.hungerVal < 30.0f)
+	      lc.HP -= 10.0f / TICKS_PER_SECOND;
+	    else if(lc.hungerVal < 15.0f)
+	      lc.HP -= 15.0f / TICKS_PER_SECOND;
+	    else if(lc.hungerVal < 10.0f)
+	      lc.HP -= 35.0f / TICKS_PER_SECOND;
+	    if (lc.HP < 50.0f) lc.hungerVal -= 1.5f / TICKS_PER_SECOND;
+	    else lc.hungerVal -= 0.1225f / TICKS_PER_SECOND;
+	    
+	    World w = World.getWorld();
+	    int y = Math.round(pc.pos.y);
+	    int x = Math.round(pc.pos.x);
+	    y = y < 0 ? 0 : y > w.getSize() ? w.getSize() : y;
+	    x = x < 0 ? 0 : x > w.getSize() ? w.getSize() : x;
+	    Entity ship = eManager.getTopEntityAt(pc.pos);
+	    RenderComponent rc = (RenderComponent)eManager.getComponent(Component.RENDER, ship);
+	    if(rc.s == Sprite.SHIP)
+	      lc.hungerVal += 30.0f / TICKS_PER_SECOND;
+
+	    if(lc.hungerVal > lc.maxRestVal)
+	      lc.hungerVal = lc.maxRestVal;
+	    else if (lc.hungerVal < 0)
+	    	lc.hungerVal = 0;
+	    //java.lang.System.out.println(lc.restVal);
+}
+  
   private void regainHealth(LivingComponent lc){
 	  if(lc.hydration >= 80.0f && lc.restVal >= 80.0f)
-	    lc.HP += 1.0f / TICKS_PER_SECOND;
+	    lc.HP += 5.0f / TICKS_PER_SECOND;
 	  if(lc.HP > lc.maxHP)
 	    lc.HP = lc.maxHP;
   }

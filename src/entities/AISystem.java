@@ -24,12 +24,14 @@ public class AISystem extends System {
   public void tick() {
     updateEntityVector();
     for(Entity e : entitiesToProcess){
+      eMan = EntityManager.INSTANCE;
       pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
       ac = (AIComponent)eManager.getComponent(Component.AI, e);
       mc = (MobilityComponent)eManager.getComponent(Component.MOBILITY, e);
       lc = (LivingComponent)eManager.getComponent(Component.LIVING, e);
       cc = (ContainerComponent)eManager.getComponent(Component.CONTAINER, e);
       msc = (MessageComponent)eManager.getComponent(Component.MESSAGE, e);
+      anc = (AnimalComponent)eManager.getComponent(Component.ANIMAL, e);
       
       if(ac.states.isEmpty())
       	ac.states.add(new State(State.Type.WANDER, getTime()));
@@ -62,8 +64,7 @@ public class AISystem extends System {
             desiredItems.put(item, num - cc.items.get(item));
         }
         if(!desiredItems.isEmpty()){
-	        Entity ship = eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY, 
-	        		c.location);
+        	Entity ship = eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY, c.location);
 	        PositionComponent shipPC =
 	          (PositionComponent)eManager.getComponent(Component.POSITION, ship);
 	        ac.states.add(new Command(
@@ -81,24 +82,27 @@ public class AISystem extends System {
         case REST:
           handleRestState();
           break;
+        case EAT:
+          handleEatState();
+          break;
         case RELOCATE:
           handleRelocateState();
           break;
         case FETCH_ITEMS:
           handleFetchItemsState();
           break;
-        case BUILD_SLEEPHOUSE:
-          handleBuildState(State.Type.BUILD_SLEEPHOUSE);
-          break;
-        case BUILD_REPRODUCTIONHOUSE:
-          handleBuildState(State.Type.BUILD_REPRODUCTIONHOUSE);
-          break;
-        case BUILD_STORAGEUNIT:
-          handleBuildState(State.Type.BUILD_STORAGEUNIT);
-          break;
         case BUILD_SHIP:
-          handleBuildState(State.Type.BUILD_SHIP);
+          handleBuildShipState();
           break;
+        case BUILD_SLEEPHOUSE:
+            handleBuildState(State.Type.BUILD_SLEEPHOUSE);
+            break;
+          case BUILD_REPRODUCTIONHOUSE:
+            handleBuildState(State.Type.BUILD_REPRODUCTIONHOUSE);
+            break;
+          case BUILD_STORAGEUNIT:
+            handleBuildState(State.Type.BUILD_STORAGEUNIT);
+            break;
         case DEPOSIT_ITEMS:
           handleDepositItemsState();
           break;
@@ -108,7 +112,11 @@ public class AISystem extends System {
         case CHOP_TREE:
           handleChopTree();
           break;
+        case KILL:
+          handleKill();
+          break;
         default:
+        	break;
       }
       
       // Shouldn't happen, but does non the less.
@@ -132,28 +140,41 @@ public class AISystem extends System {
   }  
 
   private void handleLivingInterrupts(){
-    if(ac.states.peek().type != State.Type.FIND_WATER && ac.states.peek().type != State.Type.REST
-       && (lc.hydration <= lc.drinkHydration)){
+    if(ac.states.peek().type != State.Type.FIND_WATER &&
+       (lc.hydration <= lc.drinkHydration || 
+          (lc.hydration <= lc.healHydration+10 && lc.HP < lc.goodHP))){
       ac.states.add(new State(State.Type.FIND_WATER, getTime()));
       ac.path = null;
-    }
-    else if(ac.states.peek().type != State.Type.FIND_WATER && ac.states.peek().type != State.Type.REST
-       && (lc.restVal <= lc.sleepRestVal)){
+    }		// Here I check to make sure that both FIND_WATER and REST are not in the top
+    else if(ac.states.peek().type != State.Type.REST && ac.states.peek().type != State.Type.FIND_WATER
+       && (lc.restVal <= lc.sleepRestVal) ||
+       		(lc.restVal <= lc.healRestVal+10 && lc.HP < lc.goodHP)){
       ac.states.add(new State(State.Type.REST, getTime()));
   	  ac.path = null;
+  	  /*
+      State temp = ac.states.remove();
+      if(temp != null){
+        if(ac.states.peek() != null && ac.states.peek().type != State.Type.REST){
+    	    ac.states.add(new State(State.Type.REST, getTime()));
+    	    ac.path = null;
+        }
+        ac.states.add(temp);
+      }
+      else{
+    	ac.states.add(new State(State.Type.REST, getTime()));
+  	    ac.path = null;
+      }     
+      */ 
     }
-    if(ac.states.peek().type != State.Type.FIND_WATER && ac.states.peek().type != State.Type.REST
-      && (lc.hydration <= lc.healHydration+10 && lc.HP < lc.goodHP)){
-      ac.states.add(new State(State.Type.FIND_WATER, getTime()));
-      ac.path = null;
-    }
-    else if(ac.states.peek().type != State.Type.REST && ac.states.peek().type != State.Type.FIND_WATER
-      && (lc.restVal <= lc.healRestVal+10 && lc.HP < lc.goodHP)){
-      ac.states.add(new State(State.Type.REST, getTime()));
-      ac.path = null;
+    else if (ac.states.peek().type != State.Type.EAT
+       && ((lc.hungerVal <= lc.eatHunger) ||
+       		(lc.hungerVal <= lc.healHungerVal+10 && lc.HP < lc.goodHP))) {
+    	ac.states.add(new State(State.Type.EAT, getTime()));
+    	ac.path = null;
     }
     else if((ac.states.peek().type == State.Type.FIND_WATER && lc.hydration >= lc.maxHydration) 
-    	  || (ac.states.peek().type == State.Type.REST && lc.restVal >= lc.maxRestVal)){
+    	  || (ac.states.peek().type == State.Type.REST && lc.restVal >= lc.maxRestVal)
+    	  || (ac.states.peek().type == State.Type.EAT && lc.hungerVal >= lc.maxHungerVal)){
       ac.states.poll();
       ac.path = null;
     }
@@ -203,6 +224,18 @@ public class AISystem extends System {
 	  }
 	}
   }
+  
+  private void handleEatState() {
+	  if(ac.path == null){
+		  Vec2f shipLoc = findClosest(Sprite.SHIP, pc.pos);
+		  if(shipLoc != null){
+		    ac.path = getPath(roundVector(pc.pos), roundVector(shipLoc));
+		  }else{
+		    ac.states.poll();
+		    ac.path = null;
+		  }
+		}
+  }
 
   private void handleRelocateState(){
     Command command = (Command)ac.states.peek();
@@ -222,8 +255,8 @@ public class AISystem extends System {
       ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
     }else if(distance <= CLOSE_ENOUGH){
       ContainerComponent scc = (ContainerComponent)eManager.getComponent(
-          Component.CONTAINER, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY,
-        		  command.location));
+    		  Component.CONTAINER, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY,
+            		  command.location));
       ContainerComponent ecc = cc;
       ac.states.poll();
       ac.path = null;
@@ -244,8 +277,7 @@ public class AISystem extends System {
           if(item.isCraftable){
             PositionComponent spc =
               (PositionComponent)eManager.getComponent(Component.POSITION,
-                  eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY, 
-                      command.position));
+                  eManager.getFirstMatching(Component.SHIP));
             EnumMap<Item, Integer> itemsToCraft =
               new EnumMap<Item, Integer>(Item.class);
             itemsToCraft.put(item, command.desiredItems.get(item) - oldVal);
@@ -276,9 +308,9 @@ public class AISystem extends System {
     if(distance > CLOSE_ENOUGH && ac.path == null){
       ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
     }else if(distance <= CLOSE_ENOUGH){
-      ContainerComponent scc = (ContainerComponent)eManager.getComponent(
-          Component.CONTAINER, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY, 
-        		  command.location));
+    	ContainerComponent scc = (ContainerComponent)eManager.getComponent(
+    	          Component.CONTAINER, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY, 
+    	        		  command.location));
       ContainerComponent ecc = cc;
       for(Item item : command.desiredItems.keySet()){
         int oldVal = scc.items.get(item) == null ? 0 : scc.items.get(item);
@@ -294,32 +326,32 @@ public class AISystem extends System {
   }
 
   private void handleBuildState(State.Type type){
-    Command command = (Command)ac.states.peek();
-    float distance = (command.location.sub(pc.pos)).getMag();
-    if(distance > CLOSE_ENOUGH && ac.path == null){
-      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
-    }else if(distance <= CLOSE_ENOUGH){
-      if(type == State.Type.BUILD_SLEEPHOUSE)
-    	  EntityFactory.makeNewSleepHouse(command.location.x, command.location.y);
-      else if(type == State.Type.BUILD_REPRODUCTIONHOUSE)
-    	  EntityFactory.makeNewReproductionHouse(command.location.x, command.location.y);
-      else if(type == State.Type.BUILD_STORAGEUNIT)
-    	  EntityFactory.makeNewStorageUnit(command.location.x, command.location.y);
-      else if(type == State.Type.BUILD_SHIP)
-    	  EntityFactory.makeNewShip(command.location.x, command.location.y);
-      else{
-    	  java.lang.System.err.println("Error with handleBuildState. This should never run.");
-      }
-      for(Item item : command.reqItems.keySet()){
-        if(!item.isTool){
-          cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
-        }
-      }
-      ac.states.poll();
-      ac.path = null;
-    }
-  }
-  /*
+	    Command command = (Command)ac.states.peek();
+	    float distance = (command.location.sub(pc.pos)).getMag();
+	    if(distance > CLOSE_ENOUGH && ac.path == null){
+	      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
+	    }else if(distance <= CLOSE_ENOUGH){
+	      if(type == State.Type.BUILD_SLEEPHOUSE)
+	    	  EntityFactory.makeNewSleepHouse(command.location.x, command.location.y);
+	      else if(type == State.Type.BUILD_REPRODUCTIONHOUSE)
+	    	  EntityFactory.makeNewReproductionHouse(command.location.x, command.location.y);
+	      else if(type == State.Type.BUILD_STORAGEUNIT)
+	    	  EntityFactory.makeNewStorageUnit(command.location.x, command.location.y);
+	      else if(type == State.Type.BUILD_SHIP)
+	    	  EntityFactory.makeNewShip(command.location.x, command.location.y);
+	      else{
+	    	  java.lang.System.err.println("Error with handleBuildState. This should never run.");
+	      }
+	      for(Item item : command.reqItems.keySet()){
+	        if(!item.isTool){
+	          cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
+	        }
+	      }
+	      ac.states.poll();
+	      ac.path = null;
+	    }
+	  }
+  
   private void handleBuildShipState(){
 	    Command command = (Command)ac.states.peek();
 	    float distance = (command.location.sub(pc.pos)).getMag();
@@ -331,8 +363,8 @@ public class AISystem extends System {
 	        if(!item.isTool){
 	          // TODO: without these next two lines, the next line causes 
 	          //       null pointer exceptions. magic?
-	          //command.reqItems.size();
-	          //cc.items.size();
+	          command.reqItems.size();
+	          cc.items.size();
 	          // next line causes null pointer exceptions
 	          cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
 	        }
@@ -341,7 +373,7 @@ public class AISystem extends System {
 	      ac.path = null;
 	    }
 	  }
-*/
+
   private void handleCraftItemsState(){
     /*
     Command command = (Command)ac.states.peek();
@@ -350,8 +382,7 @@ public class AISystem extends System {
       ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
     }else if(distance <= CLOSE_ENOUGH){
       ContainerComponent scc = (ContainerComponent)eManager.getComponent(
-          Component.CONTAINER, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY,
-          													command.location));
+          Component.CONTAINER, eManager.getFirstMatching(Component.SHIP));
       ContainerComponent ecc = cc;
       boolean success = true;
       for(Item item : command.reqItems.keySet()){
@@ -416,12 +447,53 @@ public class AISystem extends System {
           new EnumMap<Item, Integer>(Item.class);
         itemsToDeposit.put(Item.WOOD, ecc.items.get(Item.WOOD));
         PositionComponent spc = (PositionComponent)eManager.getComponent(
-            Component.POSITION, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY,
-            		command.location));
+            Component.POSITION, eManager.getFirstMatching(Component.SHIP));
         ac.states.add(new Command(
               State.Type.DEPOSIT_ITEMS, spc.pos, getTime(), itemsToDeposit));
       }
     }
+  }
+  
+  public void handleKill() {
+	  final int NUM_MEAT_FROM_DEER = 5;
+	    Command command = (Command)ac.states.peek();
+	    PositionComponent targetPos = (PositionComponent)eMan.getComponent(Component.POSITION,command.target);
+	    Vec2f pcPos = pc.pos;
+	    if (pcPos == null || targetPos == null) {
+	    	ac.states.poll();
+	    	ac.path = null;
+	    	return;
+	    }
+	    float distance = targetPos.getPos().sub(pcPos).getMag();
+	    if(distance > CLOSE_ENOUGH && ac.path == null){
+	      ac.path = getPath(roundVector(pcPos), roundVector(((PositionComponent)eMan.getComponent(Component.POSITION,command.target)).getPos()));
+	    }else if(distance <= CLOSE_ENOUGH){
+	      AnimalComponent anCom = ((AnimalComponent)eMan.getComponent(Component.ANIMAL,command.target));
+	      if (anCom == null) return;
+	      anCom.toggleHit();
+	      ac.path = null;
+	      
+	      
+	      if(anCom.HP <= 0.0f) {
+	    	  anCom.dead = true;
+		      ContainerComponent ecc = cc;
+		      int oldVal = ecc.items.get(Item.MEAT) == null ? 0 : ecc.items.get(Item.MEAT);
+		      ecc.items.put(Item.MEAT, NUM_MEAT_FROM_DEER + oldVal);
+	
+		      ac.states.poll();
+		      ac.path = null;
+	
+		      if(ecc.items.get(Item.MEAT) >= ecc.maxCapacity){
+		        EnumMap<Item, Integer> itemsToDeposit =
+		          new EnumMap<Item, Integer>(Item.class);
+		        itemsToDeposit.put(Item.MEAT, ecc.items.get(Item.MEAT));
+		        PositionComponent spc = (PositionComponent)eManager.getComponent(
+		            Component.POSITION, eManager.getFirstMatching(Component.SHIP));
+		        ac.states.add(new Command(
+		        State.Type.DEPOSIT_ITEMS, spc.pos, getTime(), itemsToDeposit));
+	      }
+	      }
+	    }
   }
 
   // Returns the rounded integer version of a given Vec2f
@@ -432,7 +504,7 @@ public class AISystem extends System {
   }
   
   // Decides if the current location is pretty close to the destination
-  public  boolean isPrettyClose(Vec2f location, Vec2f destination){
+  private boolean isPrettyClose(Vec2f location, Vec2f destination){
     return Math.abs(location.sub(destination).getMag()) < 1.0f;
   } 
   
@@ -646,6 +718,8 @@ public class AISystem extends System {
   private LivingComponent lc;
   private ContainerComponent cc;
   private MessageComponent msc;
+  private AnimalComponent anc;
+  private EntityManager eMan;
   
   private static Random r = new Random();
   private static final float CLOSE_ENOUGH = 0.2f;

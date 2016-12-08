@@ -7,11 +7,16 @@
 package run;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.EnumMap;
 import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -22,9 +27,15 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 
 import entities.AIComponent;
+import entities.AnimalComponent;
+import entities.Command;
+import entities.CommandSystem;
+import entities.CommandableComponent;
 import entities.Component;
 import entities.ContainerComponent;
 import entities.Entity;
@@ -43,9 +54,8 @@ public class InfoPanel extends JPanel implements Serializable{
   EntityManager eManager;
   private static InfoPanel uniqueInstance;
   float alignment;
-  private Dimension size;
-  private Dimension buffer;
-  //private JButton sleepButton, reproduceButton, storageButton;
+  Dimension size;
+  Dimension buffer;
   JLabel sleepLabel, reproduceLabel, storeLabel, shipLabel, nothing;
   private JLabel healthLabel;
   private JList<String> inventoryList;
@@ -64,6 +74,7 @@ public class InfoPanel extends JPanel implements Serializable{
 	e = (Entity) null;
 	s = (Sprite) null;
 	eManager = EntityManager.INSTANCE;
+	//this.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 	alignment = java.awt.Component.LEFT_ALIGNMENT;
 	size = this.getPreferredSize();
 	buffer = new Dimension(0,5);
@@ -84,18 +95,18 @@ public class InfoPanel extends JPanel implements Serializable{
   private void createPanel(){
 	removeAll();
 	createBuildingsInstructions();
-	//createButtonPanel();
 	createName();
 	createImage();
 	createHealth();
+	createAnimalHealth();
 	createInventory();
 	createCommandQueue();
 	revalidate();
 	repaint();
   }
   
-  // Adds JLabels that give instructions for creating buildings
-  private void createBuildingsInstructions(){
+//Adds JLabels that give instructions for creating buildings
+ private void createBuildingsInstructions(){
 	JLabel helpLabel = new JLabel("Press H for help");
 	helpLabel.setForeground(Color.BLUE);
 	add(helpLabel);
@@ -128,24 +139,7 @@ public class InfoPanel extends JPanel implements Serializable{
 	nothing.setForeground(Color.RED);
 	  
 	add(Box.createRigidArea(buffer));
-  }
-  
-  /*		Unused but I may change my mind later
-  // Set's up the button Panel for the user to build buildings
-  private void createButtonPanel(){
-	  JLabel buttonInstructions = new JLabel("Click on a button below to construct a building");
-	  add(buttonInstructions);
-	  
-	  sleepButton = new JButton("Sleep House");
-	  reproduceButton = new JButton("Reproduction House");
-	  storageButton = new JButton("Storage House");
-	  
-	  ButtonListener buttonListener = new ButtonListener();
-	  sleepButton.addActionListener(buttonListener);
-	  reproduceButton.addActionListener(buttonListener);
-	  storageButton.addActionListener(buttonListener);
-	  
-  }*/
+ }
   
   // Sets up a title feature and adds it to the InfoPanel
   private void createName(){
@@ -204,11 +198,28 @@ public class InfoPanel extends JPanel implements Serializable{
 	String text1 = "Health: " + (int) lc.HP + "/" + (int) lc.maxHP + "\n"; 
 	String text2 = "Hydration: " + (int) lc.hydration + "/" + (int) lc.maxHydration; 
 	String text3 = "Rest Value: " + (int) lc.restVal + "/" + (int) lc.maxRestVal;
-	String text = "<html>" + text1 + "<br>" + text2 + "<br>" + text3;
+	String text4 = "Hunger: " + (int) lc.hungerVal + "/" + (int) lc.maxHungerVal;
+	String text = "<html>" + text1 + "<br>" + text2 + "<br>" + text3 + "<br>" + text4;
 	healthLabel.setText(text);
 	add(healthLabel);
 	add(Box.createRigidArea(buffer));
   }
+  
+//Sets up the health feature for the entity if it has a LivingComponent
+ private void createAnimalHealth(){
+   if(e == null || !eManager.hasComponents(Component.ANIMAL, e))
+	  return;
+	healthLabel = new JLabel();
+	healthLabel.setSize(this.getSize().width, 80);
+	healthLabel.setAlignmentX(alignment);
+	Border healthBorder = BorderFactory.createTitledBorder("Health");
+	healthLabel.setBorder(healthBorder);
+	AnimalComponent ac = (AnimalComponent) eManager.getComponent(Component.ANIMAL, e);
+	String text = "Health: " + (int) ac.HP + "/" + (int) ac.maxHP + "\n"; 
+	healthLabel.setText(text);
+	add(healthLabel);
+	add(Box.createRigidArea(buffer));
+ }
   
   // Sets up the inventory feature for the entity if it has a ContainerComponent
   private void createInventory(){
@@ -238,8 +249,11 @@ public class InfoPanel extends JPanel implements Serializable{
 	AIComponent ac = (AIComponent) eManager.getComponent(Component.AI, e);
 	PriorityQueue<State> states = ac.getStates();
 	
+	//Command command= (Command)states.peek();
+	
 	DefaultListModel<String> model = new DefaultListModel<String>();
 	for(State s : states){
+	  //model.addElement(s.getType().name().equals("KILL") ? "KILL " + ((NameComponent)eManager.getComponent(Component.NAME,command.target)).name : s.getType().name());
 	  model.addElement(s.getType().name());
 	}
 	commandList = new JList<String>(model);
@@ -255,18 +269,19 @@ public class InfoPanel extends JPanel implements Serializable{
   
   // Updates the panel assuming that the panel has the same entity as before
   public void updatePanel(char buildChoice){
-	updateBuildChoice(buildChoice);
-	if(e == null)
+	  updateBuildChoice(buildChoice);
+	  if(e == null)
 	  return;
 	updateBuildChoice(buildChoice);
 	updateHealth();
+	updateAnimalHealth();
 	updateInventory();
 	updateCommandQueue();
 	repaint();
   }
   
-  // Displays as red the build option that is currently selected
-  private void updateBuildChoice(char buildChoice){
+//Displays as red the build option that is currently selected
+ private void updateBuildChoice(char buildChoice){
 	  sleepLabel.setForeground(Color.BLACK);
 	  reproduceLabel.setForeground(Color.BLACK);
 	  storeLabel.setForeground(Color.BLACK);
@@ -293,22 +308,31 @@ public class InfoPanel extends JPanel implements Serializable{
 		  System.err.println(buildChoice);
 		  break;
 	  }
-  }
+ }
   
   // Updates the name feature of the InfoPanel
-  private void updateHealth(){
+  public void updateHealth(){
 	if(!eManager.hasComponents(Component.LIVING, e))
 	  return;
 	LivingComponent lc = (LivingComponent) eManager.getComponent(Component.LIVING, e);
 	String text1 = "Health: " + (int) lc.HP + "/" + (int) lc.maxHP + "\n"; 
 	String text2 = "Hydration: " + (int) lc.hydration + "/" + (int) lc.maxHydration; 
 	String text3 = "Rest Value: " + (int) lc.restVal + "/" + (int) lc.maxRestVal;
-	String text = "<html>" + text1 + "<br>" + text2 + "<br>" + text3;
+	String text4 = "Hunger: " + (int) lc.hungerVal + "/" + (int) lc.maxHungerVal;
+	String text = "<html>" + text1 + "<br>" + text2 + "<br>" + text3 + "<br>" + text4;
 	healthLabel.setText(text);
   }
   
+  public void updateAnimalHealth(){
+		if(!eManager.hasComponents(Component.ANIMAL, e))
+		  return;
+		AnimalComponent ac = (AnimalComponent) eManager.getComponent(Component.ANIMAL, e);
+		String text = "Health: " + (int) ac.HP + "/" + (int) ac.maxHP + "\n"; 
+		healthLabel.setText(text);
+	  }
+  
   // Updates the inventory feature of the InfoPanel
-  private void updateInventory(){
+  public void updateInventory(){
 	if(!eManager.hasComponents(Component.CONTAINER, e))
 	  return;
     ContainerComponent cc = (ContainerComponent) eManager.getComponent(Component.CONTAINER, e);
@@ -321,14 +345,16 @@ public class InfoPanel extends JPanel implements Serializable{
   }
   
   // Updates the command feature of the InfoPanel
-  private void updateCommandQueue(){
+  public void updateCommandQueue(){
 	if(!eManager.hasComponents(Component.COMMANDABLE, e))
 	  return;
 	AIComponent ac = (AIComponent) eManager.getComponent(Component.AI, e);
 	PriorityQueue<State> states = ac.getStates();
+	//Command command= (Command)states.peek();
 	DefaultListModel<String> model = new DefaultListModel<String>();
 	for(State s : states){
-	  model.addElement(s.getType().name());
+	  //model.addElement(s.getType().name().equals("KILL") ? "KILL " + ((NameComponent)eManager.getComponent(Component.NAME,command.target)).name : s.getType().name());
+		model.addElement(s.getType().name());
 	}
 	commandList.setModel(model);
   }
@@ -336,18 +362,5 @@ public class InfoPanel extends JPanel implements Serializable{
   public static void load(InfoPanel ip) {
 	  uniqueInstance = ip;
   }
-  /*		Unused but I may change my mind later
-  private class ButtonListener implements ActionListener{
-		@Override
-		public void actionPerformed(ActionEvent arg0){
-			JButton button = (JButton) arg0.getSource();
-			if(button == sleepButton)
-				;
-			else if(button == reproduceButton)
-				;
-			else if(button == storageButton)
-				;
-		}
-	}
-  */
+  
 }

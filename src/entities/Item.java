@@ -5,7 +5,10 @@ import java.util.EnumMap;
 
 public enum Item implements Serializable {
   WOOD("WOOD",false, false),
-  AXE("AXE",true, true);
+  STONE("STONE",false,false),
+  MEAT("MEAT",false,false),
+  AXE("AXE",true, true),
+  SWORD("SWORD",true,true);
 
   private Item(String name, boolean craftable, boolean tool){
     this.name = name;
@@ -21,6 +24,8 @@ public enum Item implements Serializable {
   	switch(this){
   		case AXE:
   			return axeRecipe;
+  		case SWORD:
+  			return swordRecipe;
   		default:
   			return null;
   	}
@@ -32,6 +37,9 @@ public enum Item implements Serializable {
 
   static final EnumMap<Item, Integer> axeRecipe = new EnumMap<Item, Integer>(Item.class){{
     put(WOOD, 2);
+  }};
+  static final EnumMap<Item, Integer> swordRecipe = new EnumMap<Item, Integer>(Item.class){{
+	put(STONE, 2);
   }};
 }
 
