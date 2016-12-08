@@ -8,6 +8,8 @@ import java.util.EnumMap;
 import java.util.Random;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 //import com.sun.glass.ui.EventLoop.State;
 
 import utility.Sprite;
@@ -337,8 +339,21 @@ public class AISystem extends System {
 	    	  EntityFactory.makeNewReproductionHouse(command.location.x, command.location.y);
 	      else if(type == State.Type.BUILD_STORAGEUNIT)
 	    	  EntityFactory.makeNewStorageUnit(command.location.x, command.location.y);
-	      else if(type == State.Type.BUILD_SHIP)
-	    	  EntityFactory.makeNewShip(command.location.x, command.location.y);
+	      else if(type == State.Type.BUILD_SHIP){
+	    	  Vector<Component> n = eMan.getCompVec(Component.CONTAINER);
+	    	  //Boolean shipIsBuildable = false;
+	    	  int numWood = 0;
+	    	  int numStone = 0;
+	    	  for(Component container : n){
+	    		  ContainerComponent current = (ContainerComponent) container;
+	    		  numWood += current.items.get(Item.WOOD);
+	    		  numStone += current.items.get(Item.STONE);
+	    	  }
+	    	  // TODO: make ship cost stone
+	    	  if(numWood > 20 /*&& numStone > 20*/){
+	    		  EntityFactory.makeNewShip(command.location.x, command.location.y);
+	    	  } 
+	      }
 	      else{
 	    	  java.lang.System.err.println("Error with handleBuildState. This should never run.");
 	      }
@@ -358,15 +373,26 @@ public class AISystem extends System {
 	    if(distance > CLOSE_ENOUGH && ac.path == null){
 	      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
 	    }else if(distance <= CLOSE_ENOUGH){
-	      EntityFactory.makeNewShip(command.location.x, command.location.y);
+	    	Vector<Component> n = eMan.getCompVec(Component.CONTAINER);
+	    	  //Boolean shipIsBuildable = false;
+	    	  int numWood = 0;
+	    	  int numStone = 0;
+	    	  for(Component container : n){
+	    		  ContainerComponent current = (ContainerComponent) container;
+	    		  if(current != null && current.items != null && current.items.get(Item.WOOD) != null){
+	    		    numWood += current.items.get(Item.WOOD);
+	    		    //numStone += current.items.get(Item.STONE);
+	    		  }
+	    	  }
+	    	  // TODO: make ship cost stone
+	    	  if(numWood > 20 /*&& numStone > 20*/){
+	    		  EntityFactory.makeNewShip(command.location.x, command.location.y);
+	    	  } 
 	      for(Item item : command.reqItems.keySet()){
 	        if(!item.isTool){
-	          // TODO: without these next two lines, the next line causes 
-	          //       null pointer exceptions. magic?
-	          command.reqItems.size();
-	          cc.items.size();
-	          // next line causes null pointer exceptions
-	          cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
+	          // TODO: do we need this line? no because the game ends here?
+	          // this causes null pointer exceptions
+	          //cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
 	        }
 	      }
 	      ac.states.poll();
