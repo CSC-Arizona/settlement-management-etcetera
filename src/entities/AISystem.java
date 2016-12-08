@@ -234,13 +234,19 @@ public class AISystem extends System {
   private void handleEatState() {
 	  if(ac.path == null){
 		  Vec2f shipLoc = findClosest(Sprite.SHIP, pc.pos);
+		  
 		  if(shipLoc != null){
 		    ac.path = getPath(roundVector(pc.pos), roundVector(shipLoc));
 		  }else{
-		    ac.states.poll();
-		    ac.path = null;
+			  ac.states.poll();
+			  ac.path = null;
 		  }
 		}
+	  if (lc.hungerVal == 100.0f) {
+		  ac.states.poll();
+		  ac.path = null;
+	  }
+	  
   }
 
   private void handleRelocateState(){
@@ -343,8 +349,20 @@ public class AISystem extends System {
 	    	  EntityFactory.makeNewReproductionHouse(command.location.x, command.location.y);
 	      else if(type == State.Type.BUILD_STORAGEUNIT)
 	    	  EntityFactory.makeNewStorageUnit(command.location.x, command.location.y);
-	      else if(type == State.Type.BUILD_SHIP)
-	    	  EntityFactory.makeNewShip(command.location.x, command.location.y);
+	      else if(type == State.Type.BUILD_SHIP) {
+	    	  Vector<Component> n = eMan.getCompVec(Component.CONTAINER);
+    	  //Boolean shipIsBuildable = false;
+    	  int numWood = 0;
+    	  int numStone = 0;
+    	  for(Component container : n){
+    		  ContainerComponent current = (ContainerComponent) container;
+    		  numWood += current.items.get(Item.WOOD);
+    		  numStone += current.items.get(Item.STONE);
+    	  }
+    	  // TODO: make ship cost stone
+    	  if(numWood > 20 /*&& numStone > 20*/){
+    		  EntityFactory.makeNewShip(command.location.x, command.location.y);
+    	  }} 
 	      else{
 	    	  java.lang.System.err.println("Error with handleBuildState. This should never run.");
 	      }
@@ -364,8 +382,24 @@ public class AISystem extends System {
 	    if(distance > CLOSE_ENOUGH && ac.path == null){
 	      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
 	    }else if(distance <= CLOSE_ENOUGH){
-	      EntityFactory.makeNewShip(command.location.x, command.location.y);
-	      for(Item item : command.reqItems.keySet()){
+	      //EntityFactory.makeNewShip(command.location.x, command.location.y);
+	    	Vector<Component> n = eMan.getCompVec(Component.CONTAINER);
+	    	  //Boolean shipIsBuildable = false;
+	    	  int numWood = 0;
+	    	  int numStone = 0;
+	    	  for(Component container : n){
+	    		  ContainerComponent current = (ContainerComponent) container;
+	    		  if(current != null && current.items != null && current.items.get(Item.WOOD) != null){
+	    		    numWood += current.items.get(Item.WOOD);
+	    		    //numStone += current.items.get(Item.STONE);
+	    		  }
+	    	  }
+	    	  // TODO: make ship cost stone
+	    	  if(numWood > 20 /*&& numStone > 20*/){
+	    		  EntityFactory.makeNewShip(command.location.x, command.location.y);
+	    	  } 
+	    	
+	    	for(Item item : command.reqItems.keySet()){
 	        if(!item.isTool){
 	          // TODO: without these next two lines, the next line causes 
 	          //       null pointer exceptions. magic?

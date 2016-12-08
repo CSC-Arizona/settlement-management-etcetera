@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.EnumMap;
 import java.util.Random;
 
 import utility.Sprite;
@@ -83,7 +84,7 @@ public class LivingSystem extends System {
 	    Entity house = eManager.getTopEntityAt(pc.pos);
 	    RenderComponent rc = (RenderComponent)eManager.getComponent(Component.RENDER, house);
 	    if(rc.s == Sprite.SLEEPHOUSE)
-	      lc.restVal += 2.5f / TICKS_PER_SECOND;
+	      lc.restVal += 10.0f / TICKS_PER_SECOND;
 
 	    if(lc.restVal > lc.maxRestVal)
 	      lc.restVal = lc.maxRestVal;
@@ -110,8 +111,22 @@ public class LivingSystem extends System {
 	    x = x < 0 ? 0 : x > w.getSize() ? w.getSize() : x;
 	    Entity ship = eManager.getTopEntityAt(pc.pos);
 	    RenderComponent rc = (RenderComponent)eManager.getComponent(Component.RENDER, ship);
-	    if(rc.s == Sprite.SHIP)
-	      lc.hungerVal += 30.0f / TICKS_PER_SECOND;
+	    ContainerComponent cc = (ContainerComponent)eManager.getComponent(Component.CONTAINER, ship);
+	    if(rc.s == Sprite.SHIP && lc.hungerVal < 100.0f) {
+	      EnumMap<Item, Integer> items = cc.getItems();	
+	      for(Item i : items.keySet()){
+	       if (i == Item.MEAT && items.get(i) > 0) {
+	    	   lc.hungerVal += 30.0f;
+	    	   items.put(i,items.get(i)-1);
+	    	   break;
+	       } else if (i == Item.BERRY && items.get(i) > 0) {
+	    	   lc.hungerVal += 10.0f;
+	    	   items.put(i,items.get(i)-1);
+	    	   break;
+	       }
+	      }
+	      
+	    }
 
 	    if(lc.hungerVal > lc.maxRestVal)
 	      lc.hungerVal = lc.maxRestVal;
