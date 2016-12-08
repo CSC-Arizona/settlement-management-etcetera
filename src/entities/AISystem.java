@@ -390,13 +390,17 @@ public class AISystem extends System {
 	    	  int numStone = 0;
 	    	  for(Component container : n){
 	    		  ContainerComponent current = (ContainerComponent) container;
-	    		  if(current != null && current.items != null && current.items.get(Item.WOOD) != null){
+	    		  if(current != null && current.items != null && current.items.get(Item.WOOD) != null ){
 	    		    numWood += current.items.get(Item.WOOD);
 	    		    //numStone += current.items.get(Item.STONE);
 	    		  }
+	    		  if(current != null && current.items != null && current.items.get(Item.STONE) != null){
+		    		    //numWood += current.items.get(Item.WOOD);
+		    		    numStone += current.items.get(Item.STONE);
+	    		  }
 	    	  }
 	    	  // TODO: make ship cost stone
-	    	  if(numWood > 20 /*&& numStone > 20*/){
+	    	  if(numWood > 20 && numStone > 20){
 	    		  EntityFactory.makeNewShip(command.location.x, command.location.y);
 	    	  } 
 	    	
@@ -407,7 +411,7 @@ public class AISystem extends System {
 	          command.reqItems.size();
 	          cc.items.size();
 	          // next line causes null pointer exceptions
-	          cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
+	          //cc.items.put(item, cc.items.get(item) - command.reqItems.get(item));
 	        }
 	      }
 	      ac.states.poll();
