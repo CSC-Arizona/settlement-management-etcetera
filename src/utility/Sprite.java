@@ -14,6 +14,7 @@ public enum Sprite {
   LAKE(141, 15),
   ROCK(225, 3),
   TREE(135, 15),
+  HOLE(128,4),
   SLEEPHOUSE(65, 14),
   REPRODUCTIONHOUSE(69, 1),
   STORAGEUNIT(70, 10),

@@ -8,6 +8,7 @@ package world;
 
 public enum StructureManager {
 	Rock(new Rock(1,1)),
+	Hole(new Hole(1,1)),
 	Grass(new Grass(1,1)),
 	Tree(new Tree(1,1)),
 	Bush(new Bush(1,1)),

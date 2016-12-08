@@ -44,7 +44,9 @@ public class WorldGenerator {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				r = rng.nextInt(4 * 25);
-				if (r > 1 && r <= 11) {
+				if(r > 1 && r <= 6){
+					board[i][j] = sMan.Hole.getStructure();
+				}else if (r > 6 && r <= 11) {
 					board[i][j] = sMan.Rock.getStructure();
 				} else if (r > 11 && r <= 31) {
 					board[i][j] = sMan.Grass.getStructure(); // 10%

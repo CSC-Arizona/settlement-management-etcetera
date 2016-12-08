@@ -344,16 +344,23 @@ public class Game extends Thread implements Serializable {
 		}
 	}
 
-	public void help() {
-		JOptionPane.showMessageDialog(frame,
-				"Welcome to Escape from Earth!\n" + "You control a band of cosmonauts on Earth. There's only one"
-						+ " problem:\n" + "a huge increase in seismic activity makes the planet unstabl"
-						+ "e. Frequent\n" + "earthquakes threaten to destroy your colony. Collect resourc"
-						+ "es to survive and\n" + "- if you can - build a ship to escape.\n\n"
-						+ "Left mouse click - collect resource\n" + "Right mouse click - see more info\n"
-						+ "Middle mouse click - build house\n" + "H - view this menu",
-				"Help", JOptionPane.PLAIN_MESSAGE);
-	}
+	public void help(){
+		  JOptionPane.showMessageDialog(frame,
+				    "Welcome to Escape from Earth!\n"
+				    + "You control a band of cosmonauts on Earth. There's only one"
+				    + " problem:\n"
+				    + "a huge increase in seismic activity makes the planet unstabl"
+				    + "e. Frequent\n"
+				    + "earthquakes threaten to destroy your colony. Collect resourc"
+				    + "es to survive and\n"
+				    + "- if you can - build a ship to escape.\n\n"
+				    + "Left mouse click - collect resource / build structure\n"
+				    + "Right mouse click - see more info\n"
+				    + "S - save the game\n"
+				    + "H - view this menu",
+				    "Help",
+				    JOptionPane.PLAIN_MESSAGE);
+	  }
 	
 	public void reset(){
 		  eMan.reset();

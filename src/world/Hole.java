@@ -1,21 +1,21 @@
 /**
  * Abstract Structure Object to be used in the world creation.
  * 
- * @author Tanner Bernth
+ * @author Caleb Short (Using Tanner Bernth's model)
  */
 
 package world;
 
 import utility.Sprite;
 
-public class Bush extends Structure {
+public class Hole extends Structure {
 		
 	/*
 	 * Constructor
 	 */
-	public Bush(int row, int col) {
-		super(row, col, Sprite.BUSH);
-		setId(3);
+	public Hole(int row, int col) {
+		super(row, col, Sprite.HOLE);
+		setId(20);
 		togglePassable();
 	}
 
