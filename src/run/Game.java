@@ -311,9 +311,7 @@ public class Game extends Thread implements Serializable {
 				  "You lost. Try again?", "You lose!", 
 				  JOptionPane.YES_NO_OPTION);
 		  if (n == JOptionPane.YES_OPTION) {
-			  eMan.reset();
-			  spawnAliens(10);
-			  // TODO: SPAWN DEER WHEN IMPLEMENTED
+			 reset(); 
 		  } 
 		  else {
 			  System.exit(0);
@@ -327,9 +325,7 @@ public class Game extends Thread implements Serializable {
 		  "You win! Try again?", "You win!", 
 		  JOptionPane.YES_NO_OPTION);
 	  	if (n == JOptionPane.YES_OPTION) {
-		  eMan.reset();
-		  spawnAliens(10);
-		  // TODO: SPAWN DEER WHEN IMPLEMENTED
+	  		reset();
 	  	} 
 	  	else {
 		  System.exit(0);
@@ -349,6 +345,13 @@ public class Game extends Thread implements Serializable {
 			    + "- if you can - build a ship to escape.\n",
 			    "Help",
 			    JOptionPane.PLAIN_MESSAGE);
+  }
+  
+  public void reset(){
+	  eMan.reset();
+	  spawnAliens(10);
+	  run();
+	  // TODO: SPAWN DEER WHEN IMPLEMENTED
   }
   
   private char button1Char;
