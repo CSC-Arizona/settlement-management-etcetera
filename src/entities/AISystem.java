@@ -140,6 +140,13 @@ public class AISystem extends System {
   }  
 
   private void handleLivingInterrupts(){
+    if((ac.states.peek().type == State.Type.FIND_WATER && lc.hydration >= lc.maxHydration) 
+    	  || (ac.states.peek().type == State.Type.REST && lc.restVal >= lc.maxRestVal)
+    	  || (ac.states.peek().type == State.Type.EAT && lc.hungerVal >= lc.maxHungerVal)){
+      ac.states.poll();
+      ac.path = null;
+    }
+    
     if(ac.states.peek().type != State.Type.FIND_WATER &&
        (lc.hydration <= lc.drinkHydration || 
           (lc.hydration <= lc.healHydration+10 && lc.HP < lc.goodHP))){
@@ -171,12 +178,6 @@ public class AISystem extends System {
        		(lc.hungerVal <= lc.healHungerVal+10 && lc.HP < lc.goodHP))) {
     	ac.states.add(new State(State.Type.EAT, getTime()));
     	ac.path = null;
-    }
-    else if((ac.states.peek().type == State.Type.FIND_WATER && lc.hydration >= lc.maxHydration) 
-    	  || (ac.states.peek().type == State.Type.REST && lc.restVal >= lc.maxRestVal)
-    	  || (ac.states.peek().type == State.Type.EAT && lc.hungerVal >= lc.maxHungerVal)){
-      ac.states.poll();
-      ac.path = null;
     }
     else if((ac.states.peek().type == State.Type.WANDER)){
     	if(lc.hydration < lc.healHydration)
@@ -215,14 +216,14 @@ public class AISystem extends System {
   }
   private void handleRestState(){
     if(ac.path == null){
-	  Vec2f houseLoc = findClosest(Sprite.SLEEPHOUSE, pc.pos);
-	  if(houseLoc != null){
-	    ac.path = getPath(roundVector(pc.pos), roundVector(houseLoc));
-	  }else{
-	    ac.states.poll();
-	    ac.path = null;
-	  }
-	}
+    	Vec2f houseLoc = findClosest(Sprite.SLEEPHOUSE, pc.pos);
+    	if(houseLoc != null){
+    		ac.path = getPath(roundVector(pc.pos), roundVector(houseLoc));
+    	}else{
+    		ac.states.poll();
+    		ac.path = null;
+    	}
+    }
   }
   
   private void handleEatState() {
