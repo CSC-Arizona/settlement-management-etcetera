@@ -28,6 +28,9 @@ public class State implements Serializable {
       case GATHER_STONE:
     	priority = 8;
     	break;
+      case GATHER_BERRIES:
+      	priority = 8;
+      	break;
       case BUILD_SLEEPHOUSE:
         priority = 8;
         break;
@@ -58,11 +61,12 @@ public class State implements Serializable {
   public enum Type {
     WANDER,
     FIND_WATER,
-    GATHER_STONE,
     REST,
     EAT,
     RELOCATE,
     CHOP_TREE,
+    GATHER_STONE,
+    GATHER_BERRIES,
     BUILD_SLEEPHOUSE,
     BUILD_REPRODUCTIONHOUSE,
     BUILD_STORAGEUNIT,

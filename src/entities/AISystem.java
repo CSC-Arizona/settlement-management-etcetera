@@ -110,8 +110,14 @@ public class AISystem extends System {
           handleCraftItemsState();
           break;
         case CHOP_TREE:
-          handleChopTree();
+          handleGather(Item.WOOD, 1);
           break;
+        case GATHER_STONE:
+          handleGather(Item.STONE, 1);
+          break;  
+        case GATHER_BERRIES:
+            handleGather(Item.BERRY, 1);
+            break;   
         case KILL:
           handleKill();
           break;
@@ -229,13 +235,19 @@ public class AISystem extends System {
   private void handleEatState() {
 	  if(ac.path == null){
 		  Vec2f shipLoc = findClosest(Sprite.SHIP, pc.pos);
+		  
 		  if(shipLoc != null){
 		    ac.path = getPath(roundVector(pc.pos), roundVector(shipLoc));
 		  }else{
-		    ac.states.poll();
-		    ac.path = null;
+			  ac.states.poll();
+			  ac.path = null;
 		  }
 		}
+	  if (lc.hungerVal == 100.0f) {
+		  ac.states.poll();
+		  ac.path = null;
+	  }
+	  
   }
 
   private void handleRelocateState(){
@@ -338,8 +350,20 @@ public class AISystem extends System {
 	    	  EntityFactory.makeNewReproductionHouse(command.location.x, command.location.y);
 	      else if(type == State.Type.BUILD_STORAGEUNIT)
 	    	  EntityFactory.makeNewStorageUnit(command.location.x, command.location.y);
-	      else if(type == State.Type.BUILD_SHIP)
-	    	  EntityFactory.makeNewShip(command.location.x, command.location.y);
+	      else if(type == State.Type.BUILD_SHIP) {
+	    	  Vector<Component> n = eMan.getCompVec(Component.CONTAINER);
+    	  //Boolean shipIsBuildable = false;
+    	  int numWood = 0;
+    	  int numStone = 0;
+    	  for(Component container : n){
+    		  ContainerComponent current = (ContainerComponent) container;
+    		  numWood += current.items.get(Item.WOOD);
+    		  numStone += current.items.get(Item.STONE);
+    	  }
+    	  // TODO: make ship cost stone
+    	  if(numWood > 20 /*&& numStone > 20*/){
+    		  EntityFactory.makeNewShip(command.location.x, command.location.y);
+    	  }} 
 	      else{
 	    	  java.lang.System.err.println("Error with handleBuildState. This should never run.");
 	      }
@@ -359,8 +383,24 @@ public class AISystem extends System {
 	    if(distance > CLOSE_ENOUGH && ac.path == null){
 	      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
 	    }else if(distance <= CLOSE_ENOUGH){
-	      EntityFactory.makeNewShip(command.location.x, command.location.y);
-	      for(Item item : command.reqItems.keySet()){
+	      //EntityFactory.makeNewShip(command.location.x, command.location.y);
+	    	Vector<Component> n = eMan.getCompVec(Component.CONTAINER);
+	    	  //Boolean shipIsBuildable = false;
+	    	  int numWood = 0;
+	    	  int numStone = 0;
+	    	  for(Component container : n){
+	    		  ContainerComponent current = (ContainerComponent) container;
+	    		  if(current != null && current.items != null && current.items.get(Item.WOOD) != null){
+	    		    numWood += current.items.get(Item.WOOD);
+	    		    //numStone += current.items.get(Item.STONE);
+	    		  }
+	    	  }
+	    	  // TODO: make ship cost stone
+	    	  if(numWood > 20 /*&& numStone > 20*/){
+	    		  EntityFactory.makeNewShip(command.location.x, command.location.y);
+	    	  } 
+	    	
+	    	for(Item item : command.reqItems.keySet()){
 	        if(!item.isTool){
 	          // TODO: without these next two lines, the next line causes 
 	          //       null pointer exceptions. magic?
@@ -425,38 +465,38 @@ public class AISystem extends System {
     }
     */
   }
+  
+  private void handleGather(Item item, int count){
+	    //final int NUM_LOGS_FROM_TREE = 1;
+	    Command command = (Command)ac.states.peek();
+	    World w = World.getWorld();
+	    float distance = (command.location.sub(pc.pos)).getMag();
+	    if(distance > CLOSE_ENOUGH && ac.path == null){
+	      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
+	    }else if(distance <= CLOSE_ENOUGH){
+	      ContainerComponent ecc = cc;
+	      w.setTile((int)command.location.y, (int)command.location.x,
+	                new Dirt((int)command.location.y, (int)command.location.x));
+	      int oldVal = ecc.items.get(item) == null ? 0 : ecc.items.get(item);
+	      ecc.items.put(item, count + oldVal);
 
-  private void handleChopTree(){
-    final int NUM_LOGS_FROM_TREE = 1;
-    Command command = (Command)ac.states.peek();
-    World w = World.getWorld();
-    float distance = (command.location.sub(pc.pos)).getMag();
-    if(distance > CLOSE_ENOUGH && ac.path == null){
-      ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
-    }else if(distance <= CLOSE_ENOUGH){
-      ContainerComponent ecc = cc;
-      w.setTile((int)command.location.y, (int)command.location.x,
-                new Dirt((int)command.location.y, (int)command.location.x));
-      int oldVal = ecc.items.get(Item.WOOD) == null ? 0 : ecc.items.get(Item.WOOD);
-      ecc.items.put(Item.WOOD, NUM_LOGS_FROM_TREE + oldVal);
+	      ac.states.poll();
+	      ac.path = null;
 
-      ac.states.poll();
-      ac.path = null;
-
-      if(ecc.items.get(Item.WOOD) >= ecc.maxCapacity){
-        EnumMap<Item, Integer> itemsToDeposit =
-          new EnumMap<Item, Integer>(Item.class);
-        itemsToDeposit.put(Item.WOOD, ecc.items.get(Item.WOOD));
-        PositionComponent spc = (PositionComponent)eManager.getComponent(
-            Component.POSITION, eManager.getFirstMatching(Component.SHIP));
-        ac.states.add(new Command(
-              State.Type.DEPOSIT_ITEMS, spc.pos, getTime(), itemsToDeposit));
-      }
-    }
-  }
+	      if(ecc.items.get(item) >= ecc.maxCapacity){
+	        EnumMap<Item, Integer> itemsToDeposit =
+	          new EnumMap<Item, Integer>(Item.class);
+	        itemsToDeposit.put(item, ecc.items.get(item));
+	        PositionComponent spc = (PositionComponent)eManager.getComponent(
+	            Component.POSITION, eManager.getFirstMatching(Component.SHIP));
+	        ac.states.add(new Command(
+	              State.Type.DEPOSIT_ITEMS, spc.pos, getTime(), itemsToDeposit));
+	      }
+	    }
+	  }
   
   public void handleKill() {
-	  final int NUM_MEAT_FROM_DEER = 5;
+	  final int NUM_MEAT_FROM_DEER = 1;
 	    Command command = (Command)ac.states.peek();
 	    PositionComponent targetPos = (PositionComponent)eMan.getComponent(Component.POSITION,command.target);
 	    Vec2f pcPos = pc.pos;

@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.Random;
+
 import utility.Sprite;
 import world.World;
 
@@ -30,6 +32,10 @@ public class AnimalSystem extends System {
 	 for(Entity e : entitiesToProcess){
 		 AnimalComponent ac = (AnimalComponent)eManager.getComponent(Component.ANIMAL, e);
 		 PositionComponent pc = (PositionComponent)eManager.getComponent(Component.POSITION, e);
+		 Random r = new Random();
+		 int damage = r.nextInt(50);
+		 damage += 25;
+		 ac.HP -= damage;
 		  if (!World.getWorld().getBoard()[(int)pc.getPos().y][(int)pc.getPos().x].isPassable()) {
 		 	purgeTheDead(e);
 	 	}

@@ -16,7 +16,7 @@ public class Rock extends Structure {
 	public Rock(int row, int col) {
 		super(row, col, Sprite.ROCK);
 		setId(0);
-		togglePassable();
+		//togglePassable();
 	}
 
 	/*
