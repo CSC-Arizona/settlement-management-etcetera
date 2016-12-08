@@ -98,6 +98,20 @@ class RunMe {
     }
   }
   
+  public static void saveData(){
+	  try {
+          FileOutputStream bytesToDisk = new FileOutputStream("gamedata"); 
+          ObjectOutputStream outFile = new ObjectOutputStream(bytesToDisk);
+          outFile.writeObject(World.getWorld());
+          EntityManager eMan = EntityManager.INSTANCE;
+          eMan.saveInstance(outFile);
+
+          outFile.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+  }
+  
   private class MyWindowListener extends WindowAdapter implements WindowListener {
     @Override
     public void windowClosing(WindowEvent we) {

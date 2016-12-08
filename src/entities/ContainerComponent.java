@@ -11,7 +11,10 @@ public class ContainerComponent extends Component {
   }
   
   public void startAxe(boolean x) {
-	  if (x) items.put(Item.AXE, 1);
+	  if (x) {
+		  items.put(Item.AXE, 1);
+		  items.put(Item.SWORD, 1);
+	  }
   }
   
   public EnumMap<Item, Integer> getItems() {

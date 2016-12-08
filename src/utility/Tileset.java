@@ -33,7 +33,7 @@ public class Tileset {
   }
 
   public BufferedImage getSprite(Sprite s){
-	if(s==Sprite.HOUSE){
+	if(s==Sprite.SLEEPHOUSE){
 		try {
 			return ImageIO.read(new File("gfx/house.png"));
 		} catch (IOException e) {

@@ -16,15 +16,33 @@ public class State implements Serializable {
       case REST:
     	priority = 256;
     	break;
+      case EAT:
+    	priority = 256;
+    	break;
       case RELOCATE:
         priority = 8;
         break;
       case CHOP_TREE:
         priority = 8;
         break;
-      case BUILD_HOUSE:
+      case GATHER_STONE:
+    	priority = 8;
+    	break;
+      case BUILD_SLEEPHOUSE:
         priority = 8;
         break;
+      case BUILD_REPRODUCTIONHOUSE:
+          priority = 8;
+          break;
+      case BUILD_STORAGEUNIT:
+          priority = 8;
+          break;
+      case BUILD_SHIP:
+    	priority = 200;
+    	break;
+      case KILL:
+    	priority = 252;
+    	break;
       case DEPOSIT_ITEMS:
         priority = 128;
         break;
@@ -40,13 +58,19 @@ public class State implements Serializable {
   public enum Type {
     WANDER,
     FIND_WATER,
+    GATHER_STONE,
     REST,
+    EAT,
     RELOCATE,
     CHOP_TREE,
-    BUILD_HOUSE,
+    BUILD_SLEEPHOUSE,
+    BUILD_REPRODUCTIONHOUSE,
+    BUILD_STORAGEUNIT,
+    KILL,
     DEPOSIT_ITEMS,
     FETCH_ITEMS,
-    CRAFT_ITEMS;
+    CRAFT_ITEMS,
+    BUILD_SHIP;
   }
   
   public Type getType() {

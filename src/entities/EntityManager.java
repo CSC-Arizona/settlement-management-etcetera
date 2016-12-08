@@ -132,6 +132,30 @@ public enum EntityManager {
     }
     return null;
   }
+  
+  private Entity getClosestMatching(Vector<Entity> eList, Vec2f location){
+	  if(eList.size() == 0)
+		  return null;
+	  Entity toReturn = null;
+	  toReturn = eList.firstElement();
+	  for(Entity e : eList){
+		  PositionComponent pc = (PositionComponent)getComponent(Component.POSITION, e);
+		  PositionComponent toReturnPC = (PositionComponent)getComponent(Component.POSITION, toReturn);
+		  if(pc.pos.isGreater(toReturnPC.pos, location))
+			  toReturn = e;
+	  }
+	  return toReturn;
+  }
+  
+  public Entity getClosestMatching(long CBS, Vec2f location){
+	  Vector<Entity> eList = getMatchingEntities(CBS);
+	  return getClosestMatching(eList, location);
+  }
+  
+  public Entity getClosestMatching(long CBS, long blackList, Vec2f location){
+	  Vector<Entity> eList = getMatchingEntities(CBS, blackList);
+	  return getClosestMatching(eList, location);
+  }
 
   /*
    * Tells us whether or not an entity has specified components.
@@ -195,7 +219,7 @@ public enum EntityManager {
 	  outFile.writeObject(entityBitSets);
 	  outFile.writeObject(used);
   }
-
+  
   // Holds freed up ID's
   private Vector<Integer> recycleBin;
   private Vector<Vector<Component>> compVecs;

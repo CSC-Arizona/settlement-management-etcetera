@@ -19,9 +19,11 @@ public class RenderSystem extends System{
       RenderComponent rc;
       PositionComponent pc;
       LivingComponent lc;
+      AnimalComponent ac;
       rc = (RenderComponent) eManager.getComponent(Component.RENDER, e);
       pc = (PositionComponent) eManager.getComponent(Component.POSITION, e);
       lc = (LivingComponent) eManager.getComponent(Component.LIVING, e);
+      ac = (AnimalComponent) eManager.getComponent(Component.ANIMAL, e);
 
       // ppm = pixels per meter
       final int ppm = rc.width;
@@ -37,6 +39,15 @@ public class RenderSystem extends System{
         g.setColor(Color.RED);
         g.fillRect(x + 2, y - 1, hpBarLength - 2, 3);
       }
+      
+      //Draw Animal HP bar.
+      if(ac != null){
+          g.setColor(Color.BLACK);
+          g.drawRect(x + 1, y - 2, rc.width, 5);
+          int hpBarLength = (int)((ac.HP / ac.maxHP) * 32.0f);
+          g.setColor(Color.GREEN);
+          g.fillRect(x + 2, y - 1, hpBarLength - 2, 3);
+        }
     }
   }
 
