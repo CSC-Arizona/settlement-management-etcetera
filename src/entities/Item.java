@@ -6,6 +6,7 @@ import java.util.EnumMap;
 public enum Item implements Serializable {
   WOOD("WOOD",false, false),
   STONE("STONE",false,false),
+  BERRY("BERRY",false,false),
   MEAT("MEAT",false,false),
   AXE("AXE",true, true),
   SWORD("SWORD",true,true);

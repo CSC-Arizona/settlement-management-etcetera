@@ -227,7 +227,11 @@ public class Game extends Thread implements Serializable {
 				} else {
 					if (eMan.hasComponents(Component.ANIMAL, eMan.getTopEntityAt(new Vec2f(x,y)))) {
 						commands.push(new Command(Command.Type.KILL, eMan.getTopEntityAt(new Vec2f(x ,y)), System.currentTimeMillis()));
-					} else if (w.getTile(y, x).getType() == Sprite.TREE) {
+					} else if (w.getTile(y, x).getType() == Sprite.BUSH) {
+						commands.push(new Command(Command.Type.GATHER_BERRIES, new Vec2f(x, y), System.currentTimeMillis()));
+					} else if (w.getTile(y, x).getType() == Sprite.ROCK) {
+						commands.push(new Command(Command.Type.GATHER_STONE, new Vec2f(x, y), System.currentTimeMillis()));
+					}else if (w.getTile(y, x).getType() == Sprite.TREE) {
 						commands.push(new Command(Command.Type.CHOP_TREE, new Vec2f(x, y), System.currentTimeMillis()));
 					} else if (w.getTile(y, x).isPassable()) {
 						commands.push(new Command(Command.Type.RELOCATE, new Vec2f(x, y), System.currentTimeMillis()));
