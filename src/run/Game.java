@@ -374,6 +374,8 @@ public class Game extends Thread implements Serializable {
 				    + "    - W: Build a house for reproduction\n"
 				    + "    - E: Build a storage unit\n"
 				    + "    - R: Build a spaceship to leave this deadly earth!\n"
+				    + "         *Note: If building a building does not work, it probably means that you don't have\n"
+				    + "                enough resources to build that building. Just keep getting more\n"
 				    + "  S - Save the game\n"
 				    + "  H - View this menu\n"
 				    + "  P - (Only for Cody's eyes) Cause an earthquake (This way you can lose the\n"
