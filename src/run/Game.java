@@ -342,18 +342,38 @@ public class Game extends Thread implements Serializable {
 
 	public void help(){
 		  JOptionPane.showMessageDialog(frame,
-				    "Welcome to Escape from Earth!\n"
-				    + "You control a band of cosmonauts on Earth. There's only one"
-				    + " problem:\n"
-				    + "a huge increase in seismic activity makes the planet unstabl"
-				    + "e. Frequent\n"
-				    + "earthquakes threaten to destroy your colony. Collect resourc"
-				    + "es to survive and\n"
-				    + "- if you can - build a ship to escape.\n\n"
-				    + "Left mouse click - collect resource / build structure\n"
-				    + "Right mouse click - see more info\n"
-				    + "S - save the game\n"
-				    + "H - view this menu",
+				      "Welcome to...\n\n"
+				  
+				    + "Escape from Earth!\n\n"
+				    
+				    + "You control a band of cosmonauts on Earth. There's only one problem:\n"
+				    + "a huge increase in seismic activity makes the planet unstable. "
+				    + "Frequent earthquakes threaten to destroy your colony.\n"
+				    + "Collect resources to survive and - if you can - build a ship to escape.\n\n"
+				    
+				    + "You will need resources to survive and build structures, which you will also\n"
+				    + "need to survive. Obviously, it takes far more resources to build the spaceship\n"
+				    + "to leave this planet then the other structures (because a spaceship takes more\n"
+				    + "to build, and definitely not because the game would be lame and easy otherwise)\n\n"
+				    
+				    + "Important note: You can not control individual cosmonauts. Rather, the cosmonaut\n"
+				    + "that carries out your command be chosen based on an algorithm\n\n"
+				    
+				    + "The following commands are the controls for this game:\n"
+				    + "  RIGHT mouse click - see the information on that given unit/item\n"
+				    + "  The following four keys toggle what will happen when you LEFT mouseclick on the map\n"
+				    + "    - A: This is the default option:\n"
+				    + "        - Click on a resource to collect it\n"
+				    + "        - Click on a deer to kill it and get the meat\n"
+				    + "        - Click on an open location to move an cosmonaut to that spot\n"
+				    + "    - Q: Build a house for your cosmonauts to sleep in\n"
+				    + "    - W: Build a house for reproduction\n"
+				    + "    - E: Build a storage unit\n"
+				    + "    - R: Build a spaceship to leave this deadly earth!\n"
+				    + "  S - Save the game\n"
+				    + "  H - View this menu\n"
+				    + "  P - (Only for Cody's eyes) Cause an earthquake (This way you can end the\n"
+				    + "      game quickly by losing when you want)",
 				    "Help",
 				    JOptionPane.PLAIN_MESSAGE);
 	  }
