@@ -60,7 +60,8 @@ public class AISystem extends System {
             desiredItems.put(item, num - cc.items.get(item));
         }
         if(!desiredItems.isEmpty()){
-	        Entity ship = eManager.getFirstMatching(Component.SHIP);
+	        Entity ship = eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY, 
+	        		c.location);
 	        PositionComponent shipPC =
 	          (PositionComponent)eManager.getComponent(Component.POSITION, ship);
 	        ac.states.add(new Command(
@@ -212,7 +213,8 @@ public class AISystem extends System {
       ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
     }else if(distance <= CLOSE_ENOUGH){
       ContainerComponent scc = (ContainerComponent)eManager.getComponent(
-          Component.CONTAINER, eManager.getFirstMatching(Component.SHIP));
+          Component.CONTAINER, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY,
+        		  command.location));
       ContainerComponent ecc = cc;
       ac.states.poll();
       ac.path = null;
@@ -233,7 +235,8 @@ public class AISystem extends System {
           if(item.isCraftable){
             PositionComponent spc =
               (PositionComponent)eManager.getComponent(Component.POSITION,
-                  eManager.getFirstMatching(Component.SHIP));
+                  eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY, 
+                      command.position));
             EnumMap<Item, Integer> itemsToCraft =
               new EnumMap<Item, Integer>(Item.class);
             itemsToCraft.put(item, command.desiredItems.get(item) - oldVal);
@@ -265,7 +268,8 @@ public class AISystem extends System {
       ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
     }else if(distance <= CLOSE_ENOUGH){
       ContainerComponent scc = (ContainerComponent)eManager.getComponent(
-          Component.CONTAINER, eManager.getFirstMatching(Component.SHIP));
+          Component.CONTAINER, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY, 
+        		  command.location));
       ContainerComponent ecc = cc;
       for(Item item : command.desiredItems.keySet()){
         int oldVal = scc.items.get(item) == null ? 0 : scc.items.get(item);
@@ -337,7 +341,8 @@ public class AISystem extends System {
       ac.path = getPath(roundVector(pc.pos), roundVector(command.location));
     }else if(distance <= CLOSE_ENOUGH){
       ContainerComponent scc = (ContainerComponent)eManager.getComponent(
-          Component.CONTAINER, eManager.getFirstMatching(Component.SHIP));
+          Component.CONTAINER, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY,
+          													command.location));
       ContainerComponent ecc = cc;
       boolean success = true;
       for(Item item : command.reqItems.keySet()){
@@ -402,7 +407,8 @@ public class AISystem extends System {
           new EnumMap<Item, Integer>(Item.class);
         itemsToDeposit.put(Item.WOOD, ecc.items.get(Item.WOOD));
         PositionComponent spc = (PositionComponent)eManager.getComponent(
-            Component.POSITION, eManager.getFirstMatching(Component.SHIP));
+            Component.POSITION, eManager.getClosestMatching(Component.CONTAINER, Component.MOBILITY,
+            		command.location));
         ac.states.add(new Command(
               State.Type.DEPOSIT_ITEMS, spc.pos, getTime(), itemsToDeposit));
       }

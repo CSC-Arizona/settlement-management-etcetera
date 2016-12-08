@@ -59,6 +59,10 @@ public class Vec2f implements Serializable {
   public String toString(){
   	return "(" + x + ", " + y + ")";
   }
+  
+  public boolean isGreater(Vec2f other, Vec2f common){
+	  return this.sub(common).getMag() > other.sub(common).getMag();
+  }
 
   public final float x;
   public final float y;

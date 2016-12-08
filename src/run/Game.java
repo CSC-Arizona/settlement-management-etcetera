@@ -1,6 +1,5 @@
 package run;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -8,37 +7,27 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 import java.util.Stack;
 import java.util.Vector;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import entities.AISystem;
+import entities.Command;
+import entities.CommandSystem;
+import entities.Component;
 import entities.Entity;
 import entities.EntityFactory;
 import entities.EntityManager;
-import entities.Component;
-import entities.MobilityComponent;
-import entities.PositionComponent;
-import entities.RenderComponent;
-import entities.CollisionComponent;
-import entities.Command;
-import entities.CommandSystem;
-import entities.State;
-import entities.AIComponent;
-
-import entities.RenderSystem;
-import entities.PhysicsSystem;
-import entities.AISystem;
 import entities.LivingSystem;
 import entities.MessageSystem;
+import entities.PhysicsSystem;
+import entities.PositionComponent;
+import entities.RenderSystem;
 import utility.Sprite;
 import utility.Vec2f;
 import world.World;
@@ -73,18 +62,20 @@ public class Game extends Thread implements Serializable {
   public void earthquake(LivingSystem ls, World w, Graphics g) {
 	  ls.earthquake();
 	  w.earthquake(g);
+	  Random r = new Random();
 	  Vector<Entity> structures = eMan.getMatchingEntities(Component.REPRODUCTIONHOUSE);
+	  for(Entity e : structures){
+		  if(r.nextInt(2) == 0)
+			  eMan.rmEntity(e);
+	  }
 	  Vector<Entity> structures2 = eMan.getMatchingEntities(Component.SLEEPINGHOUSE);
 	  for(Entity e : structures2){
-		  structures.add(e);
+		  if(r.nextInt(3) == 0)
+			  eMan.rmEntity(e);
 	  }
 	  Vector<Entity> structures3 = eMan.getMatchingEntities(Component.STORAGEUNIT);
 	  for(Entity e : structures3){
-		  structures.add(e);
-	  }
-	  Random r = new Random(3);
-	  for(Entity e : structures){
-		  if(r.nextInt(3) == 0)
+		  if(r.nextInt(5) == 0)
 			  eMan.rmEntity(e);
 	  }
 	  frame.repaint();
@@ -93,6 +84,17 @@ public class Game extends Thread implements Serializable {
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
+  }
+  
+  private void reproduce(){
+	  Vector<Entity> repHouses = eMan.getMatchingEntities(Component.REPRODUCTIONHOUSE);
+	  for(Entity house : repHouses){
+		  PositionComponent pc = (PositionComponent)eMan.getComponent(Component.POSITION, house);
+		  Random r = new Random();
+		  if(r.nextInt(3000) == 0){
+			  EntityFactory.makeNewAlien(pc.pos.x, pc.pos.y);
+		  }
+	  }
   }
 
   int FORCEQUAKE = 3000;
@@ -131,6 +133,7 @@ public class Game extends Thread implements Serializable {
     	  //infoPanel.updatePanel(button1Char);
     	  FORCEQUAKE = 6000;
       }
+      reproduce();
       
       w.render(g);
       rs.tick();
