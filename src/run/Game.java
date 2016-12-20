@@ -353,8 +353,7 @@ public class Game extends Thread implements Serializable {
 				    + "You control a band of cosmonauts on Earth. There's only one problem:\n"
 				    + "a huge increase in seismic activity makes the planet unstable. "
 				    + "Frequent earthquakes threaten to destroy your colony.\n"
-				    + "Collect resources to survive and - if you can - build a ship to escape.\n\n"
-				    
+				    + "Collect resources to survive and - if you can - build a ship to escape.\n"		    
 				    + "You will need resources to survive and build structures, which you will also\n"
 				    + "need to survive. Obviously, it takes far more resources to build the spaceship\n"
 				    + "to leave this planet then the other structures (because a spaceship takes more\n"
