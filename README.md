@@ -11,3 +11,5 @@ Collect resources to survive and - if you can - build a ship to escape.
 
 Contributors:
 Artyom Perov, Tanner Bernth, Robert Walters, Caleb Short
+
+![Escape from Earth](EFE.png)
