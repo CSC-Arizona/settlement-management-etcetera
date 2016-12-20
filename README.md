@@ -1,20 +1,13 @@
-# final-project-start
+# CSC 335 Final: Settlement Management
 
-This is the GitHub repo we will use to store our CSC 335 Final Project, Fall 2016
+Welcome to...
 
-Team Name: Team Etcetera
+Escape from Earth!
 
-Project (Risk, Pokemon, Settlement Management, or MUD): Settlement
+You control a band of cosmonauts on Earth. There's only one problem:
+a huge increase in seismic activity makes the planet unstable.
+Frequent earthquakes threaten to destroy your colony.
+Collect resources to survive and - if you can - build a ship to escape.
 
-Project Manager: Cody
-
-
-All four team members make a commit that modifies this file with your name added below this line (leave this line here)
-
-1) Artyom Perov
-
-2) Tanner Bernth
-
-3) Robert Walters
-
-4) Caleb Short
+Contributors:
+Artyom Perov, Tanner Bernth, Robert Walters, Caleb Short
